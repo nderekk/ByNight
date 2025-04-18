@@ -1,0 +1,27 @@
+class name / attributes
+
+User / id, full name, age, role(manager, customer, staff), email, password
+Reservation / id, user, table, num_of_people, order, timedate, club
+Table / id, position, capacity, min_order,
+Order / id, cost, delivered, paid, 
+
+How to integrate pages into domain diagram???
+Home Page
+View Reservations Page
+Reservations Details Page
+Modify Reservation Page
+Confirmation Page
+Consumption Too Little Page
+Table Unavaialable Page
+Table Too Small Page
+
+
+
+
+
+
+
+
+
+
+
