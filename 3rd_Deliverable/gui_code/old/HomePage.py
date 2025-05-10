@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QFrame,
     QHBoxLayout, QLabel, QLayout, QLineEdit,
     QPushButton, QScrollArea, QSizePolicy, QVBoxLayout,
     QWidget)
+import sys
 
 class Ui_mainWidget(object):
     def setupUi(self, mainWidget):
@@ -340,3 +341,11 @@ class Ui_mainWidget(object):
         self.pushButton_2.setText(QCoreApplication.translate("mainWidget", u"More Details", None))
     # retranslateUi
 
+app = QApplication(sys.argv)
+
+main_window = QWidget()
+ui = Ui_mainWidget()
+ui.setupUi(main_window)
+
+main_window.show()
+sys.exit(app.exec())
