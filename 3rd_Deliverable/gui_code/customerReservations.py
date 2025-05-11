@@ -25,10 +25,10 @@ class ReservationApp(QWidget):
         layout.addWidget(subtitle)
 
         # Sections
-        layout.addWidget(self.section_label("Active Reservations"))
+        layout.addWidget(self.section_label("Upcoming Reservations"))
         layout.addWidget(self.reservation_card(active=True))
 
-        layout.addWidget(self.section_label("Expired Reservations"))
+        layout.addWidget(self.section_label("Past Reservations"))
         for _ in range(3):
             layout.addWidget(self.reservation_card(active=False))
 
