@@ -3,7 +3,6 @@ from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
 import sys
 from datetime import datetime
-from controllers.view_res_controller import ViewReservationController
 
 class CustomerViewReservations(QWidget):
     def __init__(self, upcoming_reservations, past_reservations):
@@ -28,13 +27,15 @@ class CustomerViewReservations(QWidget):
         subtitle.setStyleSheet("color: gray; font-size: 10pt;")
         layout.addWidget(subtitle)
 
-        # Sections
+        # Upcoming
         layout.addWidget(self.section_label("Upcoming Reservations"))
-        layout.addWidget(self.reservation_card(upcoming=True))
+        for reservation in self.upcoming_reservations:
+            layout.addWidget(self.reservation_card(*reservation, upcoming=True))
 
+        # Past
         layout.addWidget(self.section_label("Past Reservations"))
-        for _ in range(3):
-            layout.addWidget(self.reservation_card(upcoming=False))
+        for reservation in self.past_reservations:
+            layout.addWidget(self.reservation_card(*reservation, upcoming=False))
 
         self.setLayout(layout)
 

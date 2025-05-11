@@ -1,5 +1,4 @@
-from models.reservation import Reservation
-from models.user import User
+from app.models.user import User
 from datetime import datetime
 
 class ViewReservationController:

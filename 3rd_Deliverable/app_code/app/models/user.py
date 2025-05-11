@@ -1,5 +1,5 @@
-from role import Role
-from reservation import Reservation
+from app.models.role import Role
+from app.models.reservation import Reservation
 
 class User:
   def __init__(
