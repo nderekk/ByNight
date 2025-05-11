@@ -26,7 +26,7 @@ class User:
   def get_reservations(self):
     return [{
       "club_name": "Saint Club",
-      "timedate": r.timedate,
+      "date": r.date,
       "id": r.id,
       "event": "Kultura"
     } for r in self.reservations]
