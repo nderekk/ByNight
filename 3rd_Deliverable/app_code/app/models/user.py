@@ -2,7 +2,6 @@ from role import Role
 from reservation import Reservation
 
 class User:
-  
   def __init__(
       self, 
       full_name: str,
@@ -21,9 +20,14 @@ class User:
     self.phone = phone
     self.email = email
     self.__password = password
-    self.reservations = reservations
+    self.reservations = reservations # association
     
     
-  def get_reservations():
-    pass
+  def get_reservations(self):
+    return [{
+      "club_name": "Saint Club",
+      "timedate": r.timedate,
+      "id": r.id,
+      "event": "Kultura"
+    } for r in self.reservations]
   
