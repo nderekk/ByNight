@@ -26,11 +26,11 @@ class ReservationApp(QWidget):
 
         # Sections
         layout.addWidget(self.section_label("Upcoming Reservations"))
-        layout.addWidget(self.reservation_card(active=True))
+        layout.addWidget(self.reservation_card(upcoming=True))
 
         layout.addWidget(self.section_label("Past Reservations"))
         for _ in range(3):
-            layout.addWidget(self.reservation_card(active=False))
+            layout.addWidget(self.reservation_card(upcoming=False))
 
         self.setLayout(layout)
 
@@ -39,7 +39,7 @@ class ReservationApp(QWidget):
         label.setStyleSheet("font-weight: bold; font-size: 12pt; margin-top: 15px;")
         return label
 
-    def reservation_card(self, active=True):
+    def reservation_card(self, upcoming=True):
         card = QFrame()
         card.setStyleSheet("background-color: #444; color: white; border-radius: 5px;")
         card.setFixedHeight(80)
@@ -60,7 +60,7 @@ class ReservationApp(QWidget):
 
         layout.addLayout(details_layout)
 
-        if not active:
+        if not upcoming:
             review_button = QPushButton("+ Add Review")
             layout.addWidget(review_button)
 
