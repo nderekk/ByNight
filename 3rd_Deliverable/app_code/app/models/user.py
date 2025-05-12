@@ -4,6 +4,7 @@ from app.models.reservation import Reservation
 class User:
   def __init__(
       self, 
+      id: int,
       full_name: str,
       age: int, 
       role: Role, 
@@ -14,6 +15,7 @@ class User:
   ):
     if not isinstance(role, Role):
       raise ValueError(f"Invalid role: {role}")
+    self.id = id
     self.full_name = full_name
     self.age = age
     self.role = role
