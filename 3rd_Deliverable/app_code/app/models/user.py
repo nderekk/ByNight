@@ -24,6 +24,9 @@ class User:
     self.__password = password
     self.reservations = reservations # association
     
+  def verify_password(self, password: str) -> bool:
+    """Verify if the provided password matches the user's password."""
+    return self.__password == password
     
   def get_reservations(self):
     return [{
