@@ -1,151 +1,77 @@
-import mysql.connector
-from typing import Optional, List
-from app.models.user import User, Customer, Owner
+from typing import Optional, Dict
+from app.models.user import User
+from app.models.role import Role
 
 class UserRepository:
-    def __init__(self, host: str, user: str, password: str, database: str):
-        self.config = {
-            'host': host,
-            'user': user,
-            'password': password,
-            'database': database
-        }
-        self._init_db()
+    def __init__(self):
+        """Initialize the UserRepository with an empty dictionary and add dummy users."""
+        self._users: Dict[str, User] = {}  # email -> User mapping
+        
+        # Add dummy users
+        dummy_users = [
+            User(
+                id=1,
+                full_name="John Doe",
+                age=25,
+                role=Role.CUSTOMER,
+                phone=1234567890,
+                email="john@example.com",
+                password="password123",
+                reservations=[]
+            ),
+            User(
+                id=2,
+                full_name="Jane Smith",
+                age=28,
+                role=Role.MANAGER,
+                phone=9876543210,
+                email="jane@example.com",
+                password="password456",
+                reservations=[]
+            ),
+            User(
+                id=3,
+                full_name="Bob Wilson",
+                age=22,
+                role=Role.STAFF,
+                phone=5555555555,
+                email="bob@example.com",
+                password="password789",
+                reservations=[]
+            )
+        ]
+        
+        # Save dummy users to the repository
+        for user in dummy_users:
+            self.save(user)
 
-    def _get_connection(self):
-        """Create and return a new database connection"""
-        return mysql.connector.connect(**self.config)
-
-    def _init_db(self):
-        """Initialize the database with required tables"""
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS users (
-                    user_id INT AUTO_INCREMENT PRIMARY KEY,
-                    username VARCHAR(255) NOT NULL,
-                    email VARCHAR(255) UNIQUE NOT NULL,
-                    password VARCHAR(255) NOT NULL,
-                    user_type ENUM('customer', 'owner') NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            ''')
-            conn.commit()
-
-    def save(self, user: User):
-        """Save a user to the database"""
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            if user.user_id is None:  # New user
-                cursor.execute('''
-                    INSERT INTO users (username, email, password, user_type)
-                    VALUES (%s, %s, %s, %s)
-                ''', (
-                    user.username,
-                    user.email,
-                    user._password,
-                    user.get_role()
-                ))
-                user._user_id = cursor.lastrowid
-            else:  # Update existing user
-                cursor.execute('''
-                    UPDATE users 
-                    SET username = %s, email = %s, password = %s, user_type = %s
-                    WHERE user_id = %s
-                ''', (
-                    user.username,
-                    user.email,
-                    user._password,
-                    user.get_role(),
-                    user.user_id
-                ))
-            conn.commit()
+    def save(self, user: User) -> User:
+        """Save a user to the in-memory dictionary."""
+        self._users[user.email] = user
+        return user
 
     def find_by_email(self, email: str) -> Optional[User]:
-        """Find a user by email"""
-        with self._get_connection() as conn:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
-            row = cursor.fetchone()
-            
-            if row:
-                if row['user_type'] == "customer":
-                    user = Customer(
-                        user_id=row['user_id'],
-                        username=row['username'],
-                        email=row['email'],
-                        password=row['password']
-                    )
-                else:
-                    user = Owner(
-                        user_id=row['user_id'],
-                        username=row['username'],
-                        email=row['email'],
-                        password=row['password']
-                    )
+        """Find a user by their email."""
+        return self._users.get(email)
+
+    def find_by_id(self, user_id: str) -> Optional[User]:
+        """Find a user by their ID."""
+        for user in self._users.values():
+            if user.id == user_id:
                 return user
-            return None
+        return None
 
-    def find_by_id(self, user_id: int) -> Optional[User]:
-        """Find a user by ID"""
-        with self._get_connection() as conn:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute('SELECT * FROM users WHERE user_id = %s', (user_id,))
-            row = cursor.fetchone()
-            
-            if row:
-                if row['user_type'] == "customer":
-                    user = Customer(
-                        user_id=row['user_id'],
-                        username=row['username'],
-                        email=row['email'],
-                        password=row['password']
-                    )
-                else:
-                    user = Owner(
-                        user_id=row['user_id'],
-                        username=row['username'],
-                        email=row['email'],
-                        password=row['password']
-                    )
-                return user
-            return None
+    def update(self, user: User) -> User:
+        """Update an existing user."""
+        if user.email not in self._users:
+            raise ValueError(f"User with email {user.email} not found")
+        self._users[user.email] = user
+        return user
 
-    def get_next_id(self) -> int:
-        """Get the next available user ID"""
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute('SELECT MAX(user_id) FROM users')
-            max_id = cursor.fetchone()[0]
-            return (max_id or 0) + 1
-
-    def delete(self, user_id: int):
-        """Delete a user by ID"""
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute('DELETE FROM users WHERE user_id = %s', (user_id,))
-            conn.commit()
-
-    def list_all(self) -> List[User]:
-        """List all users"""
-        with self._get_connection() as conn:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute('SELECT * FROM users')
-            users = []
-            for row in cursor.fetchall():
-                if row['user_type'] == "customer":
-                    user = Customer(
-                        user_id=row['user_id'],
-                        username=row['username'],
-                        email=row['email'],
-                        password=row['password']
-                    )
-                else:
-                    user = Owner(
-                        user_id=row['user_id'],
-                        username=row['username'],
-                        email=row['email'],
-                        password=row['password']
-                    )
-                users.append(user)
-            return users 
+    def delete(self, user_id: str) -> bool:
+        """Delete a user by their ID."""
+        for email, user in list(self._users.items()):
+            if user.id == user_id:
+                del self._users[email]
+                return True
+        return False
