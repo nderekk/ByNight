@@ -1,6 +1,6 @@
 import mysql.connector
 from typing import Optional, List
-from ...models.user import User, Customer, Owner
+from app.models.user import User, Customer, Owner
 
 class UserRepository:
     def __init__(self, host: str, user: str, password: str, database: str):

@@ -1,7 +1,7 @@
 import hashlib
 from typing import Optional
-from ..models.user import User
-from ..data.repositories.user_repository import UserRepository
+from app.models.user import User
+from app.data.repositories.user_repository import UserRepository
 
 class AuthService:
     def __init__(self, user_repository: UserRepository):
