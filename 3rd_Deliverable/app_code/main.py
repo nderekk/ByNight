@@ -1,6 +1,8 @@
 from app.controllers.view_res_controller import ViewReservationController
 from app.views.customer_view_res import CustomerViewReservations
 from app.controllers.login_controller import LoginController
+from app.services.auth_service import AuthService
+from app.data.repositories.user_repository import UserRepository
 from datetime import datetime
 from PySide6.QtWidgets import QApplication
 import sys
@@ -20,6 +22,8 @@ if __name__ == "__main__":
     ]
 
     # window = CustomerViewReservations(upcoming, past)
-    login_controller = LoginController()
+    user_repo = UserRepository()
+    auth_service = AuthService(user_repo)
+    login_controller = LoginController(auth_service)
     login_controller.show()
     sys.exit(app.exec())
