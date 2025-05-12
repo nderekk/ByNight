@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject, Signal
-from ..services.auth_service import AuthService
-from ..views.login_view import LoginView
+from app.services.auth_service import AuthService
+from app.views.login_view import LoginView
 
 class LoginController(QObject):
   # Signals for view updates
@@ -9,9 +9,9 @@ class LoginController(QObject):
   signup_successful = Signal()
   signup_failed = Signal(str)
 
-  def __init__(self, auth_service: AuthService):
+  def __init__(self):
     super().__init__()
-    self.auth_service = auth_service
+    # self.auth_service = auth_service
     self.view = LoginView()
     self.setup_connections()
 
@@ -49,24 +49,10 @@ class LoginController(QObject):
       self.signup_failed.emit(str(e))
 
   def handle_google_login(self):
-    try:
-      user = self.auth_service.login_with_google()
-      if user:
-        self.login_successful.emit()
-      else:
-        self.login_failed.emit("Google login failed")
-    except Exception as e:
-      self.login_failed.emit(str(e))
+    self.login_failed.emit("Feature Not Yet Implimented")
 
   def handle_apple_login(self):
-    try:
-      user = self.auth_service.login_with_apple()
-      if user:
-        self.login_successful.emit()
-      else:
-        self.login_failed.emit("Apple login failed")
-    except Exception as e:
-      self.login_failed.emit(str(e))
+    self.login_failed.emit("Feature Not Yet Implimented")
 
   def show(self):
     self.view.show() 
