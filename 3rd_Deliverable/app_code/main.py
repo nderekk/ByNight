@@ -1,5 +1,6 @@
 from app.controllers.view_res_controller import ViewReservationController
 from app.views.customer_view_res import CustomerViewReservations
+from app.controllers.login_controller import LoginController
 from datetime import datetime
 from PySide6.QtWidgets import QApplication
 import sys
@@ -18,6 +19,7 @@ if __name__ == "__main__":
         ("The Garden", datetime(2025, 2, 14, 20, 0), "456789123", "Valentine's Special"),
     ]
 
-    window = CustomerViewReservations(upcoming, past)
-    window.show()
+    # window = CustomerViewReservations(upcoming, past)
+    login_controller = LoginController()
+    login_controller.show()
     sys.exit(app.exec())
