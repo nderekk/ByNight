@@ -1,6 +1,7 @@
 from PySide6.QtCore import QObject, Signal
 from app.services.auth_service import AuthService
 from app.views.login_view import LoginView
+from app.controllers.home_page_controller import HomePageController
 from app.models.user import User
 
 class LoginController(QObject):
@@ -10,10 +11,10 @@ class LoginController(QObject):
   signup_successful = Signal()
   signup_failed = Signal(str)
 
-  def __init__(self, auth_service: AuthService, show_customer_home_page):
+  def __init__(self, auth_service: AuthService, show_page):
     super().__init__()
     self.auth_service = auth_service
-    self.show_customer_home_page = show_customer_home_page
+    self.show_page = show_page
     self.view = LoginView()
     self.setup_connections()
 
@@ -25,7 +26,7 @@ class LoginController(QObject):
     self.view.apple_login_attempted.connect(self.handle_apple_login)
 
     # Connect controller signals to view methods
-    self.login_successful.connect(self.show_customer_home_page)
+    self.login_successful.connect(self.handle_next_page)
     self.login_failed.connect(self.view.show_error)
     self.signup_successful.connect(self.view.reset)
     self.signup_failed.connect(self.view.show_error)
@@ -56,6 +57,10 @@ class LoginController(QObject):
 
   def handle_apple_login(self):
     self.login_failed.emit("Feature Not Yet Implimented")
+    
+  def handle_next_page(self):
+    self.home_page_controller = HomePageController(self.show_page)
+    self.show_page('customer_home_page', self.home_page_controller)
 
   def show(self):
     self.view.show() 
