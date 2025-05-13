@@ -9,11 +9,10 @@ class LoginController(QObject):
   signup_successful = Signal()
   signup_failed = Signal(str)
 
-  def __init__(self, auth_service: AuthService, show_customer_view_reservations):
+  def __init__(self, auth_service: AuthService, show_customer_home_page):
     super().__init__()
     self.auth_service = auth_service
-    # self.main_window = main_window
-    self.show_customer_view_reservations = show_customer_view_reservations
+    self.show_customer_home_page = show_customer_home_page
     self.view = LoginView()
     self.setup_connections()
 
@@ -25,7 +24,7 @@ class LoginController(QObject):
     self.view.apple_login_attempted.connect(self.handle_apple_login)
 
     # Connect controller signals to view methods
-    self.login_successful.connect(self.show_customer_view_reservations)
+    self.login_successful.connect(self.show_customer_home_page)
     self.login_failed.connect(self.view.show_error)
     self.signup_successful.connect(self.view.reset)
     self.signup_failed.connect(self.view.show_error)
