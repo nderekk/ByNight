@@ -1,11 +1,50 @@
 from typing import Optional, Dict
 from app.models.user import User
 from app.models.role import Role
+from app.models.reservation import Reservation
+from app.utils.container import Container
+from datetime import datetime
 
 class UserRepository:
     def __init__(self):
         """Initialize the UserRepository with an empty dictionary and add dummy users."""
         self._users: Dict[str, User] = {}  # email -> User mapping
+        
+        dummy_reservations = [
+              Reservation(
+                id=9432,
+                user= self.find_by_email('john@example.com'),
+                table = 'No 26',
+                num_of_people= 4,
+                order= 'Order',
+                date= datetime.now(tz=None),
+                club= 'MAGENTA',
+                qrcode= 'Qrcode',
+                event= 'GREEK NIGHT'
+            ),
+            Reservation(
+                id=2321,
+                user= self.find_by_email('john@example.com'),
+                table = 'No 12',
+                num_of_people= 2,
+                order= 'Order',
+                date= datetime.now(tz=None),
+                club= 'SAINT',
+                qrcode= 'Qrcode',
+                event= 'Lules culpa'
+            ),
+            Reservation(
+                id=1123,
+                user= self.find_by_email('john@example.com'),
+                table = 'No 23',
+                num_of_people= 3,
+                order= 'Order',
+                date= datetime.now(tz=None),
+                club= 'OMNIA',
+                qrcode= 'Qrcode',
+                event= 'Trap Night'
+            )
+        ]
         
         # Add dummy users
         dummy_users = [
@@ -17,7 +56,7 @@ class UserRepository:
                 phone=1234567890,
                 email="john@example.com",
                 password="password123",
-                reservations=[]
+                reservations=dummy_reservations
             ),
             User(
                 id=2,
