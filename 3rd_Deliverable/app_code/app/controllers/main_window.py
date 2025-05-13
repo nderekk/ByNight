@@ -1,5 +1,6 @@
 from app.controllers.view_res_controller import ViewReservationController
 from app.controllers.login_controller import LoginController
+from app.controllers.home_page_controller import HomePageController
 from app.services.auth_service import AuthService
 from app.data.repositories.user_repository import UserRepository
 from PySide6.QtWidgets import QStackedWidget, QMainWindow, QWidget
@@ -20,9 +21,13 @@ class MainWindow(QMainWindow):
     # set up controllers
     self.user_repo = UserRepository()
     self.auth_service = AuthService(self.user_repo)
-    self.login_controller = LoginController(self.auth_service, self.show_customer_view_reservations)
+    self.login_controller = LoginController(self.auth_service, self.show_customer_home_page)
+    
+    self.home_page_controller = HomePageController(self.show_customer_view_reservations)
     
     self.view_res_controller = ViewReservationController()
+    
+    
      
     # Start with login page
     self.show_login()
@@ -33,6 +38,13 @@ class MainWindow(QMainWindow):
       self.stack.addWidget(self.login_page)
       self.pages['login_page'] = self.login_page
     self.stack.setCurrentWidget(self.login_page)
+    
+  def show_customer_home_page(self):
+    if 'customer_home_page' not in self.pages:
+      self.customer_home_page = self.home_page_controller.view
+      self.stack.addWidget(self.customer_home_page)
+      self.pages['customer_home_page'] = self.customer_home_page
+    self.stack.setCurrentWidget(self.customer_home_page)
 
   def show_customer_view_reservations(self):
     if 'customer_view_res_page' not in self.pages:
