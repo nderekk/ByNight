@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout,
-    QDateEdit, QTimeEdit, QFrame
+    QDateEdit, QTimeEdit, QFrame, QPushButton
 )
 from PySide6.QtCore import Qt, QDate, QTime
 from PySide6.QtGui import QFont
@@ -49,14 +49,19 @@ class ClubStatsWindow(QWidget):
         main_layout.setContentsMargins(16, 16, 16, 16)
         main_layout.setSpacing(16)
 
-        # Header
+        # Header with back button
         header_layout = QHBoxLayout()
-        back_arrow = QLabel("←")
-        back_arrow.setFont(QFont("Arial", 18))
-        header_layout.addWidget(back_arrow)
+        back_button = QPushButton("←")
+        back_button.setFixedSize(30, 30)
+        back_button.setStyleSheet("font-size: 18px; border: none; background: transparent;")
+        back_button.setCursor(Qt.PointingHandCursor)
+        back_button.clicked.connect(self.go_back)
+
+        header_layout.addWidget(back_button)
         header_layout.addStretch()
         main_layout.addLayout(header_layout)
 
+        # Title and subtitle
         title = QLabel("Club Statistics")
         title.setFont(QFont("Arial", 16, QFont.Bold))
         title.setAlignment(Qt.AlignLeft)
@@ -104,7 +109,7 @@ class ClubStatsWindow(QWidget):
         main_layout.addLayout(from_layout)
         main_layout.addLayout(to_layout)
 
-        # Cards
+        # Statistic cards
         main_layout.addWidget(self.create_divider())
         main_layout.addWidget(StatCard("Attendance", 82))
         main_layout.addWidget(self.create_divider())
@@ -121,6 +126,9 @@ class ClubStatsWindow(QWidget):
         line.setFrameShape(QFrame.HLine)
         line.setStyleSheet("color: lightgray;")
         return line
+
+    def go_back(self):
+        print("Back button clicked")
 
 
 if __name__ == "__main__":
