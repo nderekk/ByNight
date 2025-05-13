@@ -43,8 +43,8 @@ ByNight
 ## Technology Stack
 
 - **Language**: Python 3.x
-- **GUI Framework**: PyQt6
-- **Database**: SQLite
+- **GUI Framework**: PySide6
+- **Database**: MySQL (NOT YET)
 - **Testing**: pytest
 
 ## Getting Started
