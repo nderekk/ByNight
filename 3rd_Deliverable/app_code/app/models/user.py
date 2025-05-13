@@ -1,5 +1,8 @@
 from app.models.role import Role
 from app.models.reservation import Reservation
+from app.utils.container import Container
+from datetime import datetime
+from typing import Tuple
 
 class User:
   def __init__(
@@ -29,10 +32,14 @@ class User:
     return self.__password == password
     
   def get_reservations(self):
-    return [{
-      "club_name": "Saint Club",
-      "date": r.date,
-      "id": r.id,
-      "event": "Kultura"
-    } for r in self.reservations]
+    return self.get_upcoming_reservations_for_display(), self.get_past_reservations_for_display()
+    
+      # mporei na min prepei na einai edw
+  def get_upcoming_reservations_for_display(self):
+    upcoming = [r for r in self.reservations if r.date > datetime.now()]
+    return upcoming
+  
+  def get_past_reservations_for_display(self):
+    past = [r for r in self.reservations if r.date < datetime.now()]
+    return past
   
