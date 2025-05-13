@@ -1,9 +1,9 @@
 import sys
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QLabel, QPushButton,
-    QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QSizePolicy
+    QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QSizePolicy, QMessageBox
 )
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QCursor
 from PySide6.QtCore import Qt
 
 
@@ -20,6 +20,14 @@ class ReservationCard(QFrame):
                 font-size: 14px;
             }
         """)
+        self.table_no = table_no
+        self.reserved_by = reserved_by
+        self.event = event
+        self.ID = ID
+        self.time = time
+        self.people = people
+        self.order = order
+        self.cost = cost
 
         layout = QVBoxLayout()
         layout.setContentsMargins(15, 10, 15, 10)
@@ -38,6 +46,16 @@ class ReservationCard(QFrame):
 
         self.setLayout(layout)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        
+        # Set cursor to pointer to indicate it's clickable
+        self.setCursor(QCursor(Qt.PointingHandCursor))
+
+    def mousePressEvent(self, event):
+        # Show a popup with the reservation details
+        message = f"Table No: {self.table_no}\nReserved by: {self.reserved_by}\nEvent: {self.event}\n" \
+                  f"ID: {self.ID}\nTime: {self.time}\nPeople: {self.people}\nOrder: {self.order}\nCost: {self.cost}"
+        
+        QMessageBox.information(self, "Reservation Details", message)
 
 
 class MainWindow(QMainWindow):
@@ -56,6 +74,7 @@ class MainWindow(QMainWindow):
         back_btn = QPushButton("←")
         back_btn.setFixedSize(30, 30)
         back_btn.setStyleSheet("font-size: 18px; background-color: #555; color: white; border: none;")
+        back_btn.clicked.connect(self.on_back_clicked)
 
         title = QLabel("Manage Reservations")
         title.setFont(QFont("Arial", 18, QFont.Bold))
@@ -98,6 +117,10 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(scroll)
 
         self.setCentralWidget(main_widget)
+
+    def on_back_clicked(self):
+        # Here, you can either close the window or switch to a previous window
+        self.close()
 
 
 if __name__ == "__main__":
