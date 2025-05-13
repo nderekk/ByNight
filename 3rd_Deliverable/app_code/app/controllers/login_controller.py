@@ -1,10 +1,11 @@
 from PySide6.QtCore import QObject, Signal
 from app.services.auth_service import AuthService
 from app.views.login_view import LoginView
+from app.models.user import User
 
 class LoginController(QObject):
   # Signals for view updates
-  login_successful = Signal()
+  login_successful = Signal(User)
   login_failed = Signal(str)
   signup_successful = Signal()
   signup_failed = Signal(str)
@@ -33,7 +34,7 @@ class LoginController(QObject):
     try:
       user = self.auth_service.authenticate(email, password)
       if user:
-        self.login_successful.emit()
+        self.login_successful.emit(user)
       else:
         self.login_failed.emit("Invalid email or password")
     except Exception as e:
