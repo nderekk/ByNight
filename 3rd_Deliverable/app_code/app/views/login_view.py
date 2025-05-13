@@ -14,8 +14,6 @@ class LoginView(QWidget):
 
   def __init__(self):
     super().__init__()
-    self.setWindowTitle("ByNight - Login/Signup")
-    self.setFixedSize(360, 480)
     self.init_ui()
 
   def init_ui(self):

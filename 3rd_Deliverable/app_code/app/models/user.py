@@ -3,15 +3,15 @@ from app.models.reservation import Reservation
 
 class User:
   def __init__(
-      self, 
-      id: int,
-      full_name: str,
-      age: int, 
-      role: Role, 
-      phone: int, 
-      email: str, 
-      password: str,
-      reservations: list[Reservation]
+    self, 
+    id: int,
+    full_name: str,
+    age: int, 
+    role: Role, 
+    phone: int, 
+    email: str, 
+    password: str,
+    reservations: list[Reservation]
   ):
     if not isinstance(role, Role):
       raise ValueError(f"Invalid role: {role}")

@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QScrollArea, QFrame, QHBoxLayout
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QScrollArea, QFrame, QHBoxLayout
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
 import sys
@@ -7,8 +7,6 @@ from datetime import datetime
 class CustomerViewReservations(QWidget):
     def __init__(self, upcoming_reservations, past_reservations):
         super().__init__()
-        self.setWindowTitle("Reservations")
-        self.setMinimumSize(400, 600)
         self.upcoming_reservations = upcoming_reservations
         self.past_reservations = past_reservations
         self.setup_ui()
