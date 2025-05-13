@@ -1,4 +1,6 @@
 bynight_venv/
 __pycache__/
 .venv/
+venv/
 ignored/
+tempCodeRunnerFile.py
