@@ -24,12 +24,6 @@ class MainWindow(QMainWindow):
     self.auth_service = AuthService(self.user_repo)
     self.login_controller = LoginController(self.auth_service, self.show_page)
     
-    
-    
-    self.view_res_controller = ViewReservationController()
-    
-    
-     
     # Start with login page
     self.show_page('login_page', self.login_controller)
 
