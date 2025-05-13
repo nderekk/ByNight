@@ -5,18 +5,13 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QFont
 from PySide6.QtCore import Qt, QSize, Signal
+from app.models.club import Club
 
 
 class CustomerHomePage(QWidget):
-    # # Signals for user actions
-    # login_attempted = Signal(str, str)  # email, password
-    # signup_attempted = Signal(str, str, str)  # email, password, user_type
-    # google_login_attempted = Signal()
-    # apple_login_attempted = Signal()
-  
-    def __init__(self):
+    def __init__(self, clubs: list[Club]):
         super().__init__()
-
+        self.clubs = clubs
         main_layout = QVBoxLayout(self)
 
         # --- Top Bar ---
@@ -72,11 +67,10 @@ class CustomerHomePage(QWidget):
         scroll_area.setWidgetResizable(True)
         scroll_content = QWidget()
         scroll_layout = QVBoxLayout(scroll_content)
-
-        # Add 3 club cards
-        for i in range(3):
-            card = self.create_club_card(f"Club {i+1}")
-            scroll_layout.addWidget(card)
+            
+        # Add club cards
+        for club in self.clubs:
+            scroll_layout.addWidget(self.create_club_card(club.name))
 
         scroll_area.setWidget(scroll_content)
         main_layout.addWidget(scroll_area)
@@ -87,7 +81,7 @@ class CustomerHomePage(QWidget):
         layout = QHBoxLayout(card)
 
         # Placeholder for club image
-        image = QLabel("ClubIMG")
+        image = QLabel(club_name)
         image.setMinimumSize(QSize(100, 100))
         image.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         layout.addWidget(image)
