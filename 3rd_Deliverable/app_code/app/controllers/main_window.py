@@ -1,6 +1,4 @@
-from app.controllers.view_res_controller import ViewReservationController
 from app.controllers.login_controller import LoginController
-from app.controllers.home_page_controller import HomePageController
 from app.services.auth_service import AuthService
 from app.data.repositories.user_repository import UserRepository
 from PySide6.QtWidgets import QStackedWidget, QMainWindow

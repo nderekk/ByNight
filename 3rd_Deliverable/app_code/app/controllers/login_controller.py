@@ -33,8 +33,8 @@ class LoginController(QObject):
 
   def handle_login(self, email: str, password: str):
     try:
-      user = self.auth_service.authenticate(email, password)
-      if user:
+      success, user = self.auth_service.authenticate(email, password)
+      if success:
         self.login_successful.emit(user)
       else:
         self.login_failed.emit("Invalid email or password")
@@ -58,8 +58,8 @@ class LoginController(QObject):
   def handle_apple_login(self):
     self.login_failed.emit("Feature Not Yet Implimented")
     
-  def handle_next_page(self):
-    self.home_page_controller = HomePageController(self.show_page)
+  def handle_next_page(self, user: User):
+    self.home_page_controller = HomePageController(user, self.show_page)
     self.show_page('customer_home_page', self.home_page_controller)
 
   def show(self):
