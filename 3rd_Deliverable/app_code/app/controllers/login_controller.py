@@ -1,44 +1,37 @@
 from PySide6.QtCore import QObject, Signal
 from app.services.auth_service import AuthService
 from app.views.login_view import LoginView
+from app.controllers.base_controller import BaseController
+from app.utils.event_bus import EventBus
 
-class LoginController(QObject):
-  # Signals for view updates
-  login_successful = Signal()
-  login_failed = Signal(str)
-  signup_successful = Signal()
-  signup_failed = Signal(str)
-
-  def __init__(self, auth_service: AuthService, show_customer_view_reservations):
+class LoginController(BaseController):
+  def __init__(self):
     super().__init__()
-    self.auth_service = auth_service
     # self.main_window = main_window
-    self.show_customer_view_reservations = show_customer_view_reservations
     self.view = LoginView()
     self.setup_connections()
 
   def setup_connections(self):
+    self.view.continue_btn.clicked.connect(self.handle_login)
+    
     # Connect view signals to controller methods
-    self.view.login_attempted.connect(self.handle_login)
-    self.view.signup_attempted.connect(self.handle_signup)
-    self.view.google_login_attempted.connect(self.handle_google_login)
-    self.view.apple_login_attempted.connect(self.handle_apple_login)
+    # self.view.login_attempted.connect(self.handle_login)
+    # self.view.signup_attempted.connect(self.handle_signup)
+    # self.view.google_login_attempted.connect(self.handle_google_login)
+    # self.view.apple_login_attempted.connect(self.handle_apple_login)
 
-    # Connect controller signals to view methods
-    self.login_successful.connect(self.show_customer_view_reservations)
-    self.login_failed.connect(self.view.show_error)
-    self.signup_successful.connect(self.view.reset)
-    self.signup_failed.connect(self.view.show_error)
+    # # Connect controller signals to view methods
+    # self.login_successful.connect(self.show_customer_view_reservations)
+    # self.login_failed.connect(self.view.show_error)
+    # self.signup_successful.connect(self.view.reset)
+    # self.signup_failed.connect(self.view.show_error)
 
   def handle_login(self, email: str, password: str):
-    try:
-      user = self.auth_service.authenticate(email, password)
-      if user:
-        self.login_successful.emit()
-      else:
-        self.login_failed.emit("Invalid email or password")
-    except Exception as e:
-      self.login_failed.emit(str(e))
+    user = self.auth_service.authenticate(email, password)
+    if user:
+      self.event_bus.publish("login_success", {"page": "next_page"})
+    else:
+      self.event_bus.publish("login_fail", {"page": "next_page"})
 
   def handle_signup(self, email: str, password: str, user_type: str):
     self.login_failed.emit("Feature Not Yet Implimented")

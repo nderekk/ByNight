@@ -2,15 +2,14 @@ from PySide6.QtWidgets import (
   QWidget, QLineEdit, QPushButton, QLabel, 
   QVBoxLayout, QHBoxLayout, QFrame, QMessageBox
 )
+from app.views.base_page import BasePage
 from PySide6.QtGui import QFont, QIcon
 from PySide6.QtCore import Qt, Signal
 
-class LoginView(QWidget):
+class LoginView(BasePage):
   # Signals for user actions
   login_attempted = Signal(str, str)  # email, password
   signup_attempted = Signal(str, str, str)  # email, password, user_type
-  google_login_attempted = Signal()
-  apple_login_attempted = Signal()
 
   def __init__(self):
     super().__init__()

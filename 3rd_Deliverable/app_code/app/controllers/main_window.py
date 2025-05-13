@@ -2,6 +2,7 @@ from app.controllers.view_res_controller import ViewReservationController
 from app.controllers.login_controller import LoginController
 from app.services.auth_service import AuthService
 from app.data.repositories.user_repository import UserRepository
+from app.utils.page_registry import PageRegistry
 from PySide6.QtWidgets import QStackedWidget, QMainWindow, QWidget
 
 class MainWindow(QMainWindow):
@@ -14,8 +15,8 @@ class MainWindow(QMainWindow):
     self.stack = QStackedWidget()
     self.setCentralWidget(self.stack)
     
-    # Initialize pages dictionary
-    self.pages = {}
+    # Initialize pages through registry
+    self.pages = PageRegistry.initialize_pages(Container)
 
     # set up controllers
     self.user_repo = UserRepository()
