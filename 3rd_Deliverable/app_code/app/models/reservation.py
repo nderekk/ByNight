@@ -11,14 +11,16 @@ class Reservation:
     num_of_people: int,
     order: Order,
     date: datetime,
-    club: 'Club',
-    qrcode: 'Qrcode'
+    club: str,
+    qrcode: str,
+    event: str
   ):
     self.id = id
     self.user = user # association
     self.table = table
     self.num_of_people = num_of_people
     self.order = order
-    self.timedate = date
+    self.date = date
     self.club = club
     self.qrcode = qrcode
+    self.event = event
