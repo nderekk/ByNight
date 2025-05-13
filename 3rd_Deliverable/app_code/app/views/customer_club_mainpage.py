@@ -4,23 +4,22 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QPixmap, QCursor
 from PySide6.QtCore import Qt
-import sys
 
 class CustomerClubMainPage(QWidget):
 
     def __init__(self):
-         super().__init__()
-         self.setup_ui()
+        super().__init__()
+        self.setup_ui()
 
     def setup_ui(self):
         main_layout = QVBoxLayout()
 
         # Back Button & Header Image
         header_layout = QHBoxLayout()
-        back_btn = QPushButton("←")
-        back_btn.setFixedSize(30, 30)
-        back_btn.setStyleSheet("font-size: 14pt;")
-        header_layout.addWidget(back_btn)
+        self.back_btn = QPushButton("←")
+        self.back_btn.setFixedSize(30, 30)
+        self.back_btn.setStyleSheet("font-size: 14pt;")
+        header_layout.addWidget(self.back_btn)
         header_layout.addStretch()
         main_layout.addLayout(header_layout)
 
