@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
   def __init__(self):
     super().__init__()
     self.setWindowTitle("ByNight")
-    self.setMinimumSize(360, 480)
+    self.setMinimumSize(360*1.5, 480*1.5)
     
     # Create central widget and stack
     self.stack = QStackedWidget()

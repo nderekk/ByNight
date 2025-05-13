@@ -94,10 +94,10 @@ class CustomerHomePage(QWidget):
 
         # Buttons
         buttons_layout = QVBoxLayout()
-        res_button = QPushButton("Make Reservation")
-        more_button = QPushButton("More Details")
-        buttons_layout.addWidget(res_button)
-        buttons_layout.addWidget(more_button)
+        self.res_button = QPushButton("Make Reservation")
+        self.more_button = QPushButton("More Details")
+        buttons_layout.addWidget(self.res_button)
+        buttons_layout.addWidget(self.more_button)
         layout.addLayout(buttons_layout)
 
         return card
