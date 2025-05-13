@@ -2,6 +2,7 @@ from PySide6.QtCore import QObject, Signal
 from app.services.auth_service import AuthService
 from app.views.login_view import LoginView
 from app.controllers.home_page_controller import HomePageController
+from app.utils.container import Container
 from app.models.user import User
 
 class LoginController(QObject):
@@ -59,7 +60,8 @@ class LoginController(QObject):
     self.login_failed.emit("Feature Not Yet Implimented")
     
   def handle_next_page(self, user: User):
-    self.home_page_controller = HomePageController(user, self.show_page)
+    Container.add_existing_instance(User, user)
+    self.home_page_controller = HomePageController(Container.resolve(User), self.show_page)
     self.show_page('customer_home_page', self.home_page_controller)
 
   def show(self):
