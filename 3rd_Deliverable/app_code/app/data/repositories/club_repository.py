@@ -32,6 +32,9 @@ class ClubRepository:
     def find_by_name(self, club_name: str) -> Optional[Club]:
         return self._clubs.get(club_name)
 
+    def get_all(self) -> Optional[Club]:
+        return self._clubs.values()
+
     # def update(self, user: User) -> User:
     #     """Update an existing user."""
     #     if user.email not in self._reservations:
