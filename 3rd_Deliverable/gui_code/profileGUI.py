@@ -1,9 +1,9 @@
-from PySide6.QtWidgets import (
-    QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout
-)
-from PySide6.QtGui import QPixmap, QPainter, QBrush, QColor
-from PySide6.QtCore import Qt, QRect
 import sys
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
+)
+from PySide6.QtGui import QPainter, QBrush, QColor
+from PySide6.QtCore import Qt, QRect
 
 
 class CircleImage(QLabel):
@@ -31,63 +31,60 @@ class ProfileApp(QWidget):
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignTop)
 
-        # Circular Profile Image Placeholder
+        # Header with Back Button
+        header_layout = QHBoxLayout()
+        back_btn = QPushButton("←")
+        back_btn.setStyleSheet("font-size: 20px; background-color: transparent; border: none;")
+        back_btn.setFixedSize(40, 40)
+        back_btn.clicked.connect(self.on_back_clicked)
+        header_layout.addWidget(back_btn, alignment=Qt.AlignLeft)
+        header_layout.addStretch()
+        layout.addLayout(header_layout)
+
+        # Centered Profile Image
+        profile_layout = QVBoxLayout()
+        profile_layout.setAlignment(Qt.AlignHCenter)
         profile_image = CircleImage(100)
-        layout.addWidget(profile_image, alignment=Qt.AlignHCenter)
-        layout.addSpacing(20)
+        profile_layout.addWidget(profile_image)
+        profile_layout.addSpacing(20)
+        layout.addLayout(profile_layout)
 
-        # Name and Surname
-        name_row = self.create_info_row("name", "surname", "Nick", "Dagkalis")
-        layout.addLayout(name_row)
-
-        # Date of Birth and Email
-        dob_row = self.create_info_row("date of birth", "email", "30/10/2004", "nickdagkalis@gmail.com")
-        layout.addLayout(dob_row)
-
-        # Phone Number (aligned left under email)
-        phone_row = QHBoxLayout()
-        label = QLabel("phone number")
-        label.setStyleSheet("font-weight: bold;")
-        value = QLabel("6911122223")
-        value.setStyleSheet("font-size: 10pt;")
-        phone_row.addWidget(label)
-        phone_row.addSpacing(20)
-        phone_row.addWidget(value)
-        phone_row.addStretch()
-        layout.addLayout(phone_row)
+        # Individual Info Fields (each below the other)
+        layout.addLayout(self.create_info_column("name", "Nick"))
+        layout.addLayout(self.create_info_column("surname", "Dagkalis"))
+        layout.addLayout(self.create_info_column("date of birth", "30/10/2004"))
+        layout.addLayout(self.create_info_column("email", "nickdagkalis@gmail.com"))
+        layout.addLayout(self.create_info_column("phone number", "6911122223"))
 
         layout.addStretch()
 
-        # Button
+        # Work With Us Button
         work_btn = QPushButton("work with us")
-        work_btn.setStyleSheet("padding: 10px 20px; font-size: 11pt; background-color: black; color: white; border-radius: 16px;")
+        work_btn.setStyleSheet(
+            "padding: 10px 20px; font-size: 11pt; background-color: black; color: white; border-radius: 16px;"
+        )
+        work_btn.clicked.connect(self.on_work_with_us_clicked)
         layout.addWidget(work_btn, alignment=Qt.AlignHCenter)
 
         self.setLayout(layout)
 
-    def create_info_row(self, label1, label2, val1, val2):
-        row = QHBoxLayout()
+    def create_info_column(self, label_text, value_text):
+        column = QVBoxLayout()
+        label = QLabel(label_text)
+        label.setStyleSheet("font-weight: bold;")
+        value = QLabel(value_text)
+        value.setStyleSheet("font-size: 10pt;")
+        column.addWidget(label)
+        column.addWidget(value)
+        column.setSpacing(4)
+        return column
 
-        col1 = QVBoxLayout()
-        label1_widget = QLabel(label1)
-        label1_widget.setStyleSheet("font-weight: bold;")
-        val1_widget = QLabel(val1)
-        col1.addWidget(label1_widget)
-        col1.addWidget(val1_widget)
+    def on_back_clicked(self):
+        QMessageBox.information(self, "Back", "Going back to the previous screen.")
+        self.close()
 
-        col2 = QVBoxLayout()
-        label2_widget = QLabel(label2)
-        label2_widget.setStyleSheet("font-weight: bold;")
-        val2_widget = QLabel(val2)
-        col2.addWidget(label2_widget)
-        col2.addWidget(val2_widget)
-
-        row.addLayout(col1)
-        row.addSpacing(30)
-        row.addLayout(col2)
-        row.addStretch()
-
-        return row
+    def on_work_with_us_clicked(self):
+        QMessageBox.information(self, "Work with Us", "Thank you for your interest! We’ll contact you soon.")
 
 
 if __name__ == "__main__":
