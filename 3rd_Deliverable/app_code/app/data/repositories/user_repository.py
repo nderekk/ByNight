@@ -72,11 +72,11 @@ class UserRepository:
                 id=3,
                 full_name="Bob Wilson",
                 age=22,
-                role=Role.STAFF,
+                role=Role.CUSTOMER,
                 phone=5555555555,
-                email="bob@example.com",
-                password="password789",
-                reservations=[]
+                email="john@ceid.gr",
+                password="ceid",
+                reservations=dummy_reservations
             )
         ]
         
