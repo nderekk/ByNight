@@ -30,7 +30,7 @@ class CustomerHomePage(QWidget):
 
         # --- Menu Buttons ---
         menu_bar = QHBoxLayout()
-        self.menuButton = QPushButton("≡")
+        self.menuButton = QPushButton("Work With Us")
         self.menuButton.setFont(QFont("", weight=QFont.Bold))
         self.viewResButton = QPushButton("View Reservations")
         self.profileButton = QPushButton("👤")
