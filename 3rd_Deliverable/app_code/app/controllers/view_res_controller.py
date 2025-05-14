@@ -1,7 +1,7 @@
 from app.utils.container import Container
 from PySide6.QtCore import QObject, Signal
 from app.models.user import User
-from app.views.customer_view_res import CustomerViewReservations
+from app.views.customer_view_Reservations import ReservationApp
 from datetime import datetime
 
 class ViewReservationsController(QObject):
@@ -16,7 +16,7 @@ class ViewReservationsController(QObject):
     # upcoming, past = self.get_dummy_data()
     self.upcoming, self.past = Container.resolve(User).get_reservations()
     self.fomrat_for_card()
-    self.view = CustomerViewReservations(self.upcoming, self.past)
+    self.view = ReservationApp()
     self.setup_connections()
   
   def setup_connections(self):
