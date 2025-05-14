@@ -10,6 +10,7 @@ from app.models.club import Club
 
 class CustomerHomePage(QWidget):
     more_button_clicked=Signal(Club)
+    access_work_with_us=Signal()
     
     def __init__(self, clubs: list[Club]):
         super().__init__()

@@ -7,6 +7,7 @@ from app.models.role import Role
 from app.utils.container import Container
 from app.data.repositories.club_repository import ClubRepository
 from app.models.club import Club
+from app.controllers.work_with_us_controller import WorkWithUsController
 
 class HomePageController(QObject):
   # Signals for view updates
@@ -27,6 +28,7 @@ class HomePageController(QObject):
   def setup_connections(self):
     self.view.viewResButton.clicked.connect(self.hand_view_res)
     self.view.more_button_clicked.connect(self.handle_club_mainpage)
+    self.view.menuButton.clicked.connect(self.access_to_WorkWithUs)
 
 
 
@@ -48,4 +50,11 @@ class HomePageController(QObject):
       self.club_mainpage_controller.set_club(club)
     self.show_page('customer_club_main_page', self.club_mainpage_controller)
     
+  def access_to_WorkWithUs(self):
+    self.view_work_with_us=WorkWithUsController(self.show_page)
+    self.show_page('work_with_us_page', self.view_work_with_us)
+
+
+
+
   
