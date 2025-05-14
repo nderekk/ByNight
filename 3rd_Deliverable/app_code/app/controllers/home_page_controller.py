@@ -29,7 +29,7 @@ class HomePageController(QObject):
     
   def hand_view_res(self):
     if not Container.is_initialized(ViewReservationsController):
-      self.view_res_controller = ViewReservationsController()
+      self.view_res_controller = ViewReservationsController(self.show_page)
       Container.add_existing_instance(ViewReservationsController, self.view_res_controller)
     else:
       self.view_res_controller = Container.resolve(ViewReservationsController)

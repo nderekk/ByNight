@@ -10,9 +10,10 @@ class ViewReservationsController(QObject):
   # signup_successful = Signal()
   # signup_failed = Signal(str)
   
-  def __init__(self):
+  def __init__(self, show_page: callable):
     super().__init__()
     # upcoming, past = self.get_dummy_data()
+    self.show_page = show_page
     self.upcoming, self.past = Container.resolve(User).get_reservations()
     self.fomrat_for_card()
     if not Container.is_initialized(CustomerViewReservations):
