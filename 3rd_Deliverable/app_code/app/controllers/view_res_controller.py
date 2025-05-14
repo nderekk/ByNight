@@ -27,18 +27,5 @@ class ViewReservationsController(QObject):
     self.upcoming = [(r.club, r.date, r.id, r.event) for r in self.upcoming]
     self.past = [(r.club, r.date, r.id, r.event) for r in self.past]
   
-  @staticmethod
-  def get_dummy_data():
-    upcoming = [
-      ("Saint Club", datetime(2025, 5, 30, 0, 30), "123456789", "Kultura"),
-      ("Magenta", datetime(2025, 3, 2, 0, 30), "984313241", "GREEK NIGHT"),
-    ]
-
-    past = [
-      ("Vibe Lounge", datetime(2025, 3, 20, 22, 0), "987654321", "Retro Night"),
-      ("The Garden", datetime(2025, 2, 14, 20, 0), "456789123", "Valentine's Special"),
-    ]
-    return upcoming, past
-  
   def show(self):
     self.view.show() 

@@ -20,3 +20,9 @@ class Container:
   def add_existing_instance(cls, interface: Type, existing_obj: Type):
     if interface not in cls._instances:
       cls._instances[interface] = existing_obj
+      
+  @classmethod
+  def is_initialized(cls, interface: Type):
+    if interface not in cls._instances:
+      return False
+    return True

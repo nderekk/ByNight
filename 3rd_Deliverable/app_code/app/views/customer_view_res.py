@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QScrollArea, QFrame, QHBoxLayout
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
-import sys
 from datetime import datetime
 
 class CustomerViewReservations(QWidget):
