@@ -17,7 +17,7 @@ class UserRepository:
                 table = 'No 26',
                 num_of_people= 4,
                 order= 'Order',
-                date= datetime.now(tz=None),
+                date= datetime(2021, 12, 12),
                 club= 'MAGENTA',
                 qrcode= 'Qrcode',
                 event= 'GREEK NIGHT'
@@ -28,7 +28,7 @@ class UserRepository:
                 table = 'No 12',
                 num_of_people= 2,
                 order= 'Order',
-                date= datetime.now(tz=None),
+                date= datetime(2025, 12, 12),
                 club= 'SAINT',
                 qrcode= 'Qrcode',
                 event= 'Lules culpa'
@@ -39,7 +39,7 @@ class UserRepository:
                 table = 'No 23',
                 num_of_people= 3,
                 order= 'Order',
-                date= datetime.now(tz=None),
+                date= datetime(2020, 1, 1),
                 club= 'OMNIA',
                 qrcode= 'Qrcode',
                 event= 'Trap Night'
