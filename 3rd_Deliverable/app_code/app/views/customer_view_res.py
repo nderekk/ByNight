@@ -19,7 +19,6 @@ class CustomerViewReservations(QWidget):
         back_btn = QPushButton("←")
         back_btn.setFixedSize(30, 30)
         back_btn.setStyleSheet("font-size: 14pt;")
-        back_btn.clicked.connect(self.go_back)
         header_layout.addWidget(back_btn)
         header_layout.addStretch()
         layout.addLayout(header_layout)
@@ -92,8 +91,5 @@ class CustomerViewReservations(QWidget):
 
     def open_event_details(self):
         print("Opening event details...")  # You can replace this with actual logic
-
-    def go_back(self):
-        pass
         
 
