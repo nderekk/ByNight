@@ -57,6 +57,7 @@ class FileUploadField(QWidget):
 
 
 class WorkWithUsPage(QWidget):
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Work With Us")
@@ -69,9 +70,9 @@ class WorkWithUsPage(QWidget):
 
         # Header
         header_layout = QHBoxLayout()
-        back_btn = QPushButton("←")
-        back_btn.setFixedSize(30, 30)
-        back_btn.setStyleSheet("""
+        self.back_btn = QPushButton("←")
+        self.back_btn.setFixedSize(30, 30)
+        self.back_btn.setStyleSheet("""
             QPushButton {
                 font-size: 14pt;
                 background-color: black;
@@ -83,7 +84,7 @@ class WorkWithUsPage(QWidget):
 
         title = QLabel("Work With Us")
         title.setStyleSheet("font-size: 12pt; font-weight: bold;")
-        header_layout.addWidget(back_btn)
+        header_layout.addWidget(self.back_btn)
         header_layout.addWidget(title)
         header_layout.addStretch()
         main_layout.addLayout(header_layout)
