@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit,
-    QPushButton, QFrame, QSizePolicy, QSpacerItem
+    QPushButton, QFrame, QSizePolicy, QSpacerItem, QComboBox
 )
 from PySide6.QtGui import QPixmap, QFont
 from PySide6.QtCore import Qt
@@ -22,16 +22,18 @@ class ReservationUI(QWidget):
 
         # Header
         header_layout = QHBoxLayout()
-        back_label = QLabel("←")
-        back_label.setFont(QFont("Arial", 20))
-        back_label.setStyleSheet("color: white;")
+        back_button = QPushButton("←")
+        back_button.setFont(QFont("Arial", 16))  # Smaller font size
+        back_button.setStyleSheet("color: white;")
+        back_button.setFixedSize(30, 30)  # Make the button smaller
+        back_button.clicked.connect(self.on_back_clicked)
 
         title = QLabel("Make a reservation")
         title.setFont(QFont("Arial", 12, QFont.Bold))
         title.setStyleSheet("color: white;")
         title.setAlignment(Qt.AlignCenter)
 
-        header_layout.addWidget(back_label)
+        header_layout.addWidget(back_button)
         header_layout.addStretch()
         header_layout.addWidget(title)
         header_layout.addStretch()
@@ -89,25 +91,27 @@ class ReservationUI(QWidget):
         guests_layout.addWidget(guest_input)
         card_layout.addLayout(guests_layout)
 
-        # Table Section
+        # Table Section - Dropdown
         table_title = QLabel("☰  Select a table")
         table_title.setFont(QFont("Arial", 11))
         table_title.setStyleSheet("color: white;")
-        table_sub = QLabel("Number and location")
-        table_sub.setFont(QFont("Arial", 9))
-        table_sub.setStyleSheet("color: #bbbbbb;")
+        
+        table_dropdown = QComboBox()
+        table_dropdown.addItems(["Table 1", "Table 2", "Table 3", "Table 4"])
+        
         card_layout.addWidget(table_title)
-        card_layout.addWidget(table_sub)
+        card_layout.addWidget(table_dropdown)
 
-        # Drink Section
+        # Drink Section - Dropdown
         drinks_title = QLabel("☰  Select drinks")
         drinks_title.setFont(QFont("Arial", 11))
         drinks_title.setStyleSheet("color: white;")
-        drinks_sub = QLabel("Number and drink type")
-        drinks_sub.setFont(QFont("Arial", 9))
-        drinks_sub.setStyleSheet("color: #bbbbbb;")
+        
+        drinks_dropdown = QComboBox()
+        drinks_dropdown.addItems(["Drink 1", "Drink 2", "Drink 3", "Drink 4"])
+        
         card_layout.addWidget(drinks_title)
-        card_layout.addWidget(drinks_sub)
+        card_layout.addWidget(drinks_dropdown)
 
         main_layout.addWidget(card)
 
@@ -130,6 +134,9 @@ class ReservationUI(QWidget):
 
         main_layout.addStretch()
         main_layout.addWidget(confirm_btn)
+
+    def on_back_clicked(self):
+        self.close()  # Close the current window when back is clicked
 
 
 if __name__ == "__main__":

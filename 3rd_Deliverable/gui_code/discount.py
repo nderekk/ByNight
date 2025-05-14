@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
     QCheckBox, QSizePolicy, QFrame, QPushButton
 )
 from PySide6.QtGui import QFont, QColor, QPainter, QBrush
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import Qt
 
 
 class CircleAvatar(QLabel):
@@ -37,21 +37,23 @@ class DiscountPage(QWidget):
 
         # --- Header ---
         header = QHBoxLayout()
-        settings_left = QPushButton("⚙")
-        settings_right = QPushButton("⚙")
-        settings_left.setFixedWidth(30)
-        settings_right.setFixedWidth(30)
+        back_button = QPushButton("←")
+        back_button.setFixedWidth(30)
+        back_button.setStyleSheet("font-size: 14pt;")
+        back_button.clicked.connect(self.go_back)
+
         title = QLabel("Discount Tab")
         title.setAlignment(Qt.AlignCenter)
         title.setFont(QFont("", 14, QFont.Bold))
-        date_label = QLabel("9/11")
-        date_label.setStyleSheet("background-color: #eee; border-radius: 10px; padding: 5px;")
-        header.addWidget(settings_left)
+
+        date_label = QLabel("13/5/2025")
+        date_label.setStyleSheet("background-color: #; border-radius: 10px; padding: 5px;")
+
+        header.addWidget(back_button)
         header.addStretch()
         header.addWidget(title)
         header.addStretch()
         header.addWidget(date_label)
-        header.addWidget(settings_right)
         main_layout.addLayout(header)
 
         # --- Divider ---
@@ -74,8 +76,8 @@ class DiscountPage(QWidget):
             ("W", "Johny Black", "25%"),
             ("W", "Johny Red", "20%"),
             ("W", "Johny Gold", "20%"),
-            ("G", "Gordons", "20%+"),
-            ("G", "Bombay", "20%+"),
+            ("G", "Gordons", "20%"),
+            ("G", "Bombay", "20%"),
         ]
 
         for icon, name, discount in drinks:
@@ -100,6 +102,10 @@ class DiscountPage(QWidget):
 
         scroll_area.setWidget(list_widget)
         main_layout.addWidget(scroll_area)
+
+    def go_back(self):
+        # Implement back navigation here, e.g., self.close() or show another screen
+        print("Back button clicked")
 
 
 if __name__ == "__main__":
