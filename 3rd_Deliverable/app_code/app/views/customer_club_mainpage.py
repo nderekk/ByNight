@@ -4,12 +4,16 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QPixmap, QCursor
 from PySide6.QtCore import Qt
+from app.models.club import Club
 
 class CustomerClubMainPage(QWidget):
 
-    def __init__(self):
+    def __init__(self, club: Club):
         super().__init__()
+        self.club=club
+        self.name = QLabel()
         self.setup_ui()
+        
 
     def setup_ui(self):
         main_layout = QVBoxLayout()
@@ -33,9 +37,8 @@ class CustomerClubMainPage(QWidget):
         main_layout.addWidget(club_image)
 
         # Club Name & Address
-        name = QLabel("Kanakari 99")
-        name.setStyleSheet("padding: 10px; font-size: 10pt;")
-        main_layout.addWidget(name)
+        self.name.setStyleSheet("padding: 10px; font-size: 10pt;")
+        main_layout.addWidget(self.name)
 
         # Tabs: Upcoming Events & Photos
         tab_layout = QHBoxLayout()
@@ -91,7 +94,9 @@ class CustomerClubMainPage(QWidget):
         main_layout.addWidget(contact)
 
         self.setLayout(main_layout)
-    
+
+    def set_name(self, club: Club):
+        self.name.setText(club.location)
 
 
 

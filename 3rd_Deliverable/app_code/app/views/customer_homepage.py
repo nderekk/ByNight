@@ -9,6 +9,8 @@ from app.models.club import Club
 
 
 class CustomerHomePage(QWidget):
+    more_button_clicked=Signal(Club)
+    
     def __init__(self, clubs: list[Club]):
         super().__init__()
         self.clubs = clubs
@@ -70,12 +72,12 @@ class CustomerHomePage(QWidget):
             
         # Add club cards
         for club in self.clubs:
-            scroll_layout.addWidget(self.create_club_card(club.name))
+            scroll_layout.addWidget(self.create_club_card(club.name,club))
 
         scroll_area.setWidget(scroll_content)
         main_layout.addWidget(scroll_area)
 
-    def create_club_card(self, club_name):
+    def create_club_card(self, club_name,club):
         card = QFrame()
         card.setFrameShape(QFrame.NoFrame)
         layout = QHBoxLayout(card)
@@ -89,9 +91,11 @@ class CustomerHomePage(QWidget):
         # Buttons
         buttons_layout = QVBoxLayout()
         self.res_button = QPushButton("Make Reservation")
-        self.more_button = QPushButton("More Details")
+        more_button = QPushButton("More Details")
         buttons_layout.addWidget(self.res_button)
-        buttons_layout.addWidget(self.more_button)
+        buttons_layout.addWidget(more_button)
         layout.addLayout(buttons_layout)
+        more_button.clicked.connect(lambda _, c=club: self.more_button_clicked.emit(c))
+
 
         return card

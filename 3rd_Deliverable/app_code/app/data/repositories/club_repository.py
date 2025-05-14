@@ -11,9 +11,9 @@ class ClubRepository:
         
         # Add dummy reservations
         dummy_clubs = [
-            Club(1, "Navona", "Patra", "Alice"),
-            Club(2, "Saint", "Patra", "Bob"),
-            Club(3, "Omnia", "Patra", "Charlie")
+            Club(1, "Navona", "Hfaistou 8", "Alice"),
+            Club(2, "Saint", "Kanakari 99", "Bob"),
+            Club(3, "Omnia", "Gamveta 17", "Charlie")
         ]
         
         # Save dummy Reservations to the repository

@@ -6,10 +6,12 @@ from app.models.user import User
 from app.models.role import Role
 from app.utils.container import Container
 from app.data.repositories.club_repository import ClubRepository
+from app.models.club import Club
 
 class HomePageController(QObject):
   # Signals for view updates
   view_reservations_pushed = Signal()
+  
 
   def __init__(self, user: User, show_page: callable):
     super().__init__()
@@ -24,7 +26,10 @@ class HomePageController(QObject):
 
   def setup_connections(self):
     self.view.viewResButton.clicked.connect(self.hand_view_res)
-    self.view.more_button.clicked.connect(self.handle_club_mainpage)
+    self.view.more_button_clicked.connect(self.handle_club_mainpage)
+
+
+
     
   def hand_view_res(self):
     if not Container.is_initialized(ClubMainPageController):
@@ -34,12 +39,13 @@ class HomePageController(QObject):
       self.view_res_controller = Container.resolve(ViewReservationsController)
     self.show_page('customer_view_res_page', self.view_res_controller)
     
-  def handle_club_mainpage(self):
+  def handle_club_mainpage(self, club: Club):
     if not Container.is_initialized(ClubMainPageController):
-      self.club_mainpage_controller = ClubMainPageController(self.show_page)
+      self.club_mainpage_controller = ClubMainPageController(self.show_page,club)
       Container.add_existing_instance(ClubMainPageController, self.club_mainpage_controller)
     else:
       self.club_mainpage_controller = Container.resolve(ClubMainPageController)
+      self.club_mainpage_controller.set_club(club)
     self.show_page('customer_club_main_page', self.club_mainpage_controller)
     
   
