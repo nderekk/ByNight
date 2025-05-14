@@ -16,10 +16,10 @@ class CustomerViewReservations(QWidget):
 
         # Header with back button
         header_layout = QHBoxLayout()
-        back_btn = QPushButton("←")
-        back_btn.setFixedSize(30, 30)
-        back_btn.setStyleSheet("font-size: 14pt;")
-        header_layout.addWidget(back_btn)
+        self.back_btn = QPushButton("←")
+        self.back_btn.setFixedSize(30, 30)
+        self.back_btn.setStyleSheet("font-size: 14pt;")
+        header_layout.addWidget(self.back_btn)
         header_layout.addStretch()
         layout.addLayout(header_layout)
 
