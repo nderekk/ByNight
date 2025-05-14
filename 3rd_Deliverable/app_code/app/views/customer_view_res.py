@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QScrollArea, QFrame, QHBoxLayout
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QCursor
 from PySide6.QtCore import Qt
 import sys
 from datetime import datetime
@@ -13,6 +13,16 @@ class CustomerViewReservations(QWidget):
 
     def setup_ui(self):
         layout = QVBoxLayout()
+
+        # Header with back button
+        header_layout = QHBoxLayout()
+        back_btn = QPushButton("←")
+        back_btn.setFixedSize(30, 30)
+        back_btn.setStyleSheet("font-size: 14pt;")
+        back_btn.clicked.connect(self.go_back)
+        header_layout.addWidget(back_btn)
+        header_layout.addStretch()
+        layout.addLayout(header_layout)
 
         # Title
         title = QLabel("Reservations")
@@ -45,7 +55,7 @@ class CustomerViewReservations(QWidget):
     def reservation_card(self, club_name: str, date: datetime, id: int, event: str, upcoming=True):
         card = QFrame()
         card.setStyleSheet("background-color: #444; color: white; border-radius: 5px;")
-        card.setFixedHeight(80)
+        card.setFixedHeight(100)
         layout = QHBoxLayout()
 
         # Image (placeholder)
@@ -61,12 +71,29 @@ class CustomerViewReservations(QWidget):
         details_layout.addWidget(QLabel(f"{date.strftime('%d/%m/%Y')} | {date.strftime('%H:%M')} | ID: {id}"))
         details_layout.addWidget(QLabel(f"Event: {event}"))
 
+        # # Clickable event label
+        # event_label = QLabel(f'<a href="#">Event: {event}</a>')
+        # event_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        # event_label.setOpenExternalLinks(False)
+        # event_label.linkActivated.connect(self.open_event_details)
+        # event_label.setStyleSheet("color: #7ec8e3; font-weight: bold;")
+        # details_layout.addWidget(event_label)
+
         layout.addLayout(details_layout)
 
         if not upcoming:
             review_button = QPushButton("+ Add Review")
+            review_button.setCursor(QCursor(Qt.PointingHandCursor))
+            review_button.setStyleSheet("background-color: #666; color: white; border-radius: 4px; padding: 4px 8px;")
             layout.addWidget(review_button)
 
         card.setLayout(layout)
         return card
+
+    def open_event_details(self):
+        print("Opening event details...")  # You can replace this with actual logic
+
+    def go_back(self):
+        pass
+        
 
