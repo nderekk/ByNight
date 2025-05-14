@@ -23,6 +23,6 @@ class Container:
       
   @classmethod
   def is_initialized(cls, interface: Type):
-    if interface not in cls._instances:
-      return False
-    return True
+    if interface in cls._instances:
+      return True
+    return False

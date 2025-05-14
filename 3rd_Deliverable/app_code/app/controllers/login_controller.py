@@ -62,6 +62,7 @@ class LoginController(QObject):
   def handle_next_page(self, user: User):
     Container.add_existing_instance(User, user)
     self.home_page_controller = HomePageController(Container.resolve(User), self.show_page)
+    Container.add_existing_instance(HomePageController, self.home_page_controller)
     self.show_page('customer_home_page', self.home_page_controller)
 
   def show(self):

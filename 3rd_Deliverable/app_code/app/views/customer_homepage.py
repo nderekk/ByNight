@@ -5,18 +5,15 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QFont
 from PySide6.QtCore import Qt, QSize, Signal
+from app.models.club import Club
 
 
 class CustomerHomePage(QWidget):
-    # # Signals for user actions
-    # login_attempted = Signal(str, str)  # email, password
-    # signup_attempted = Signal(str, str, str)  # email, password, user_type
-    # google_login_attempted = Signal()
-    # apple_login_attempted = Signal()
-  
-    def __init__(self):
+    more_button_clicked=Signal(Club)
+    
+    def __init__(self, clubs: list[Club]):
         super().__init__()
-
+        self.clubs = clubs
         main_layout = QVBoxLayout(self)
 
         # --- Top Bar ---
@@ -72,32 +69,33 @@ class CustomerHomePage(QWidget):
         scroll_area.setWidgetResizable(True)
         scroll_content = QWidget()
         scroll_layout = QVBoxLayout(scroll_content)
-
-        # Add 3 club cards
-        for i in range(3):
-            card = self.create_club_card(f"Club {i+1}")
-            scroll_layout.addWidget(card)
+            
+        # Add club cards
+        for club in self.clubs:
+            scroll_layout.addWidget(self.create_club_card(club.name,club))
 
         scroll_area.setWidget(scroll_content)
         main_layout.addWidget(scroll_area)
 
-    def create_club_card(self, club_name):
+    def create_club_card(self, club_name,club):
         card = QFrame()
         card.setFrameShape(QFrame.NoFrame)
         layout = QHBoxLayout(card)
 
         # Placeholder for club image
-        image = QLabel("ClubIMG")
+        image = QLabel(club_name)
         image.setMinimumSize(QSize(100, 100))
         image.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         layout.addWidget(image)
 
         # Buttons
         buttons_layout = QVBoxLayout()
-        res_button = QPushButton("Make Reservation")
+        self.res_button = QPushButton("Make Reservation")
         more_button = QPushButton("More Details")
-        buttons_layout.addWidget(res_button)
+        buttons_layout.addWidget(self.res_button)
         buttons_layout.addWidget(more_button)
         layout.addLayout(buttons_layout)
+        more_button.clicked.connect(lambda _, c=club: self.more_button_clicked.emit(c))
+
 
         return card
