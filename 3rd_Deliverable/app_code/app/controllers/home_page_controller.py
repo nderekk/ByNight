@@ -12,7 +12,6 @@ class HomePageController(QObject):
   # Signals for view updates
   view_reservations_pushed = Signal()
   
-
   def __init__(self, user: User, show_page: callable):
     super().__init__()
     self.user = user
@@ -27,12 +26,9 @@ class HomePageController(QObject):
   def setup_connections(self):
     self.view.viewResButton.clicked.connect(self.hand_view_res)
     self.view.more_button_clicked.connect(self.handle_club_mainpage)
-
-
-
     
   def hand_view_res(self):
-    if not Container.is_initialized(ClubMainPageController):
+    if not Container.is_initialized(ViewReservationsController):
       self.view_res_controller = ViewReservationsController()
       Container.add_existing_instance(ViewReservationsController, self.view_res_controller)
     else:
