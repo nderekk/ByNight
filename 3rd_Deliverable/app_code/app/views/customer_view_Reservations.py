@@ -9,8 +9,8 @@ import sys
 class ReservationApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Reservations")
-        self.setMinimumSize(400, 600)
+        # self.setWindowTitle("Reservations")
+        # self.setMinimumSize(400, 600)
         self.setup_ui()
 
     def setup_ui(self):
