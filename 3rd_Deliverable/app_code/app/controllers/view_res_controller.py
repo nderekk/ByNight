@@ -2,6 +2,7 @@ from app.utils.container import Container
 from PySide6.QtCore import QObject, Signal
 from app.models.user import User
 from app.views.customer_view_res import CustomerViewReservations
+from app.controllers.add_review_controller import AddReviewController
 from app.utils.container import Container
 class ViewReservationsController(QObject):
   # Signals for view updates
@@ -25,12 +26,21 @@ class ViewReservationsController(QObject):
   
   def setup_connections(self):
     # Connect view signals to controller methods
+    self.view.review_button.clicked.connect(self.handle_view_review)
     self.view.back_btn.clicked.connect(self.handle_back)
       
   def fomrat_for_card(self):
     self.upcoming = [(r.club, r.date, r.id, r.event) for r in self.upcoming]
     self.past = [(r.club, r.date, r.id, r.event) for r in self.past]
-    
+  
+  def handle_view_review(self):
+    if not Container.is_initialized(AddReviewController):
+      self.review_button = AddReviewController(self.show_page)
+      Container.add_existing_instance(AddReviewController, self.review_button)
+    else: 
+      self.review_button = Container.resolve(AddReviewController)
+    self.show_page('customer_view_button', self.review_button)
+      
   def handle_back(self):
     from app.controllers.home_page_controller import HomePageController
         

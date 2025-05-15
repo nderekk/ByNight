@@ -80,10 +80,11 @@ class CustomerViewReservations(QWidget):
         layout.addLayout(details_layout)
 
         if not upcoming:
-            review_button = QPushButton("+ Add Review")
-            review_button.setCursor(QCursor(Qt.PointingHandCursor))
-            review_button.setStyleSheet("background-color: #666; color: white; border-radius: 4px; padding: 4px 8px;")
-            layout.addWidget(review_button)
+            self.review_button = QPushButton("+ Add Review")
+            self.review_button.setCursor(QCursor(Qt.PointingHandCursor))
+            self.review_button.setStyleSheet("background-color: #666; color: white; border-radius: 4px; padding: 4px 8px;")
+            layout.addWidget(self.review_button)
+
 
         card.setLayout(layout)
         return card
