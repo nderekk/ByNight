@@ -2,6 +2,8 @@ from sqlalchemy import Column, Integer, String, Enum
 from sqlalchemy.orm import relationship
 from app.data.database import Base
 from app.models.role import Role
+import app.models
+from datetime import datetime
 
 class User(Base):
   __tablename__ = "users"

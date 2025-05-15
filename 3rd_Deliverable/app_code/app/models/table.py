@@ -1,5 +1,18 @@
-class Table:
-  def __init__(self, id: int, capacity: int, min_order: float):
-    self.id = id
-    self.capacity = capacity
-    self.min_order = min_order
+from sqlalchemy import Column, Integer, Float, ForeignKey
+from sqlalchemy.orm import relationship
+from app.data.database import Base
+import app.models
+
+
+class Table(Base):
+  __tablename__ = "tables"
+
+  id = Column(Integer, primary_key=True)
+  capacity = Column(Integer, nullable=False)
+  min_order = Column(Float, nullable=False)
+
+  # Assuming a club owns tables
+  club_id = Column(Integer, ForeignKey("clubs.id"), nullable=False)
+  club = relationship("Club", back_populates="tables")
+
+  reservations = relationship("Reservation", back_populates="table", cascade="all, delete-orphan")
