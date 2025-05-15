@@ -28,8 +28,8 @@ class ViewReservationsController(QObject):
     self.view.back_btn.clicked.connect(self.handle_back)
       
   def fomrat_for_card(self):
-    self.upcoming = [(r.club, r.date, r.id, r.event) for r in self.upcoming]
-    self.past = [(r.club, r.date, r.id, r.event) for r in self.past]
+    self.upcoming = [(r.club.name, r.date, r.id, r.event.title) for r in self.upcoming]
+    self.past = [(r.club.name, r.date, r.id, r.event.title) for r in self.past]
     
   def handle_back(self):
     from app.controllers.home_page_controller import HomePageController

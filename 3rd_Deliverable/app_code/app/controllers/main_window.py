@@ -1,8 +1,6 @@
 from app.controllers.login_controller import LoginController
-from app.controllers.view_res_controller import ViewReservationsController
 from app.services.auth_service import AuthService
 from app.utils.container import Container
-from app.data.repositories.user_repository import UserRepository
 from PySide6.QtWidgets import QStackedWidget, QMainWindow
 from PySide6.QtCore import QObject, Signal
 
@@ -20,8 +18,9 @@ class MainWindow(QMainWindow):
     self.pages = {}
 
     # set up controllers
-    self.auth_service = AuthService(Container.resolve(UserRepository))
-    self.login_controller = LoginController(self.auth_service, self.show_page)
+    Container.register(AuthService, AuthService)
+    self.auth_service = Container.resolve(AuthService)
+    self.login_controller = LoginController(self.show_page)
     
     # self.view_res = ViewReservationsController()
     # Start with login page

@@ -5,7 +5,6 @@ from app.controllers.club_mainpage_controller import ClubMainPageController
 from app.models.user import User
 from app.models.role import Role
 from app.utils.container import Container
-from app.data.repositories.club_repository import ClubRepository
 from app.models.club import Club
 
 class HomePageController(QObject):
@@ -15,7 +14,7 @@ class HomePageController(QObject):
   def __init__(self, user: User, show_page: callable):
     super().__init__()
     self.user = user
-    self.clubs = Container.resolve(ClubRepository).get_all()
+    self.clubs = Club.get_clubs_all()
     self.show_page = show_page
     if self.user.role == Role.CUSTOMER:
       self.view = CustomerHomePage(self.clubs)

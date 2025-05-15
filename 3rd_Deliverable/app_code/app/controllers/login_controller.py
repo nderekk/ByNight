@@ -12,9 +12,9 @@ class LoginController(QObject):
   signup_successful = Signal()
   signup_failed = Signal(str)
 
-  def __init__(self, auth_service: AuthService, show_page):
+  def __init__(self, show_page):
     super().__init__()
-    self.auth_service = auth_service
+    self.auth_service = Container.resolve(AuthService)
     self.show_page = show_page
     self.view = LoginView()
     self.setup_connections()

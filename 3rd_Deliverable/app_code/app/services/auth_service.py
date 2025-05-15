@@ -1,38 +1,36 @@
 import hashlib
 from typing import Optional, Tuple
 from app.models.user import User
-from app.data.repositories.user_repository import UserRepository
+from app.utils.container import Container
+from app.services.db_session import DatabaseSession
 
 class AuthService:
-    def __init__(self, user_repository: UserRepository):
-        self.user_repository = user_repository
+    def __init__(self):
+        self.session = Container.resolve(DatabaseSession)
 
-    def authenticate(self, email: str, password: str) -> Tuple[bool, Optional[User]]:
+    def authenticate(self, mail: str, password: str) -> Tuple[bool, Optional[User]]:
         """Authenticate a user with email and password.
         
         Returns:
             Tuple[bool, Optional[User]]: (success, user) where success is True if authentication
             was successful, and user is the authenticated user if successful, None otherwise.
         """
-        user = self.user_repository.find_by_email(email)
+        user = self.session.query(User).filter_by(email=mail).first()
         if user and user.verify_password(password):
             return True, user
         return False, None
 
     def register_user(self, user: User):
         """Register a new user"""
-        pass
+        self.session.add(user)
+        self.session.commit()
         # # Hash the password before storing
         # user._password = self._hash_password(user._password)
         # self.user_repository.save(user)
 
-    def user_exists(self, email: str) -> bool:
+    def user_exists(self, mail: str) -> bool:
         """Check if a user with the given email exists"""
-        return self.user_repository.find_by_email(email) is not None
-
-    def get_next_user_id(self) -> int:
-        """Get the next available user ID"""
-        return self.user_repository.get_next_id()
+        return self.session.query(User).filter_by(email=mail).first() is not None
 
     def _hash_password(self, password: str) -> str:
         return password
