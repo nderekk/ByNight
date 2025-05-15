@@ -1,99 +1,106 @@
-from PySide6.QtWidgets import (
-    QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout,
-    QFileDialog, QFrame
-)
-from PySide6.QtCore import Qt
 import sys
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton,
+    QComboBox, QScrollArea, QFrame, QSizePolicy
+)
+from PySide6.QtGui import QFont
+from PySide6.QtCore import Qt, QSize
 
 
-class FileUploadField(QWidget):
-    def __init__(self, label_text):
-        super().__init__()
-        layout = QHBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-
-        label = QLabel(label_text)
-        label.setStyleSheet("font-size: 9pt;")
-
-        self.button = QPushButton("Input File")
-        self.button.setStyleSheet("padding: 4px; font-size: 9pt; background-color: #e0dfe6;")
-
-        self.remove_btn = QPushButton("✕")
-        self.remove_btn.setFixedSize(24, 24)
-        self.remove_btn.setStyleSheet("font-size: 10pt; background: none;")
-
-        layout.addWidget(label)
-        layout.addStretch()
-        layout.addWidget(self.button)
-        layout.addWidget(self.remove_btn)
-        self.setLayout(layout)
-
-
-class WorkWithUsApp(QWidget):
+class MainUI(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Work With Us")
-        self.setMinimumSize(360, 640)
-        self.setup_ui()
+        self.setWindowTitle("Club Finder")
+        self.resize(500, 650)
 
-    def setup_ui(self):
-        main_layout = QVBoxLayout()
+        main_layout = QVBoxLayout(self)
 
-        # Header
-        header_layout = QHBoxLayout()
-        back_btn = QPushButton("←")
-        back_btn.setFixedSize(30, 30)
-        back_btn.setStyleSheet("font-size: 14pt;")
-        title = QLabel("Work With Us")
-        title.setStyleSheet("font-size: 12pt; font-weight: bold;")
-        header_layout.addWidget(back_btn)
-        header_layout.addWidget(title)
-        header_layout.addStretch()
-        main_layout.addLayout(header_layout)
+        # --- Top Bar ---
+        top_bar = QHBoxLayout()
+        self.backButton = QPushButton("←")
+        self.searchLineEdit = QLineEdit()
+        self.searchLineEdit.setPlaceholderText("Search")
+        top_bar.addWidget(self.backButton)
+        top_bar.addWidget(self.searchLineEdit)
+        main_layout.addLayout(top_bar)
 
-        # Tab underline (simulated)
-        underline = QFrame()
-        underline.setFrameShape(QFrame.HLine)
-        underline.setFrameShadow(QFrame.Sunken)
-        underline.setStyleSheet("margin-top: -10px; margin-bottom: 10px;")
-        main_layout.addWidget(underline)
+        # --- Menu Buttons ---
+        menu_bar = QHBoxLayout()
+        self.menuButton = QPushButton("≡")
+        self.menuButton.setFont(QFont("", weight=QFont.Bold))
+        self.viewResButton = QPushButton("View Reservations")
+        self.profileButton = QPushButton("👤")
+        menu_bar.addWidget(self.menuButton)
+        menu_bar.addWidget(self.viewResButton)
+        menu_bar.addWidget(self.profileButton)
+        main_layout.addLayout(menu_bar)
 
-        # Greek Title
-        greek_title = QLabel("Αίτηση υποβολής")
-        greek_title.setStyleSheet("font-size: 12pt; font-weight: bold;")
-        greek_title.setAlignment(Qt.AlignCenter)
-        main_layout.addWidget(greek_title)
+        # --- Dropdowns ---
+        filter_layout = QVBoxLayout()
+        self.locationLabel = QLabel("Location")
+        self.locationDropdown = QComboBox()
+        self.locationDropdown.addItems(["Athens", "Patras"])
+        filter_layout.addWidget(self.locationLabel)
+        filter_layout.addWidget(self.locationDropdown)
 
-        # Upload fields
-        upload_fields = [
-            "ΑΦΜ",
-            "ΚΑΔ",
-            "Επωνυμία",
-            "Άδεια Λειτουργίας"
-        ]
+        self.musicLabel = QLabel("Music")
+        self.musicDropdown = QComboBox()
+        self.musicDropdown.addItems(["Rock", "Rap/Trap", "Pop", "Rnb"])
+        filter_layout.addWidget(self.musicLabel)
+        filter_layout.addWidget(self.musicDropdown)
 
-        for field in upload_fields:
-            field_widget = FileUploadField(field)
-            field_widget.setStyleSheet("background-color: #eae6ef; padding: 8px; border: 1px solid gray;")
-            main_layout.addWidget(field_widget)
+        self.eventLabel = QLabel("Event")
+        self.eventDropdown = QComboBox()
+        self.eventDropdown.addItems(["Kultura", "Lules Culpa"])
+        filter_layout.addWidget(self.eventLabel)
+        filter_layout.addWidget(self.eventDropdown)
 
-        main_layout.addStretch()
+        main_layout.addLayout(filter_layout)
 
-        # Submit Button
-        submit_btn = QPushButton("✓ Υποβολής")
-        submit_btn.setStyleSheet("padding: 10px; font-size: 11pt; background-color: #c8b8d7;")
-        submit_btn.setFixedWidth(120)
-        submit_btn.setFixedHeight(40)
-        submit_layout = QHBoxLayout()
-        submit_layout.addStretch()
-        submit_layout.addWidget(submit_btn)
-        main_layout.addLayout(submit_layout)
+        # --- Recommended Clubs Label ---
+        self.recClubsText = QLabel("Recommended Clubs")
+        self.recClubsText.setFont(QFont("", italic=True))
+        self.recClubsText.setAlignment(Qt.AlignCenter)
+        main_layout.addWidget(self.recClubsText)
 
-        self.setLayout(main_layout)
+        # --- Scroll Area with Club Cards ---
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_content = QWidget()
+        scroll_layout = QVBoxLayout(scroll_content)
+
+        # Add 3 club cards
+        for i in range(3):
+            card = self.create_club_card(f"Club {i+1}")
+            scroll_layout.addWidget(card)
+
+        scroll_area.setWidget(scroll_content)
+        main_layout.addWidget(scroll_area)
+
+    def create_club_card(self, club_name):
+        card = QFrame()
+        card.setFrameShape(QFrame.NoFrame)
+        layout = QHBoxLayout(card)
+
+        # Placeholder for club image
+        image = QLabel("ClubIMG")
+        image.setMinimumSize(QSize(100, 100))
+        image.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        layout.addWidget(image)
+
+        # Buttons
+        buttons_layout = QVBoxLayout()
+        res_button = QPushButton("Make Reservation")
+        more_button = QPushButton("More Details")
+        buttons_layout.addWidget(res_button)
+        buttons_layout.addWidget(more_button)
+        layout.addLayout(buttons_layout)
+
+        return card
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = WorkWithUsApp()
+    window = MainUI()
     window.show()
     sys.exit(app.exec())

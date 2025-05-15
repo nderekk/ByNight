@@ -72,7 +72,7 @@ class ReservationUI(QWidget):
         section_title.setStyleSheet("color: white;")
         card_layout.addWidget(section_title)
 
-        # Guests (Removed the checkbox)
+        # Guests
         guests_layout = QVBoxLayout()
         guest_input = QLineEdit()
         guest_input.setPlaceholderText("Insert Number of Guests")
@@ -136,7 +136,7 @@ class ReservationUI(QWidget):
         main_layout.addWidget(confirm_btn)
 
     def on_back_clicked(self):
-        self.close()  # Close the current window when back is clicked
+        self.close()  # Close the current window
 
 
 if __name__ == "__main__":
