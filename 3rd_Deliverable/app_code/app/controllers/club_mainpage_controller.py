@@ -28,5 +28,6 @@ class ClubMainPageController(QObject):
 
     def handle_back(self):
         from app.controllers.home_page_controller import HomePageController
+        
         self.home_page_controller = Container.resolve(HomePageController)
         self.show_page('customer_home_page', self.home_page_controller)
