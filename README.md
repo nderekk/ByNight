@@ -44,7 +44,7 @@ ByNight
 
 - **Language**: Python 3.x
 - **GUI Framework**: PySide6
-- **Database**: MySQL (NOT YET)
+- **Database**: SQLite
 - **Testing**: pytest
 
 ## Getting Started
