@@ -51,8 +51,13 @@ class HomePageController(QObject):
     self.show_page('customer_club_main_page', self.club_mainpage_controller)
     
   def access_to_WorkWithUs(self):
-    self.view_work_with_us=WorkWithUsController(self.show_page)
+    if not Container.is_initialized(WorkWithUsController):
+      self.view_work_with_us=WorkWithUsController(self.show_page)
+      Container.add_existing_instance(WorkWithUsController, self.view_work_with_us)
+    else:
+      self.view_work_with_us=Container.resolve(WorkWithUsController)
     self.show_page('work_with_us_page', self.view_work_with_us)
+
 
 
 

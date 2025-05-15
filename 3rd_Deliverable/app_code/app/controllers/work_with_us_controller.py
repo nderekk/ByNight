@@ -3,8 +3,13 @@ from app.utils.container import Container
 class WorkWithUsController():
     def __init__(self, show_page: callable):
         super().__init__()
+        if not Container.is_initialized(WorkWithUsPage):
+            self.view = WorkWithUsPage()
+            Container.add_existing_instance(WorkWithUsPage, self.view)
+        else:
+            self.view = Container.resolve(WorkWithUsPage)
+            
         self.show_page=show_page
-        self.view=WorkWithUsPage()
         self.setup_connections()
 
 
