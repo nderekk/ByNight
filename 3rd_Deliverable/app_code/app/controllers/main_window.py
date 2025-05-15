@@ -1,6 +1,8 @@
 from app.controllers.login_controller import LoginController
 from app.services.auth_service import AuthService
 from app.utils.container import Container
+from app.data.database import SessionLocal
+from app.services.db_session import DatabaseSession
 from PySide6.QtWidgets import QStackedWidget, QMainWindow
 from PySide6.QtCore import QObject, Signal
 
@@ -13,6 +15,9 @@ class MainWindow(QMainWindow):
     # Create central widget and stack
     self.stack = QStackedWidget()
     self.setCentralWidget(self.stack)
+    
+    self.session = DatabaseSession(SessionLocal)
+    Container.register(DatabaseSession, self.session.get_session)
     
     # Initialize pages dictionary
     self.pages = {}
@@ -33,6 +38,11 @@ class MainWindow(QMainWindow):
       self.stack.addWidget(self.pages[page_name])
     self.stack.setCurrentWidget(self.pages[page_name])
 
+  def closeEvent(self, event):
+    print("🛑 Closing app — cleaning up session.")
+    self.session.close()
+    super().closeEvent(event)
+    
   # def show_login(self):
   #   if 'login_page' not in self.pages:
   #     self.login_page = self.login_controller.view
