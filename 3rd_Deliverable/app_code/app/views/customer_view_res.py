@@ -4,7 +4,7 @@ from PySide6.QtCore import Qt
 from datetime import datetime
 
 class CustomerViewReservations(QWidget):
-    def __init__(self, upcoming_reservations, past_reservations):
+    def __init__(self, upcoming_reservations: str, past_reservations: str):
         super().__init__()
         self.upcoming_reservations = upcoming_reservations
         self.past_reservations = past_reservations
