@@ -8,7 +8,7 @@ from PySide6.QtCore import Qt
 
 
 class ReservationCard(QFrame):
-    def __init__(self, table_no, reserved_by, event, ID, time, people, order, cost):
+    def __init__(self):  #, table_no, reserved_by, event, ID, time, people, order, cost):
         super().__init__()
         self.setStyleSheet("""
             QFrame {
@@ -20,25 +20,25 @@ class ReservationCard(QFrame):
                 font-size: 14px;
             }
         """)
-        self.table_no = table_no
-        self.reserved_by = reserved_by
-        self.event = event
-        self.ID = ID
-        self.time = time
-        self.people = people
-        self.order = order
-        self.cost = cost
+        # self.table_no = table_no
+        # self.reserved_by = reserved_by
+        # self.event = event
+        # self.ID = ID
+        # self.time = time
+        # self.people = people
+        # self.order = order
+        # self.cost = cost
 
         layout = QVBoxLayout()
         layout.setContentsMargins(15, 10, 15, 10)
         layout.setSpacing(5)
 
         # Create labels with word wrap
-        label1 = QLabel(f"<b>Table No: {table_no}</b>")
-        label2 = QLabel(f"Reserved by: <b>{reserved_by}</b>")
-        label3 = QLabel(f"Event: {event} | ID: {ID} | {time}")
-        label4 = QLabel(f"People: {people} | Order: {order}")
-        label5 = QLabel(f"<b>Cost: {cost}</b>")
+        label1 = QLabel(f"<b>Table No: {1}</b>")
+        label2 = QLabel(f"Reserved by: <b>{'Spyros Sioutas'}</b>")
+        label3 = QLabel(f"Event: {'Koultoura'} | ID: {2} | {12}")
+        label4 = QLabel(f"People: {5} | Order: {2}")
+        label5 = QLabel(f"<b>Cost: {120}</b>")
 
         for label in (label1, label2, label3, label4, label5):
             label.setWordWrap(True)
@@ -102,16 +102,12 @@ class MainWindow(QMainWindow):
         # Sample sections and cards
         content_layout.addWidget(QLabel("<b>Sunday (Today)</b>"))
         for _ in range(2):
-            content_layout.addWidget(ReservationCard(
-                "4", "Elmos Stauridis", "Kultura", "123456789", "00:30", "4", "Grey Goose Vodka x1", "$120"
-            ))
+            content_layout.addWidget(ReservationCard())
 
         content_layout.addSpacing(20)
         content_layout.addWidget(QLabel("<b>Monday</b>"))
         for _ in range(2):
-            content_layout.addWidget(ReservationCard(
-                "4", "Elmos Stauridis", "Kultura", "123456789", "00:30", "4", "Grey Goose Vodka x1", "$120"
-            ))
+            content_layout.addWidget(ReservationCard())
 
         scroll.setWidget(content_widget)
         main_layout.addWidget(scroll)
