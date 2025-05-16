@@ -15,10 +15,7 @@ class HomePageController(QObject):
     self.clubs = Club.get_clubs_all()
     self.filters = Club.get_club_filters()
     self.show_page = show_page
-    if self.user.role == Role.CUSTOMER:
-      self.view = CustomerHomePage(clubs=self.clubs, filters=self.filters)
-    else:
-      print("KANE TO GUI TBOY")
+    self.view = CustomerHomePage(clubs=self.clubs, filters=self.filters)
     self.setup_connections()
 
   def setup_connections(self):
