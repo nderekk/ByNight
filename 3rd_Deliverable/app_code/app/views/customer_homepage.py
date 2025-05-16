@@ -1,4 +1,3 @@
-import sys
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton,
     QComboBox, QScrollArea, QFrame, QSizePolicy
@@ -11,7 +10,7 @@ from app.models.club import Club
 class CustomerHomePage(QWidget):
     more_button_clicked=Signal(Club)
     
-    def __init__(self, clubs: list[Club]):
+    def __init__(self, clubs: list[Club], filters: dict[str: list[str]]):
         super().__init__()
         self.clubs = clubs
         main_layout = QVBoxLayout(self)
@@ -38,21 +37,24 @@ class CustomerHomePage(QWidget):
 
         # --- Dropdowns ---
         filter_layout = QVBoxLayout()
-        self.locationLabel = QLabel("Location")
-        self.locationDropdown = QComboBox()
-        self.locationDropdown.addItems(["Athens", "Patras"])
-        filter_layout.addWidget(self.locationLabel)
-        filter_layout.addWidget(self.locationDropdown)
+        self.addressLabel = QLabel("address")
+        self.addressDropdown = QComboBox()
+        self.addressDropdown.addItem("Any")
+        self.addressDropdown.addItems(filters["location"])
+        filter_layout.addWidget(self.addressLabel)
+        filter_layout.addWidget(self.addressDropdown)
 
         self.musicLabel = QLabel("Music")
         self.musicDropdown = QComboBox()
-        self.musicDropdown.addItems(["Rock", "Rap/Trap", "Pop", "Rnb"])
+        self.musicDropdown.addItem("Any")
+        self.musicDropdown.addItems(filters["music"])
         filter_layout.addWidget(self.musicLabel)
         filter_layout.addWidget(self.musicDropdown)
 
         self.eventLabel = QLabel("Event")
         self.eventDropdown = QComboBox()
-        self.eventDropdown.addItems(["Kultura", "Lules Culpa"])
+        self.eventDropdown.addItem("Any")
+        self.eventDropdown.addItems(filters["event"])
         filter_layout.addWidget(self.eventLabel)
         filter_layout.addWidget(self.eventDropdown)
 
@@ -96,6 +98,5 @@ class CustomerHomePage(QWidget):
         buttons_layout.addWidget(more_button)
         layout.addLayout(buttons_layout)
         more_button.clicked.connect(lambda _, c=club: self.more_button_clicked.emit(c))
-
 
         return card
