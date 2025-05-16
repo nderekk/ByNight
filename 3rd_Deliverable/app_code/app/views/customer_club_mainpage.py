@@ -96,7 +96,7 @@ class CustomerClubMainPage(QWidget):
         self.setLayout(main_layout)
 
     def set_name(self, club: Club):
-        self.name.setText(club.location)
+        self.name.setText(club.address)
 
 
 
