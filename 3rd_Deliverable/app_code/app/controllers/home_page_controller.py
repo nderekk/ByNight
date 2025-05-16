@@ -2,10 +2,8 @@ from PySide6.QtCore import QObject, Signal
 from app.views.customer_homepage import CustomerHomePage
 from app.controllers.view_res_controller import ViewReservationsController
 from app.controllers.club_mainpage_controller import ClubMainPageController
-from app.models.user import User
-from app.models.role import Role
+from app.models import User, Role, Club
 from app.utils.container import Container
-from app.models.club import Club
 
 class HomePageController(QObject):
   # Signals for view updates
@@ -15,9 +13,10 @@ class HomePageController(QObject):
     super().__init__()
     self.user = user
     self.clubs = Club.get_clubs_all()
+    self.filters = Club.get_club_filters()
     self.show_page = show_page
     if self.user.role == Role.CUSTOMER:
-      self.view = CustomerHomePage(self.clubs)
+      self.view = CustomerHomePage(clubs=self.clubs, filters=self.filters)
     else:
       print("KANE TO GUI TBOY")
     self.setup_connections()
@@ -25,6 +24,9 @@ class HomePageController(QObject):
   def setup_connections(self):
     self.view.viewResButton.clicked.connect(self.hand_view_res)
     self.view.more_button_clicked.connect(self.handle_club_mainpage)
+    self.view.addressDropdown.currentTextChanged.connect(self.apply_filters)
+    self.view.musicDropdown.currentTextChanged.connect(self.apply_filters)
+    self.view.eventDropdown.currentTextChanged.connect(self.apply_filters)
     
   def hand_view_res(self):
     if not Container.is_initialized(ViewReservationsController):
@@ -42,5 +44,19 @@ class HomePageController(QObject):
       self.club_mainpage_controller = Container.resolve(ClubMainPageController)
       self.club_mainpage_controller.set_club(club)
     self.show_page('customer_club_main_page', self.club_mainpage_controller)
+    
+  def apply_filters(self):
+    address_filter = self.view.addressDropdown.currentText()
+    music_filter = self.view.musicDropdown.currentText()
+    event_filter = self.view.eventDropdown.currentText()
+    
+    filtered_clubs = self.clubs
+    
+    if address_filter != "Any":
+      filtered_clubs = [club for club in filtered_clubs if club.location == address_filter]
+    if music_filter != "Any":
+      filtered_clubs = [club for club in filtered_clubs if any(event.music == music_filter for event in club.events)]
+    if event_filter != "Any":
+      filtered_clubs = [club for club in filtered_clubs if any(event.title == event_filter for event in club.events)]
     
   
