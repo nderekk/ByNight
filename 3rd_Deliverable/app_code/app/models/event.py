@@ -9,6 +9,7 @@ class Event(Base):
   id = Column(Integer, primary_key=True)
   title = Column(String, nullable=False)
   description = Column(String)
+  music = Column(String)
   date = Column(Date, nullable=False)
   time = Column(Time, nullable=False)
   
