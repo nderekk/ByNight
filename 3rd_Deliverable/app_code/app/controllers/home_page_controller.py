@@ -27,6 +27,7 @@ class HomePageController(QObject):
     self.view.addressDropdown.currentTextChanged.connect(self.apply_filters)
     self.view.musicDropdown.currentTextChanged.connect(self.apply_filters)
     self.view.eventDropdown.currentTextChanged.connect(self.apply_filters)
+    self.view.searchLineEdit.textChanged.connect(self.apply_filters)
     
   def hand_view_res(self):
     if not Container.is_initialized(ViewReservationsController):
@@ -49,14 +50,12 @@ class HomePageController(QObject):
     address_filter = self.view.addressDropdown.currentText()
     music_filter = self.view.musicDropdown.currentText()
     event_filter = self.view.eventDropdown.currentText()
+    search_text = self.view.searchLineEdit.text().lower()
     
-    filtered_clubs = self.clubs
+    self.filtered_clubs = Club.get_filtered_clubs(address_filter, music_filter, event_filter)
+    if search_text:
+      self.filtered_clubs = [club for club in self.filtered_clubs if search_text in club.name.lower()]
     
-    if address_filter != "Any":
-      filtered_clubs = [club for club in filtered_clubs if club.location == address_filter]
-    if music_filter != "Any":
-      filtered_clubs = [club for club in filtered_clubs if any(event.music == music_filter for event in club.events)]
-    if event_filter != "Any":
-      filtered_clubs = [club for club in filtered_clubs if any(event.title == event_filter for event in club.events)]
+    self.view.update_club_display(self.filtered_clubs)
     
   
