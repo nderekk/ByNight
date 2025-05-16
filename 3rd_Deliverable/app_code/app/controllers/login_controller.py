@@ -1,9 +1,9 @@
 from PySide6.QtCore import QObject, Signal
 from app.services.auth_service import AuthService
-from app.views.login_view import LoginView
-from app.controllers.home_page_controller import HomePageController
+from app.views import LoginView
+from app.controllers import HomePageController
 from app.utils.container import Container
-from app.models.user import User
+from app.models import User
 
 class LoginController(QObject):
   # Signals for view updates

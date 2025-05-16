@@ -1,8 +1,9 @@
 from app.utils.container import Container
 from PySide6.QtCore import QObject, Signal
-from app.models.user import User
-from app.views.customer_view_res import CustomerViewReservations
+from app.models import User
+from app.views import CustomerViewReservations
 from app.utils.container import Container
+
 class ViewReservationsController(QObject):
   # Signals for view updates
   # login_successful = Signal()
