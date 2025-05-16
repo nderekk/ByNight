@@ -2,17 +2,21 @@ from app.data.database import SessionLocal
 from app.models import Club, User, Event, Reservation, Order, Table, Role
 from datetime import datetime, date, time
 
-# to run: *from root* PYTHONPATH=. python app/scripts/seed_tables.py
+# WINDOWS
+# $env:PYTHONPATH = "."
+# python app/scripts/seed_tables.py
+# UNIX:
+# PYTHONPATH=. python app/scripts/seed_tables.py
 def seed():
   session = SessionLocal()
 
   try:
     # 1. Create Club
     dummy_clubs = [
-            Club(name="Navona", location="Hfaistou 8", manager="Alice"),
-            Club(name="Saint", location="Kanakari 99", manager="Bob"),
-            Club(name="Omnia", location="Gamveta 17", manager="Charlie"),
-            Club(name="Marquee", location="Kalampakistan", manager="Toulas")
+            Club(name="Navona", address="Hfaistou 8", location="Patra", manager="Alice"),
+            Club(name="Saint", address="Kanakari 99", location="Patra", manager="Bob"),
+            Club(name="Omnia", address="Gamveta 17", location="Patra", manager="Charlie"),
+            Club(name="Marquee", address="Kalampakistan", location="Kalampaka", manager="Toulas")
     ]
     session.add_all(dummy_clubs)
     # (session.add(c) for c in dummy_clubs)
@@ -29,14 +33,25 @@ def seed():
     session.add(user)
 
     # 3. Create Event
-    event = Event(
+    events = [
+      Event(
       title="Trap Night",
       description="DJ Marinos",
+      music="Trap",
       date=date(2025, 6, 1),
       time=time(22, 0),
       club=dummy_clubs[3]
-    )
-    session.add(event)
+      ),
+      Event(
+      title="Kultura",
+      description="Gxhan",
+      music="Hip-Hop/Rap",
+      date=date(2025, 7, 1),
+      time=time(23, 0),
+      club=dummy_clubs[1]
+      ),
+    ]
+    session.add_all(events)
 
     # 4. Create Table
     table = Table(
@@ -65,7 +80,7 @@ def seed():
                 date=datetime(2026, 1, 1, 22, 0),
                 club= dummy_clubs[3],
                 qrcode= 'Qrcode',
-                event= event
+                event= events[0]
             ),
             Reservation(
                 user= user,
@@ -75,7 +90,7 @@ def seed():
                 date=datetime(2024, 6, 1, 22, 0),
                 club= dummy_clubs[0],
                 qrcode= 'Qrcode',
-                event= event
+                event= events[1]
             ),
             Reservation(
                 user= user,
@@ -85,7 +100,7 @@ def seed():
                 date=datetime(2025, 6, 1, 22, 0),
                 club= dummy_clubs[2],
                 qrcode= 'Qrcode',
-                event= event
+                event= events[0]
             )
     ]
     session.add_all(dummy_reservations)
