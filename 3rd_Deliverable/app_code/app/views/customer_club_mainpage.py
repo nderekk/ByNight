@@ -75,13 +75,13 @@ class CustomerClubMainPage(QWidget):
         btn_event_info.setStyleSheet("padding: 8px; font-size: 11pt; background-color: #333; color: white; border-radius: 8px;")
         btn_event_info.setFixedWidth(120)
 
-        btn_reserve = QPushButton("Reservation")
-        btn_reserve.setStyleSheet("padding: 10px; font-size: 12pt; background-color: #111; color: white; border-radius: 8px;")
-        btn_reserve.setFixedWidth(180)
+        self.btn_reserve = QPushButton("Reservation")
+        self.btn_reserve.setStyleSheet("padding: 10px; font-size: 12pt; background-color: #111; color: white; border-radius: 8px;")
+        self.btn_reserve.setFixedWidth(180)
 
         main_layout.addWidget(btn_event_info, alignment=Qt.AlignHCenter)
         main_layout.addSpacing(5)
-        main_layout.addWidget(btn_reserve, alignment=Qt.AlignHCenter)
+        main_layout.addWidget(self.btn_reserve, alignment=Qt.AlignHCenter)
 
         # Spacer
         main_layout.addStretch()

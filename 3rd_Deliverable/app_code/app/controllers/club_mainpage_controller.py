@@ -25,9 +25,25 @@ class ClubMainPageController(QObject):
 
     def setup_connections(self):
         self.view.back_btn.clicked.connect(self.handle_back)
+        self.view.btn_reserve.clicked.connect(lambda: self.handle_make_res(self.club))
+
 
     def handle_back(self):
         from app.controllers.home_page_controller import HomePageController
         
         self.home_page_controller = Container.resolve(HomePageController)
         self.show_page('customer_home_page', self.home_page_controller)
+
+
+    def handle_make_res(self,club):
+        from app.controllers.make_reservation_controller import MakeReservationController
+
+        if not Container.is_initialized(MakeReservationController):
+         self.make_res_controller =MakeReservationController(self.show_page,club)
+         Container.add_existing_instance(MakeReservationController, self.make_res_controller)
+        else:
+         self.make_res_controller = Container.resolve(MakeReservationController)
+         self.make_res_controller.set_club(club)
+        self.show_page('customer_club_main_page', self.make_res_controller)
+
+

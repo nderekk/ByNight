@@ -8,13 +8,7 @@ class MakeReservationController(QObject):
     def __init__(self, show_page: callable, club: Club):
         super().__init__()
         self.club = club
-
-        if not Container.is_initialized(MakeReservationPage):
-            self.view = MakeReservationPage(club)
-            Container.add_existing_instance(MakeReservationPage, self.view)
-        else:
-            self.view = Container.resolve(MakeReservationPage)
-
+        self.view=MakeReservationPage(club)
         self.view.set_name(club)
 
         self.show_page = show_page
