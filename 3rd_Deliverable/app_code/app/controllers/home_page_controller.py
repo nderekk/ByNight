@@ -1,5 +1,6 @@
 from PySide6.QtCore import QObject, Signal
 from app.views.customer_homepage import CustomerHomePage
+from app.views.manager_home_page_view import ManagerUI
 from app.controllers.view_res_controller import ViewReservationsController
 from app.controllers.club_mainpage_controller import ClubMainPageController
 from app.models.user import User
@@ -20,7 +21,7 @@ class HomePageController(QObject):
     if self.user.role == Role.CUSTOMER:
       self.view = CustomerHomePage(self.clubs)
     else:
-      print("KANE TO GUI TBOY")
+      self.view = ManagerUI()
     self.setup_connections()
 
   def setup_connections(self):
