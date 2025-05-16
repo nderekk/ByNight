@@ -10,6 +10,7 @@ from app.models.club import Club
 
 class CustomerHomePage(QWidget):
     more_button_clicked=Signal(Club)
+    make_reservation_clicked=Signal(Club)
     
     def __init__(self, clubs: list[Club]):
         super().__init__()
@@ -90,12 +91,14 @@ class CustomerHomePage(QWidget):
 
         # Buttons
         buttons_layout = QVBoxLayout()
-        self.res_button = QPushButton("Make Reservation")
+        res_button = QPushButton("Make Reservation")
         more_button = QPushButton("More Details")
-        buttons_layout.addWidget(self.res_button)
+        buttons_layout.addWidget(res_button)
         buttons_layout.addWidget(more_button)
         layout.addLayout(buttons_layout)
         more_button.clicked.connect(lambda _, c=club: self.more_button_clicked.emit(c))
+        res_button.clicked.connect(lambda _, c=club: self.make_reservation_clicked.emit(c))
+
 
 
         return card

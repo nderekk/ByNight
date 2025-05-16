@@ -6,6 +6,7 @@ from app.models.user import User
 from app.models.role import Role
 from app.utils.container import Container
 from app.models.club import Club
+from app.controllers.make_reservation_controller import MakeReservationController
 
 class HomePageController(QObject):
   # Signals for view updates
@@ -25,6 +26,7 @@ class HomePageController(QObject):
   def setup_connections(self):
     self.view.viewResButton.clicked.connect(self.hand_view_res)
     self.view.more_button_clicked.connect(self.handle_club_mainpage)
+    self.view.make_reservation_clicked.connect(self.handle_make_res_page)
     
   def hand_view_res(self):
     if not Container.is_initialized(ViewReservationsController):
@@ -43,4 +45,14 @@ class HomePageController(QObject):
       self.club_mainpage_controller.set_club(club)
     self.show_page('customer_club_main_page', self.club_mainpage_controller)
     
+  def handle_make_res_page(self, club: Club):
+    if not Container.is_initialized(MakeReservationController):
+      self.make_res_controller =MakeReservationController(self.show_page,club)
+      Container.add_existing_instance(MakeReservationController, self.make_res_controller)
+    else:
+      self.make_res_controller = Container.resolve(MakeReservationController)
+      self.make_res_controller.set_club(club)
+    self.show_page('customer_club_main_page', self.make_res_controller)
+
+
   
