@@ -25,6 +25,7 @@ class LoginController(QObject):
     self.view.signup_attempted.connect(self.handle_signup)
     self.view.google_login_attempted.connect(self.handle_google_login)
     self.view.apple_login_attempted.connect(self.handle_apple_login)
+    self.view.continue_clicked.connect(self.on_continue_clicked)
 
     # Connect controller signals to view methods
     self.login_successful.connect(self.handle_next_page)

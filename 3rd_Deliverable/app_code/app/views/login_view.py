@@ -11,6 +11,7 @@ class LoginView(QWidget):
   signup_attempted = Signal(str, str, str)  # email, password, user_type
   google_login_attempted = Signal()
   apple_login_attempted = Signal()
+  continue_clicked = Signal()  # New signal for continue button click
 
   def __init__(self):
     super().__init__()
@@ -36,6 +37,7 @@ class LoginView(QWidget):
     self.email_input.setPlaceholderText("email@domain.com")
     self.email_input.setFixedHeight(40)
     self.email_input.setStyleSheet("padding: 8px; font-size: 14px;")
+    self.email_input.returnPressed.connect(self.on_continue_clicked)  # Add Enter key handler
 
     # Password input (initially hidden)
     self.password_input = QLineEdit()
@@ -44,11 +46,13 @@ class LoginView(QWidget):
     self.password_input.setFixedHeight(40)
     self.password_input.setStyleSheet("padding: 8px; font-size: 14px;")
     self.password_input.hide()
+    self.password_input.returnPressed.connect(self.on_continue_clicked)  # Add Enter key handler
 
     # Continue/Login button
     self.continue_btn = QPushButton("Continue")
     self.continue_btn.setFixedHeight(40)
     self.continue_btn.setStyleSheet("background-color: black; color: white; font-size: 14px;")
+    self.continue_btn.clicked.connect(self.on_continue_clicked)
 
     # Divider
     divider_layout = QHBoxLayout()
@@ -146,4 +150,7 @@ class LoginView(QWidget):
     self.password_input.clear()
     self.password_input.hide()
     self.continue_btn.setText("Continue")
-    self.subtitle.setText("Create an account\nEnter your email to sign up for this app") 
+    self.subtitle.setText("Create an account\nEnter your email to sign up for this app")
+
+  def on_continue_clicked(self):
+    self.continue_clicked.emit() 
