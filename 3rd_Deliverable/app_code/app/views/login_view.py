@@ -49,7 +49,6 @@ class LoginView(QWidget):
     self.continue_btn = QPushButton("Continue")
     self.continue_btn.setFixedHeight(40)
     self.continue_btn.setStyleSheet("background-color: black; color: white; font-size: 14px;")
-    self.continue_btn.clicked.connect(self.on_continue_clicked)
 
     # Divider
     divider_layout = QHBoxLayout()
@@ -126,22 +125,6 @@ class LoginView(QWidget):
 
     self.setLayout(layout)
 
-  def on_continue_clicked(self):
-    email = self.email_input.text().strip()
-    if not self.password_input.isVisible():
-      # First step: email validation
-      if not self.validate_email(email):
-        self.show_error("Please enter a valid email address")
-        return
-      self.show_password_step()
-    else:
-      # Second step: password and login/signup
-      password = self.password_input.text()
-      if not password:
-        self.show_error("Please enter your password")
-        return
-      self.login_attempted.emit(email, password)
-
   def on_google_clicked(self):
     self.google_login_attempted.emit()
 
@@ -156,11 +139,6 @@ class LoginView(QWidget):
 
   def show_error(self, message):
     QMessageBox.critical(self, "Error", message)
-
-  def validate_email(self, email):
-    import re
-    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    return re.match(pattern, email) is not None
 
   def reset(self):
     self.email_input.clear()
