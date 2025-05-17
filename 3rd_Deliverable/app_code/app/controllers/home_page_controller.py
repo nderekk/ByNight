@@ -46,7 +46,12 @@ class HomePageController(QObject):
     self.show_page('customer_club_main_page', self.club_mainpage_controller)
     
   def handle_make_res_page(self, club: Club):
-    self.make_res_controller=MakeReservationController(self.show_page,club)
+    if not Container.is_initialized(MakeReservationController):
+      self.make_res_controller =MakeReservationController(self.show_page,club)
+      Container.add_existing_instance(MakeReservationController, self.make_res_controller)
+    else:
+      self.make_res_controller = Container.resolve(MakeReservationController)
+      self.make_res_controller.set_club(club)
     self.show_page('customer_club_main_page', self.make_res_controller)
 
 
