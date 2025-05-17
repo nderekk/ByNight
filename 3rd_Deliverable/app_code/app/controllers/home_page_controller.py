@@ -1,7 +1,6 @@
 from PySide6.QtCore import QObject, Signal
-from app.views.customer_homepage import CustomerHomePage
-from app.controllers.view_res_controller import ViewReservationsController
-from app.controllers.club_mainpage_controller import ClubMainPageController
+from app.views import CustomerHomePage
+from app.controllers import ClubMainPageController
 from app.models import User, Role, Club
 from app.utils.container import Container
 
@@ -27,6 +26,8 @@ class HomePageController(QObject):
     self.view.searchLineEdit.textChanged.connect(self.apply_filters)
     
   def hand_view_res(self):
+    from app.controllers import ViewReservationsController
+    
     if not Container.is_initialized(ViewReservationsController):
       self.view_res_controller = ViewReservationsController(self.show_page)
       Container.add_existing_instance(ViewReservationsController, self.view_res_controller)

@@ -1,8 +1,9 @@
 from sqlalchemy import Column, Computed, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from app.data.database import Base
+from app.utils.container import Container
+from app.services.db_session import DatabaseSession
 import app.models
-
 
 class Reservation(Base):
   __tablename__ = "reservations"
@@ -17,9 +18,24 @@ class Reservation(Base):
   date = Column(DateTime)
   qrcode = Column(String) # to do
 
-
   club = relationship("Club", back_populates="reservations")
   order = relationship("Order", back_populates="reservation", uselist=False, cascade="all, delete-orphan")
   user = relationship("User", back_populates="reservations")
   event = relationship("Event", back_populates="reservations")
   table = relationship("Table", back_populates="reservations")
+  
+  def get_club_name(self) -> str:
+    return self.club.name
+  
+  def get_user_name(self) -> str:
+    from app.models import User
+    return self.user.full_name
+
+  def get_event_name(self) -> str:
+    from app.models import Event
+    return self.event.title
+  
+  @classmethod
+  def get_res_from_id(cls, res_id):
+    session = Container.resolve(DatabaseSession) 
+    return session.get(cls, res_id)

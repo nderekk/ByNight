@@ -1,9 +1,9 @@
 from PySide6.QtCore import QObject, Signal
 from app.services.auth_service import AuthService
-from app.views.login_view import LoginView
-from app.controllers.home_page_controller import HomePageController
+from app.views import LoginView
+from app.controllers import HomePageController
 from app.utils.container import Container
-from app.models.user import User
+from app.models import User
 
 class LoginController(QObject):
   # Signals for view updates
@@ -21,16 +21,19 @@ class LoginController(QObject):
 
   def setup_connections(self):
     # Connect view signals to controller methods
-    self.view.login_attempted.connect(self.handle_login)
+    # self.view.login_attempted.connect(self.handle_login)
     self.view.signup_attempted.connect(self.handle_signup)
     self.view.google_login_attempted.connect(self.handle_google_login)
     self.view.apple_login_attempted.connect(self.handle_apple_login)
+    self.view.continue_clicked.connect(self.on_continue_clicked)
 
     # Connect controller signals to view methods
     self.login_successful.connect(self.handle_next_page)
     self.login_failed.connect(self.view.show_error)
     self.signup_successful.connect(self.view.reset)
     self.signup_failed.connect(self.view.show_error)
+    
+    self.view.continue_btn.clicked.connect(self.on_continue_clicked)
 
   def handle_login(self, email: str, password: str):
     try:
@@ -52,6 +55,27 @@ class LoginController(QObject):
     #     self.signup_failed.emit("Failed to create account")
     # except Exception as e:
     #   self.signup_failed.emit(str(e))
+    
+  def on_continue_clicked(self):
+    email = self.view.email_input.text().strip()
+    if not self.view.password_input.isVisible():
+      # First step: email validation
+      if not self.validate_email(email):
+        self.view.show_error("Please enter a valid email address")
+        return
+      self.view.show_password_step()
+    else:
+      # Second step: password and login/signup
+      password = self.view.password_input.text()
+      if not password:
+        self.view.show_error("Please enter your password")
+        return
+      self.handle_login(email, password)
+      
+  def validate_email(self, email):
+    import re
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
 
   def handle_google_login(self):
     self.login_failed.emit("Feature Not Yet Implimented")

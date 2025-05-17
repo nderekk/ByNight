@@ -1,7 +1,7 @@
 from PySide6.QtCore import QObject
-from app.views.customer_club_mainpage import CustomerClubMainPage
+from app.views import CustomerClubMainPage
 from app.utils.container import Container
-from app.models.club import Club
+from app.models import Club
 
 class ClubMainPageController(QObject):
     def __init__(self, show_page: callable, club: Club):
