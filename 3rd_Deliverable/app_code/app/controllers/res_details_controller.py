@@ -20,7 +20,7 @@ class ReservationDetailsController(QObject):
       "Reservation ID": self.reservation.id,
       "User": self.reservation.get_user_name(),
       "Event": self.reservation.get_event_name(),
-      "Table No": self.reservation.id,
+      "Table Type": self.reservation.get_table_type(),
       "Number of People": self.reservation.num_of_people,
       "Date": self.reservation.date.strftime('%d/%m/%Y %H:%M')
     }

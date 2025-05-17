@@ -76,10 +76,10 @@ class ReservationDetailsPage(QWidget):
     add_detail("Club", d.get("Club", "N/A"))
     add_detail("Reservation ID", d.get("Reservation ID", "N/A"))
     add_detail("User", d.get("User", "N/A"))
-    add_detail("Event", d.get("Event", "N/A") or "N/A")
-    add_detail("Table No", d.get("Table No", "N/A") or "N/A")
+    add_detail("Event", d.get("Event", "N/A"))
+    add_detail("Table Type", d.get("Table Type", "N/A"))
     add_detail("Number of People", d.get("Number of People", "N/A"))
-    add_detail("Date", d.get("Date", "N/A") or "N/A")
+    add_detail("Date", d.get("Date", "N/A"))
 
   def refresh_details(self, res_details: dict[str, str]):
     self.res_details = res_details
