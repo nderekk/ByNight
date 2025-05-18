@@ -38,15 +38,13 @@ class ClubMainPageController(QObject):
     def handle_make_res(self,club):
         from app.controllers.make_reservation_controller import MakeReservationController
 
-        flag='from_clubpage'
-        print(flag)
-
-        if not Container.is_initialized(MakeReservationController):
-         self.make_res_controller =MakeReservationController(self.show_page,club,flag)
-         Container.add_existing_instance(MakeReservationController, self.make_res_controller)
-        else:
-         self.make_res_controller = Container.resolve(MakeReservationController)
-         self.make_res_controller.set_club(club)
+        # if not Container.is_initialized(MakeReservationController):
+        #  self.make_res_controller =MakeReservationController(self.show_page,club)
+        #  Container.add_existing_instance(MakeReservationController, self.make_res_controller)
+        # else:
+        #  self.make_res_controller = Container.resolve(MakeReservationController)
+        #  self.make_res_controller.set_club(club)
+        self.make_res_controller = MakeReservationController(self.show_page, club)
         self.show_page('customer_make_res__page', self.make_res_controller)
 
 
