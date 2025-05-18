@@ -1,19 +1,19 @@
 from PySide6.QtCore import QObject
-from app.views.customer_club_mainpage import CustomerClubMainPage
+from app.views import CustomerClubMainPage
 from app.utils.container import Container
-from app.models.club import Club
+from app.models import Club
 
 class ClubMainPageController(QObject):
     def __init__(self, show_page: callable, club: Club):
         super().__init__()
         self.club = club
 
-        if not Container.is_initialized(CustomerClubMainPage):
-            self.view = CustomerClubMainPage(club)
-            Container.add_existing_instance(CustomerClubMainPage, self.view)
-        else:
-            self.view = Container.resolve(CustomerClubMainPage)
-
+        # if not Container.is_initialized(CustomerClubMainPage):
+        #     self.view = CustomerClubMainPage(club)
+        #     Container.add_existing_instance(CustomerClubMainPage, self.view)
+        # else:
+        #     self.view = Container.resolve(CustomerClubMainPage)
+        self.view = CustomerClubMainPage(club)
         self.view.set_name(club)
 
         self.show_page = show_page

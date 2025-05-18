@@ -1,18 +1,17 @@
-import sys
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton,
     QComboBox, QScrollArea, QFrame, QSizePolicy
 )
 from PySide6.QtGui import QFont
 from PySide6.QtCore import Qt, QSize, Signal
-from app.models.club import Club
+from app.models import Club
 
 
 class CustomerHomePage(QWidget):
     more_button_clicked=Signal(Club)
     make_reservation_clicked=Signal(Club)
     
-    def __init__(self, clubs: list[Club]):
+    def __init__(self, clubs: list[Club], filters: dict[str: list[str]]):
         super().__init__()
         self.clubs = clubs
         main_layout = QVBoxLayout(self)
@@ -39,21 +38,24 @@ class CustomerHomePage(QWidget):
 
         # --- Dropdowns ---
         filter_layout = QVBoxLayout()
-        self.locationLabel = QLabel("Location")
-        self.locationDropdown = QComboBox()
-        self.locationDropdown.addItems(["Athens", "Patras"])
-        filter_layout.addWidget(self.locationLabel)
-        filter_layout.addWidget(self.locationDropdown)
+        self.addressLabel = QLabel("address")
+        self.addressDropdown = QComboBox()
+        self.addressDropdown.addItem("Any")
+        self.addressDropdown.addItems(filters["location"])
+        filter_layout.addWidget(self.addressLabel)
+        filter_layout.addWidget(self.addressDropdown)
 
         self.musicLabel = QLabel("Music")
         self.musicDropdown = QComboBox()
-        self.musicDropdown.addItems(["Rock", "Rap/Trap", "Pop", "Rnb"])
+        self.musicDropdown.addItem("Any")
+        self.musicDropdown.addItems(filters["music"])
         filter_layout.addWidget(self.musicLabel)
         filter_layout.addWidget(self.musicDropdown)
 
         self.eventLabel = QLabel("Event")
         self.eventDropdown = QComboBox()
-        self.eventDropdown.addItems(["Kultura", "Lules Culpa"])
+        self.eventDropdown.addItem("Any")
+        self.eventDropdown.addItems(filters["event"])
         filter_layout.addWidget(self.eventLabel)
         filter_layout.addWidget(self.eventDropdown)
 
@@ -69,11 +71,11 @@ class CustomerHomePage(QWidget):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_content = QWidget()
-        scroll_layout = QVBoxLayout(scroll_content)
+        self.scroll_layout = QVBoxLayout(scroll_content)
             
         # Add club cards
         for club in self.clubs:
-            scroll_layout.addWidget(self.create_club_card(club.name,club))
+            self.scroll_layout.addWidget(self.create_club_card(club.name, club))
 
         scroll_area.setWidget(scroll_content)
         main_layout.addWidget(scroll_area)
@@ -100,5 +102,23 @@ class CustomerHomePage(QWidget):
         res_button.clicked.connect(lambda _, c=club: self.make_reservation_clicked.emit(c))
 
 
-
         return card
+    
+    def update_club_display(self, filtered_clubs):
+        # Clear existing club cards
+        for i in reversed(range(self.scroll_layout.count())): 
+            widget = self.scroll_layout.takeAt(i).widget()
+            if widget:
+                widget.setParent(None)
+
+        if not filtered_clubs:
+            # Show a message if no clubs match
+            no_result_label = QLabel("No clubs matching your filters")
+            no_result_label.setAlignment(Qt.AlignCenter)
+            no_result_label.setStyleSheet("color: gray; font-style: italic; padding: 10px;")
+            self.scroll_layout.addWidget(no_result_label)
+            return
+        
+        # Add filtered club cards
+        for club in filtered_clubs:
+            self.scroll_layout.addWidget(self.create_club_card(club.name, club))
