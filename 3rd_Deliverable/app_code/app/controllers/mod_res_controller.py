@@ -46,7 +46,7 @@ class ModifyReservationController(QObject):
     print(f"\nresponse: {response}\n")
     # result = ReservationValidator.check(self.table_type, self.people, self.bottles, self.club)
     if response[0]:
-      # self.reservation.update_res(self.table_type, self.people, 2)
+      self.reservation.update_res(self.table_type, self.people, 2)
       # self.reservation.update_res(self.table_type, self.people, self.bottles)
       popup = MessagePopup(success=True, message="Your reservation has been updated successfully.")
       popup.exec()
