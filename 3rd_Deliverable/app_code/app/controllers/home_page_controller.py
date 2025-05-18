@@ -52,7 +52,7 @@ class HomePageController(QObject):
     else:
       self.make_res_controller = Container.resolve(MakeReservationController)
       self.make_res_controller.set_club(club)
-    self.show_page('make_reservation', self.make_res_controller)
+    self.show_page('customer_club_main_page', self.make_res_controller)
 
 
   
