@@ -45,7 +45,7 @@ class CustomerViewReservations(QWidget):
     layout.addWidget(title)
 
     # Subtitle
-    subtitle = QLabel("Observe your reservations any time and don’t forget to leave a review within 30 days.")
+    subtitle = QLabel("Observe your reservations any time and don't forget to leave a review within 30 days.")
     subtitle.setWordWrap(True)
     subtitle.setStyleSheet("color: gray; font-size: 10pt;")
     layout.addWidget(subtitle)
@@ -69,7 +69,7 @@ class CustomerViewReservations(QWidget):
     label.setStyleSheet("font-weight: bold; font-size: 12pt; margin-top: 15px;")
     return label
 
-  def reservation_card(self, club_name: str, date: datetime, id: int, event: str, upcoming=True):
+  def reservation_card(self, club_name: str, date: datetime, id: int, event: str, upcoming: bool):
     # Create the original card layout
     card = QFrame()
     card.setFixedHeight(100)
@@ -97,13 +97,18 @@ class CustomerViewReservations(QWidget):
 
     card.setLayout(layout)
 
-    # Wrap in clickable frame
-    clickable = ClickableReservationCard(
-      reservation_data={"club_name": club_name, "date": date, "id": id, "event": event, "upcoming": upcoming},
-      card_widget=card
-    )
-    clickable.clicked.connect(self.handle_card_click)
-    return clickable
+    # Only make upcoming reservations clickable
+    if upcoming:
+        clickable = ClickableReservationCard(
+            reservation_data={"club_name": club_name, "date": date, "id": id, "event": event, "upcoming": upcoming},
+            card_widget=card
+        )
+        clickable.clicked.connect(self.handle_card_click)
+        return clickable
+    else:
+        # For past reservations, just return the regular card
+        card.setStyleSheet("background-color: #444; color: white; border-radius: 5px;")
+        return card
 
   def handle_card_click(self, reservation_data):
     print("Reservation clicked:", reservation_data)

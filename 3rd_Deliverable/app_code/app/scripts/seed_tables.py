@@ -1,5 +1,5 @@
 from app.data.database import SessionLocal
-from app.models import Club, User, Event, Reservation, Order, Table, Role
+from app.models import Club, User, Event, Reservation, Order, Table, Role, TableType
 from datetime import datetime, date, time
 
 # WINDOWS
@@ -54,12 +54,21 @@ def seed():
     session.add_all(events)
 
     # 4. Create Table
-    table = Table(
-      capacity=6,
-      min_order=100.0,
-      club=dummy_clubs[3]
-    )
-    session.add(table)
+    tables = [
+      Table(
+        capacity=6,
+        min_order=100.0,
+        club=dummy_clubs[3],
+        table_type = TableType.VIP
+      ),
+      Table(
+        capacity=4,
+        min_order=120.0,
+        club=dummy_clubs[2],
+        table_type = TableType.PASS
+      )
+    ]
+    session.add_all(tables)
 
     # 5. Create Order
     order = Order(
@@ -74,7 +83,7 @@ def seed():
     dummy_reservations = [
               Reservation(
                 user= user,
-                table = table,
+                table = tables[0],
                 num_of_people= 4,
                 order= order,
                 date=datetime(2026, 1, 1, 22, 0),
@@ -84,7 +93,7 @@ def seed():
             ),
             Reservation(
                 user= user,
-                table = table,
+                table = tables[1],
                 num_of_people= 2,
                 order= order,
                 date=datetime(2024, 6, 1, 22, 0),
@@ -94,7 +103,7 @@ def seed():
             ),
             Reservation(
                 user= user,
-                table = table,
+                table = tables[1],
                 num_of_people= 3,
                 order= order,
                 date=datetime(2025, 6, 1, 22, 0),
