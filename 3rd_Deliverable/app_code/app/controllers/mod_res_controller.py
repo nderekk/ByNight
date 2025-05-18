@@ -35,3 +35,11 @@ class ModifyReservationController(QObject):
     
     self.controller = ReservationDetailsController(self.res_id, self.show_page)
     self.show_page('res_details_controller', self.controller)
+    
+  def handle_save_changes(self):
+    from app.services import ReservationValidator
+    
+    self.table_type = self.view.table_type_combo.currentText
+    self.people = self.view.people_spin.text
+    result = ReservationValidator(self.reservation, self.table_type, self.people)
+    
