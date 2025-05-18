@@ -35,6 +35,10 @@ class Reservation(Base):
     from app.models import Event
     return self.event.title
   
+  def get_table(self):
+    from app.models import Table 
+    return self.table
+  
   def get_table_type(self):
     from app.models import Table, TableType
     return self.table.table_type.value
