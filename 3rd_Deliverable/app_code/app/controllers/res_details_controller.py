@@ -13,7 +13,6 @@ class ReservationDetailsController(QObject):
     
   def setup_connections(self):
     self.view.back_btn.clicked.connect(self.handle_back)
-    self.view.mod_res_clicked.connect(self.handle_mod_res)
   
   def format_res_details(self):
     details = {
@@ -36,13 +35,3 @@ class ReservationDetailsController(QObject):
         
     self.controller = Container.resolve(ViewReservationsController)
     self.show_page('view_res_controller', self.controller)
-    
-  def handle_mod_res(self, id: int):
-    from app.controllers import ModifyReservationController
-    if not Container.is_initialized(ModifyReservationController):
-      self.mod_res_controller = ModifyReservationController(id, self.show_page)
-      Container.add_existing_instance(ModifyReservationController, self.mod_res_controller)
-    else:
-      self.mod_res_controller = Container.resolve(ModifyReservationController)
-      self.mod_res_controller.refresh()
-    self.show_page('mod_res_controller', self.mod_res_controller)

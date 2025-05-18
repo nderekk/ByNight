@@ -4,4 +4,3 @@ from app.controllers.login_controller import LoginController
 from app.controllers.main_window import MainWindow
 from app.controllers.res_details_controller import ReservationDetailsController
 from app.controllers.view_res_controller import ViewReservationsController
-from app.controllers.mod_res_controller import ModifyReservationController

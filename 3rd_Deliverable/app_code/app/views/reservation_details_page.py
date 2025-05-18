@@ -2,13 +2,10 @@ from PySide6.QtWidgets import (
   QWidget, QVBoxLayout, QLabel, QPushButton,
   QHBoxLayout, QFrame, QSpacerItem, QSizePolicy
 )
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QCursor
 
 class ReservationDetailsPage(QWidget):
-  mod_res_clicked = Signal(int)
-  cancel_res_clicked = Signal(int)
-  
   def __init__(self, res_details: dict[str, str]):
     super().__init__()
     self.res_details = res_details
@@ -53,11 +50,6 @@ class ReservationDetailsPage(QWidget):
     # Modify and Cancel buttons
     self.modify_btn = QPushButton("Modify Reservation")
     self.cancel_btn = QPushButton("Cancel Reservation")
-    
-    #set up signals
-    res_id = int(self.res_details["Reservation ID"])
-    self.modify_btn.clicked.connect(lambda: self.mod_res_clicked.emit(res_id))
-    self.cancel_btn.clicked.connect(lambda: self.cancel_res_clicked.emit(res_id))
 
     for btn in (self.modify_btn, self.cancel_btn):
       btn.setCursor(QCursor(Qt.PointingHandCursor))
