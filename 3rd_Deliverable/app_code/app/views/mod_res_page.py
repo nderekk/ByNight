@@ -62,6 +62,7 @@ class ModifyReservationPage(QWidget):
     self.setLayout(layout)
     
   def refresh_page(self, current_table_type, current_num_of_people):
+    print(f"\n {current_table_type} \n {current_num_of_people}")
     self.current_table_type = current_table_type
     self.current_num_of_people = current_num_of_people
     self.table_type_combo.setCurrentText(current_table_type)

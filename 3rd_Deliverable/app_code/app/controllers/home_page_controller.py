@@ -28,20 +28,24 @@ class HomePageController(QObject):
   def hand_view_res(self):
     from app.controllers import ViewReservationsController
     
-    if not Container.is_initialized(ViewReservationsController):
-      self.view_res_controller = ViewReservationsController(self.show_page)
-      Container.add_existing_instance(ViewReservationsController, self.view_res_controller)
-    else:
-      self.view_res_controller = Container.resolve(ViewReservationsController)
+    # if not Container.is_initialized(ViewReservationsController):
+    #   self.view_res_controller = ViewReservationsController(self.show_page)
+    #   Container.add_existing_instance(ViewReservationsController, self.view_res_controller)
+    # else:
+    #   self.view_res_controller = Container.resolve(ViewReservationsController)
+      
+    self.view_res_controller = ViewReservationsController(self.show_page)
     self.show_page('customer_view_res_page', self.view_res_controller)
     
   def handle_club_mainpage(self, club: Club):
-    if not Container.is_initialized(ClubMainPageController):
-      self.club_mainpage_controller = ClubMainPageController(self.show_page,club)
-      Container.add_existing_instance(ClubMainPageController, self.club_mainpage_controller)
-    else:
-      self.club_mainpage_controller = Container.resolve(ClubMainPageController)
-      self.club_mainpage_controller.set_club(club)
+    # if not Container.is_initialized(ClubMainPageController):
+    #   self.club_mainpage_controller = ClubMainPageController(self.show_page,club)
+    #   Container.add_existing_instance(ClubMainPageController, self.club_mainpage_controller)
+    # else:
+    #   self.club_mainpage_controller = Container.resolve(ClubMainPageController)
+    #   self.club_mainpage_controller.set_club(club)
+      
+    self.club_mainpage_controller = ClubMainPageController(self.show_page, club)
     self.show_page('customer_club_main_page', self.club_mainpage_controller)
     
   def apply_filters(self):

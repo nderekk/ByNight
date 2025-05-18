@@ -36,6 +36,10 @@ class MainWindow(QMainWindow):
     if page_name not in self.pages:
       self.pages[page_name] = page_controller.view
       self.stack.addWidget(self.pages[page_name])
+    else:
+      self.pages[page_name] = page_controller.view
+      self.stack.addWidget(self.pages[page_name])
+    print("widget set ", page_name)
     self.stack.setCurrentWidget(self.pages[page_name])
 
   def closeEvent(self, event):

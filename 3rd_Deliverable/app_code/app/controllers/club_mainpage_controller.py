@@ -8,12 +8,12 @@ class ClubMainPageController(QObject):
         super().__init__()
         self.club = club
 
-        if not Container.is_initialized(CustomerClubMainPage):
-            self.view = CustomerClubMainPage(club)
-            Container.add_existing_instance(CustomerClubMainPage, self.view)
-        else:
-            self.view = Container.resolve(CustomerClubMainPage)
-
+        # if not Container.is_initialized(CustomerClubMainPage):
+        #     self.view = CustomerClubMainPage(club)
+        #     Container.add_existing_instance(CustomerClubMainPage, self.view)
+        # else:
+        #     self.view = Container.resolve(CustomerClubMainPage)
+        self.view = CustomerClubMainPage(club)
         self.view.set_name(club)
 
         self.show_page = show_page

@@ -34,15 +34,17 @@ class ReservationDetailsController(QObject):
   def handle_back(self):
     from app.controllers import ViewReservationsController
         
-    self.controller = Container.resolve(ViewReservationsController)
+    # self.controller = Container.resolve(ViewReservationsController)
+    self.controller = ViewReservationsController(self.show_page)
     self.show_page('view_res_controller', self.controller)
     
   def handle_mod_res(self, id: int):
     from app.controllers import ModifyReservationController
-    if not Container.is_initialized(ModifyReservationController):
-      self.mod_res_controller = ModifyReservationController(id, self.show_page)
-      Container.add_existing_instance(ModifyReservationController, self.mod_res_controller)
-    else:
-      self.mod_res_controller = Container.resolve(ModifyReservationController)
-      self.mod_res_controller.refresh()
+    # if not Container.is_initialized(ModifyReservationController):
+    #   self.mod_res_controller = ModifyReservationController(id, self.show_page)
+    #   Container.add_existing_instance(ModifyReservationController, self.mod_res_controller)
+    # else:
+    #   self.mod_res_controller = Container.resolve(ModifyReservationController)
+    #   self.mod_res_controller.refresh_mod_fields(id)
+    self.mod_res_controller = ModifyReservationController(id, self.show_page)
     self.show_page('mod_res_controller', self.mod_res_controller)
