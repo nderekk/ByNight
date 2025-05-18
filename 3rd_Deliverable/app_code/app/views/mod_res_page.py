@@ -46,7 +46,7 @@ class ModifyReservationPage(QWidget):
     layout.addWidget(num_label)
 
     self.people_spin = QSpinBox()
-    self.people_spin.setRange(1, 20)
+    self.people_spin.setRange(1, 10)
     self.people_spin.setValue(self.current_num_of_people)
     self.people_spin.setStyleSheet("background-color: #333; color: white; padding: 15px;")
     layout.addWidget(self.people_spin)
