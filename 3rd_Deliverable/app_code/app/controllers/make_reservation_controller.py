@@ -5,9 +5,11 @@ from app.models.club import Club
 from app.views.make_reservation_page import MakeReservationPage
 
 class MakeReservationController(QObject):
-    def __init__(self, show_page: callable, club: Club):
+    def __init__(self, show_page: callable, club: Club,flag):
         super().__init__()
         self.club = club
+        self.flag=flag
+        print(flag)
 
         if not Container.is_initialized(MakeReservationPage):
             self.view = MakeReservationPage(club)
@@ -29,6 +31,14 @@ class MakeReservationController(QObject):
 
     def handle_back(self):
         from app.controllers.home_page_controller import HomePageController
+        from app.controllers.club_mainpage_controller import ClubMainPageController
         
-        self.home_page_controller = Container.resolve(HomePageController)
-        self.show_page('customer_home_page', self.home_page_controller)
+        if self.flag=='from_homepage':
+         self.home_page_controller = Container.resolve(HomePageController)
+         self.show_page('customer_home_page', self.home_page_controller)
+
+        else:
+         self.club_mainpage_controller = Container.resolve(ClubMainPageController)
+         self.show_page('customer_club_main_page', self.club_mainpage_controller)
+        
+

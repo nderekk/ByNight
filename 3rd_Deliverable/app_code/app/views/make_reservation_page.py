@@ -12,7 +12,6 @@ class MakeReservationPage(QWidget):
         super().__init__()
         self.club=club
         self.venue_label = QLabel()
-
         self.init_ui()
 
      
