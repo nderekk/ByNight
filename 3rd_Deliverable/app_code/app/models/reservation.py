@@ -35,10 +35,6 @@ class Reservation(Base):
     from app.models import Event
     return self.event.title
   
-  def get_table_type(self):
-    from app.models import Table, TableType
-    return self.table.table_type.value
-  
   @classmethod
   def get_res_from_id(cls, res_id):
     session = Container.resolve(DatabaseSession) 

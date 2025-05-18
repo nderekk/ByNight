@@ -1,24 +1,18 @@
-from sqlalchemy import Column, Integer, Float, ForeignKey, Enum as SQLAlchemyEnum
+from sqlalchemy import Column, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from app.data.database import Base
 import app.models
-from enum import Enum
 
-class TableType(str, Enum):
-    VIP = "VIP"
-    PASS = "Pass"
-    BAR = "bar"
 
 class Table(Base):
-    __tablename__ = "tables"
+  __tablename__ = "tables"
 
-    id = Column(Integer, primary_key=True)
-    capacity = Column(Integer, nullable=False)
-    min_order = Column(Float, nullable=False)
-    table_type = Column(SQLAlchemyEnum(TableType), nullable=False)
+  id = Column(Integer, primary_key=True)
+  capacity = Column(Integer, nullable=False)
+  min_order = Column(Float, nullable=False)
 
-    # Assuming a club owns tables
-    club_id = Column(Integer, ForeignKey("clubs.id"), nullable=False)
-    club = relationship("Club", back_populates="tables")
+  # Assuming a club owns tables
+  club_id = Column(Integer, ForeignKey("clubs.id"), nullable=False)
+  club = relationship("Club", back_populates="tables")
 
-    reservations = relationship("Reservation", back_populates="table", cascade="all, delete-orphan")
+  reservations = relationship("Reservation", back_populates="table", cascade="all, delete-orphan")
