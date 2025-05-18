@@ -13,10 +13,10 @@ def seed():
   try:
     # 1. Create Club
     dummy_clubs = [
-            Club(name="Navona", address="Hfaistou 8", location="Patra", manager="Alice"),
-            Club(name="Saint", address="Kanakari 99", location="Patra", manager="Bob"),
-            Club(name="Omnia", address="Gamveta 17", location="Patra", manager="Charlie"),
-            Club(name="Marquee", address="Kalampakistan", location="Kalampaka", manager="Toulas")
+            Club(name="Navona", address="Hfaistou 8", location="Patra", manager="Alice", vip_available=0),
+            Club(name="Saint", address="Kanakari 99", location="Patra", manager="Bob", vip_available=0),
+            Club(name="Omnia", address="Gamveta 17", location="Patra", manager="Charlie", vip_available=0),
+            Club(name="Marquee", address="Kalampakistan", location="Kalampaka", manager="Toulas", vip_available=0)
     ]
     session.add_all(dummy_clubs)
     # (session.add(c) for c in dummy_clubs)
@@ -57,13 +57,11 @@ def seed():
     tables = [
       Table(
         capacity=6,
-        min_order=100.0,
         club=dummy_clubs[3],
         table_type = TableType.VIP
       ),
       Table(
         capacity=4,
-        min_order=120.0,
         club=dummy_clubs[2],
         table_type = TableType.PASS
       )

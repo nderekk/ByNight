@@ -14,7 +14,6 @@ class Table(Base):
 
     id = Column(Integer, primary_key=True)
     capacity = Column(Integer, nullable=False)
-    min_order = Column(Float, nullable=False)
     table_type = Column(SQLAlchemyEnum(TableType), nullable=False)
 
     # Assuming a club owns tables
@@ -22,3 +21,14 @@ class Table(Base):
     club = relationship("Club", back_populates="tables")
 
     reservations = relationship("Reservation", back_populates="table", cascade="all, delete-orphan")
+    
+    @classmethod
+    def get_capacity_on_table_type(cls, table_type: str) -> int:
+        if table_type == TableType.PASS.value:
+            return 4
+        elif table_type == TableType.VIP.value:
+            return 10
+        elif table_type == TableType.BAR.value:
+            return 3
+        else:
+            print("TIN GAMISAME")
