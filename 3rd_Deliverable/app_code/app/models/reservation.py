@@ -24,6 +24,12 @@ class Reservation(Base):
   event = relationship("Event", back_populates="reservations")
   table = relationship("Table", back_populates="reservations")
   
+  def update_res(self):
+    pass
+  
+  def get_club(self):
+    return self.club
+  
   def get_club_name(self) -> str:
     return self.club.name
   
