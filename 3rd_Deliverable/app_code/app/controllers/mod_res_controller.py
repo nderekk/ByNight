@@ -1,7 +1,7 @@
 from PySide6.QtCore import QObject, Signal
 from app.utils.container import Container
 from app.models import Reservation
-from app.views import ModifyReservationPage
+from app.views import ModifyReservationPage, MessagePopup
 
 class ModifyReservationController(QObject):
   def __init__(self, res_id: int, show_page: callable):
@@ -19,7 +19,7 @@ class ModifyReservationController(QObject):
 
   def setup_connections(self):
     self.view.back_btn.clicked.connect(self.handle_back)
-    
+    self.view.save_btn.clicked.connect(self.handle_save_changes)
   
   def refresh_mod_fields(self, id: int):
     self.reservation = Reservation.get_res_from_id(id)
@@ -39,7 +39,18 @@ class ModifyReservationController(QObject):
   def handle_save_changes(self):
     from app.services import ReservationValidator
     
-    self.table_type = self.view.table_type_combo.currentText
-    self.people = self.view.people_spin.text
-    result = ReservationValidator(self.reservation, self.table_type, self.people)
+    self.club = self.reservation.get_club()
+    self.table_type = self.view.table_type_combo.currentText()
+    self.people = self.view.people_spin.text()
+    response = ReservationValidator.check(self.table_type, self.people, 2, self.club)
+    print(f"\nresponse: {response}\n")
+    # result = ReservationValidator.check(self.table_type, self.people, self.bottles, self.club)
+    if response[0]:
+      # self.reservation.update_res(self.table_type, self.people, 2)
+      # self.reservation.update_res(self.table_type, self.people, self.bottles)
+      popup = MessagePopup(success=True, message="Your reservation has been updated successfully.")
+      popup.exec()
+    else:
+      popup = MessagePopup(success=False, message=str(response[1]))
+      popup.exec()
     
