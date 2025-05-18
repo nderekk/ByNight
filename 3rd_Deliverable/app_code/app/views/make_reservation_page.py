@@ -1,11 +1,14 @@
-import sys
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit,
-    QPushButton, QFrame, QSizePolicy, QSpacerItem, QComboBox
+    QPushButton, QFrame, QSizePolicy, QSpacerItem, QComboBox, QSpinBox
 )
 from PySide6.QtGui import QPixmap, QFont
 from PySide6.QtCore import Qt
 from app.models.club import Club
+from app.utils.container import Container                
+from app.services.db_session import DatabaseSession      
+import app.models                                        
+
 
 class MakeReservationPage(QWidget):
      def __init__(self, club: Club):
@@ -23,9 +26,9 @@ class MakeReservationPage(QWidget):
         # Header
         header_layout = QHBoxLayout()
         self.back_button = QPushButton("←")
-        self.back_button.setFont(QFont("Arial", 16))  # Smaller font size
+        self.back_button.setFont(QFont("Arial", 16))   
         self.back_button.setStyleSheet("color: white;")
-        self.back_button.setFixedSize(30, 30)  # Make the button smaller
+        self.back_button.setFixedSize(30, 30)  
 
         title = QLabel("Make a reservation")
         title.setFont(QFont("Arial", 12, QFont.Bold))
@@ -96,21 +99,72 @@ class MakeReservationPage(QWidget):
         table_title.setStyleSheet("color: white;")
         
         table_dropdown = QComboBox()
-        table_dropdown.addItems(["Table 1", "Table 2", "Table 3", "Table 4"])
+        table_dropdown.addItems(["VIP", "Pass", "bar"])
         
         card_layout.addWidget(table_title)
         card_layout.addWidget(table_dropdown)
 
         # Drink Section - Dropdown
-        drinks_title = QLabel("☰  Select drinks")
+        bottles_layout = QHBoxLayout()
+
+ 
+        premium_label = QLabel("Premium bottle")
+        premium_label.setStyleSheet("color: white;")
+        premium_spinbox = QSpinBox()
+        premium_spinbox.setMinimum(0)
+        premium_spinbox.setMaximum(20)
+        premium_spinbox.setStyleSheet("""
+            QSpinBox {
+            background-color: #2A2A2A;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 4px;
+                }
+            """)
+
+ 
+        regular_label = QLabel("Regular bottle")
+        regular_label.setStyleSheet("color: white;")
+        regular_spinbox = QSpinBox()
+        regular_spinbox.setMinimum(0)
+        regular_spinbox.setMaximum(20)
+        regular_spinbox.setStyleSheet("""
+    QSpinBox {
+        background-color: #2A2A2A;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 6px;
+        padding: 4px;
+    }
+""")
+
+ 
+        bottles_layout.addWidget(premium_label)
+        bottles_layout.addWidget(premium_spinbox)
+        bottles_layout.addSpacing(40)   
+        bottles_layout.addWidget(regular_label)
+        bottles_layout.addWidget(regular_spinbox)
+
+ 
+        drinks_title = QLabel("Select type of bottles")
         drinks_title.setFont(QFont("Arial", 11))
         drinks_title.setStyleSheet("color: white;")
-        
-        drinks_dropdown = QComboBox()
-        drinks_dropdown.addItems(["Drink 1", "Drink 2", "Drink 3", "Drink 4"])
-        
+
         card_layout.addWidget(drinks_title)
-        card_layout.addWidget(drinks_dropdown)
+        card_layout.addLayout(bottles_layout)
+
+                
+        event_title = QLabel("☰  Select event")
+        event_title.setFont(QFont("Arial", 11))
+        event_title.setStyleSheet("color: white;")
+
+        self.event_dropdown = QComboBox()
+        self.load_events()
+
+        card_layout.addWidget(event_title)
+        card_layout.addWidget(self.event_dropdown)
+
 
         main_layout.addWidget(card)
 
@@ -136,5 +190,21 @@ class MakeReservationPage(QWidget):
 
      def set_name(self, club: Club):
       self.venue_label.setText(club.name)
+
+     def load_events(self):
+  
+        session = Container.resolve(DatabaseSession)
+
+        self.event_dropdown.clear()
+
+        events = session.query(app.models.Event)\
+                        .filter(app.models.Event.club_id == self.club.id)\
+                        .order_by(app.models.Event.date.asc())\
+                        .all()
+
+        for event in events:
+            label = f"{event.title} - {event.date.strftime('%d/%m/%Y')}"
+            self.event_dropdown.addItem(label, event.id)
+
 
      
