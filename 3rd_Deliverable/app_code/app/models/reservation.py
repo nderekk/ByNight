@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from app.data.database import Base
 from app.utils.container import Container
 from app.services.db_session import DatabaseSession
+from datetime import datetime
 import app.models
 
 class Reservation(Base):
@@ -24,8 +25,52 @@ class Reservation(Base):
   event = relationship("Event", back_populates="reservations")
   table = relationship("Table", back_populates="reservations")
   
-  def update_res(self):
-    pass
+  def update_res(self, table_type: str, people: str, bottles: tuple[str]):
+    from app.models import Table, Order, TableType
+    from app.services import ReservationValidator
+    # bottle[0] = 80 bottle[1] = 120 $
+    bottles = [int(bottle) for bottle in bottles]
+      
+    mapper = {
+      "bar": "bar_available",
+      "VIP": "vip_available",
+      "Pass": "pass_available"
+    }
+    old_type = self.get_table_type()
+    new_type = TableType(table_type)
+    setattr(self.club, f"{old_type.lower()}_available", getattr(self.club, f"{old_type.lower()}_available") + 1)
+    response = ReservationValidator.check(table_type, people, bottles, self.club)
+    setattr(self.club, f"{new_type.lower()}_available", getattr(self.club, f"{new_type.lower()}_available") - 1)
+    # setattr(self.club, mapper[self.get_table_type()], mapper[self.get_table_type()]+1)
+    # setattr(self.club, mapper[table_type], mapper[table_type]-1)
+    # mapper[self.get_table_type()] += 1
+    # mapper[table_type] -= 1
+    if not response[0]:
+      return response
+    
+    self.table.table_type = TableType(table_type)
+
+    self.order.cost = bottles[0]*80 + bottles[1]*120
+    self.order.regular_bottles=bottles[0]
+    self.order.premium_bottles=bottles[1]
+    
+    self.num_of_people = people
+    
+    print("Record Updated")
+    
+    session = Container.resolve(DatabaseSession)
+    session.commit()
+    return response
+    # res = Reservation(
+    #   user= usr,
+    #   club=c,
+    #   table=tabl,
+    #   order=ord,
+    #   num_of_people=people,
+    #   date=datetime.now(tz=None),
+    #   qrcode='QR',
+    #   event=self.event
+    # )
   
   def get_club(self):
     return self.club
