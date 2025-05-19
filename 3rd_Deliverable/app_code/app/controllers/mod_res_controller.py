@@ -42,7 +42,7 @@ class ModifyReservationController(QObject):
     self.club = self.reservation.get_club()
     self.table_type = self.view.table_type_combo.currentText()
     self.people = int(self.view.people_spin.value())
-    self.bottles = (1, 0) # hardcoded for now, TODO get from user modify mod res page
+    self.bottles = (int(self.view.premium_spin.value()), int(self.view.regular_spin.value()))
     # print(f"bottles: {self.bottles[0]} , {self.bottles[1]}\n")
     response = self.reservation.update_res(self.table_type, self.people, self.bottles)
     if response[0]:
