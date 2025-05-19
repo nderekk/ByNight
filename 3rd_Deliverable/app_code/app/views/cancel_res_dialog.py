@@ -22,18 +22,30 @@ class CancelReservationDialog(QDialog):
 
     # Buttons
     button_layout = QHBoxLayout()
-    self.cancel_button = QPushButton("Cancel Reservation")
     self.keep_button = QPushButton("Keep Reservation")
+    self.cancel_button = QPushButton("Cancel Reservation")
+
+    # Set "Keep Reservation" as default
+    self.keep_button.setDefault(True)
 
     # Button styles
-    self.cancel_button.setStyleSheet("background-color: #d9534f; color: white;")
-    self.keep_button.setStyleSheet("background-color: #5bc0de; color: white;")
+    self.keep_button.setStyleSheet("background-color: #5cb85c; color: white;")  # green
+    self.cancel_button.setStyleSheet("background-color: #f8d7da; color: #333;") # subtle gray
+    self.keep_button.setStyleSheet("""
+        QPushButton {
+          background-color: #5cb85c; color: white;
+        }
+        QPushButton:hover {
+          background-color: #4cae4c;
+        }
+      """)
 
-    button_layout.addWidget(self.cancel_button)
+
     button_layout.addWidget(self.keep_button)
+    button_layout.addWidget(self.cancel_button)
 
     layout.addLayout(button_layout)
 
-    # Optional: connect button signals
-    self.cancel_button.clicked.connect(self.accept)
+    # Connect buttons
     self.keep_button.clicked.connect(self.reject)
+    self.cancel_button.clicked.connect(self.accept)
