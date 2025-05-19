@@ -50,19 +50,40 @@ class CustomerViewReservations(QWidget):
     subtitle.setStyleSheet("color: gray; font-size: 10pt;")
     layout.addWidget(subtitle)
 
-    # Upcoming
+    # Upcoming Reservations Scroll Area
     layout.addWidget(self.section_label("Upcoming Reservations"))
+    upcoming_container = QWidget()
+    upcoming_layout = QVBoxLayout()
     for reservation in self.upcoming_reservations:
-      card = self.reservation_card(*reservation, upcoming=True)
-      layout.addWidget(card)
+        card = self.reservation_card(*reservation, upcoming=True)
+        upcoming_layout.addWidget(card)
+    upcoming_layout.addStretch()
+    upcoming_container.setLayout(upcoming_layout)
 
-    # Past
+    upcoming_scroll = QScrollArea()
+    upcoming_scroll.setWidgetResizable(True)
+    upcoming_scroll.setWidget(upcoming_container)
+    upcoming_scroll.setFixedHeight(250)
+    layout.addWidget(upcoming_scroll)
+
+    # Past Reservations Scroll Area
     layout.addWidget(self.section_label("Past Reservations"))
+    past_container = QWidget()
+    past_layout = QVBoxLayout()
     for reservation in self.past_reservations:
-      card = self.reservation_card(*reservation, upcoming=False)
-      layout.addWidget(card)
+        card = self.reservation_card(*reservation, upcoming=False)
+        past_layout.addWidget(card)
+    past_layout.addStretch()
+    past_container.setLayout(past_layout)
+
+    past_scroll = QScrollArea()
+    past_scroll.setWidgetResizable(True)
+    past_scroll.setWidget(past_container)
+    past_scroll.setFixedHeight(250)
+    layout.addWidget(past_scroll)
 
     self.setLayout(layout)
+
 
   def section_label(self, text):
     label = QLabel(text)
