@@ -31,6 +31,16 @@ def seed():
       password="slet"
     )
     session.add(user)
+    
+    staff = User(
+      full_name="BIG FUCKING SIOU",
+      age=25,
+      role=Role.STAFF,
+      phone=1234567890,
+      email="skerdi@ceid.gr",
+      password="slet"
+    )
+    session.add(staff)
 
     # 3. Create Event
     events = [
