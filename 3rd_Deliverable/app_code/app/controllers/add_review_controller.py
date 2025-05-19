@@ -2,6 +2,7 @@ from app.utils.container import Container
 from PySide6.QtCore import QObject, Signal
 from app.views.review_view import AddReviewApp
 from app.models.user import User
+from app.views.review_page import ReviewPage
 
 class AddReviewController(QObject):
   # Signals for view updates
@@ -14,7 +15,7 @@ class AddReviewController(QObject):
     super().__init__()
     # upcoming, past = self.get_dummy_data()
     self.show_page = show_page
-    self.view = AddReviewApp()
+    self.view = ReviewPage()
     self.setup_connections()
   
   def setup_connections(self):
