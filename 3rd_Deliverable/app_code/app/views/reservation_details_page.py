@@ -2,10 +2,13 @@ from PySide6.QtWidgets import (
   QWidget, QVBoxLayout, QLabel, QPushButton,
   QHBoxLayout, QFrame, QSpacerItem, QSizePolicy
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QCursor
 
 class ReservationDetailsPage(QWidget):
+  mod_res_clicked = Signal(int)
+  cancel_res_clicked = Signal(int)
+  
   def __init__(self, res_details: dict[str, str]):
     super().__init__()
     self.res_details = res_details
@@ -50,6 +53,11 @@ class ReservationDetailsPage(QWidget):
     # Modify and Cancel buttons
     self.modify_btn = QPushButton("Modify Reservation")
     self.cancel_btn = QPushButton("Cancel Reservation")
+    
+    #set up signals
+    res_id = int(self.res_details["Reservation ID"])
+    self.modify_btn.clicked.connect(lambda: self.mod_res_clicked.emit(res_id))
+    self.cancel_btn.clicked.connect(lambda: self.cancel_res_clicked.emit(res_id))
 
     for btn in (self.modify_btn, self.cancel_btn):
       btn.setCursor(QCursor(Qt.PointingHandCursor))
@@ -76,10 +84,10 @@ class ReservationDetailsPage(QWidget):
     add_detail("Club", d.get("Club", "N/A"))
     add_detail("Reservation ID", d.get("Reservation ID", "N/A"))
     add_detail("User", d.get("User", "N/A"))
-    add_detail("Event", d.get("Event", "N/A") or "N/A")
-    add_detail("Table No", d.get("Table No", "N/A") or "N/A")
+    add_detail("Event", d.get("Event", "N/A"))
+    add_detail("Table Type", d.get("Table Type", "N/A"))
     add_detail("Number of People", d.get("Number of People", "N/A"))
-    add_detail("Date", d.get("Date", "N/A") or "N/A")
+    add_detail("Date", d.get("Date", "N/A"))
 
   def refresh_details(self, res_details: dict[str, str]):
     self.res_details = res_details

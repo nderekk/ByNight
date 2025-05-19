@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from app.data.database import Base
 from app.utils.container import Container
 from app.services.db_session import DatabaseSession
+from datetime import datetime
 import app.models
 
 class Reservation(Base):
@@ -24,6 +25,89 @@ class Reservation(Base):
   event = relationship("Event", back_populates="reservations")
   table = relationship("Table", back_populates="reservations")
   
+  @classmethod
+  def create_res(cls, club, event_id: int, table_type: str, people: str, bottles: tuple[str]):
+    session = Container.resolve(DatabaseSession)
+    from app.models import Order, Table,TableType, User, Event
+    from datetime import datetime
+
+    table = Table(
+      capacity=6,
+      club=club,
+      table_type = TableType(table_type)
+    )
+
+    user=Container.resolve(User)
+    reservation = Reservation(
+      user=user,  
+      club=club,
+      event_id=event_id,
+      table=table,
+      num_of_people= people,
+      date=Event.get_event_datetime(event_id)
+    )
+
+    order = Order(
+      cost=bottles[1]*120 + bottles[0]*80,
+      reservation=reservation,
+      premium_bottles=bottles[1],
+      regular_bottles=bottles[0]
+    )
+
+    session.add(reservation)
+    mapper = {
+      "bar": "bar_available",
+      "VIP": "vip_available",
+      "Pass": "pass_available"
+    }
+    new_type = TableType(table_type)
+    setattr(club, f"{new_type.lower()}_available", getattr(club, f"{new_type.lower()}_available") - 1)
+    session.commit()
+    return True
+  
+  def update_res(self, table_type: str, people: str, bottles: tuple[str]):
+    from app.models import Table, Order, TableType
+    from app.services import ReservationValidator
+    # bottle[0] = 80 bottle[1] = 120 $
+    bottles = [int(bottle) for bottle in bottles]
+      
+    mapper = {
+      "bar": "bar_available",
+      "VIP": "vip_available",
+      "Pass": "pass_available"
+    }
+    old_type = self.get_table_type()
+    new_type = TableType(table_type)
+    setattr(self.club, f"{old_type.lower()}_available", getattr(self.club, f"{old_type.lower()}_available") + 1)
+    response = ReservationValidator.check(table_type, people, bottles, self.club)
+    setattr(self.club, f"{new_type.lower()}_available", getattr(self.club, f"{new_type.lower()}_available") - 1)
+
+    if not response[0]:
+      return response
+    
+    self.table.table_type = TableType(table_type)
+
+    self.order.cost = bottles[0]*80 + bottles[1]*120
+    self.order.regular_bottles=bottles[0]
+    self.order.premium_bottles=bottles[1]
+    
+    self.num_of_people = people
+    
+    print("Record Updated")
+    
+    session = Container.resolve(DatabaseSession)
+    session.commit()
+    return response
+  
+  def cancel_res(self, reservation):
+    session = Container.resolve(DatabaseSession)
+    session.delete(reservation)
+    print("Reservation Deleted")
+    session.commit()
+  
+  def get_club(self):
+    return self.club
+  
   def get_club_name(self) -> str:
     return self.club.name
   
@@ -34,6 +118,14 @@ class Reservation(Base):
   def get_event_name(self) -> str:
     from app.models import Event
     return self.event.title
+  
+  def get_table(self):
+    from app.models import Table 
+    return self.table
+  
+  def get_table_type(self):
+    from app.models import Table, TableType
+    return self.table.table_type.value
   
   @classmethod
   def get_res_from_id(cls, res_id):

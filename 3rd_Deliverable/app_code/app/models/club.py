@@ -14,6 +14,9 @@ class Club(Base):
   address = Column(String, nullable=False)
   location = Column(String, nullable=False)
   manager = Column(String, nullable=False)
+  vip_available = Column(Integer, nullable=False, default=5)
+  pass_available = Column(Integer, nullable=False, default=30)
+  bar_available = Column(Integer, nullable=False, default=30)
 
   # Placeholder relationships — define actual classes later
   events = relationship("Event", back_populates="club", cascade="all, delete-orphan")
@@ -60,3 +63,20 @@ class Club(Base):
 
     query = query.distinct()  # avoid duplicates when multiple events match
     return query.all()
+  
+  def table_available(self, table_type: str) -> bool:
+    mapper = {
+      "bar": self.bar_available,
+      "VIP": self.vip_available,
+      "Pass": self.pass_available
+    }
+    if mapper[table_type] > 0:
+      return True
+    return False
+  
+  def get_available_table(self, table_type: str):
+    
+    for table in self.tables:
+        if table.table_type.value == table_type and table.is_available:
+            return table
+    raise Exception("No available table found")
