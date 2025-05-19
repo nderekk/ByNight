@@ -26,7 +26,7 @@ class MainUI(QWidget):
 
         # --- Menu Buttons ---
         menu_bar = QHBoxLayout()
-        self.menuButton = QPushButton("Work with us")
+        self.menuButton = QPushButton("≡")
         self.menuButton.setFont(QFont("", weight=QFont.Bold))
         self.viewResButton = QPushButton("View Reservations")
         self.profileButton = QPushButton("👤")
