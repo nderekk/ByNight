@@ -66,8 +66,6 @@ class MakeReservationController(QObject):
             table_type = TableType(table_type)
         )
         #table = club.get_available_table(table_type)   
-        
-
 
         user=Container.resolve(User)
         reservation = Reservation(
