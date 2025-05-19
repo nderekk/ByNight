@@ -22,6 +22,7 @@ class Club(Base):
   events = relationship("Event", back_populates="club", cascade="all, delete-orphan")
   tables = relationship("Table", back_populates="club", cascade="all, delete-orphan")
   reservations = relationship("Reservation", back_populates="club", cascade="all, delete-orphan")
+  reviews = relationship("Review", back_populates="club", cascade="all, delete-orphan")
 
   # staff_members = relationship("StaffMember", back_populates="club", cascade="all, delete-orphan")
   # statistics = relationship("ClubStatistics", back_populates="club", uselist=False)

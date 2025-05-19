@@ -24,6 +24,8 @@ class Reservation(Base):
   user = relationship("User", back_populates="reservations")
   event = relationship("Event", back_populates="reservations")
   table = relationship("Table", back_populates="reservations")
+  review = relationship("Review", back_populates="reservation", uselist=False, cascade="all, delete-orphan")
+
   
   @classmethod
   def create_res(cls, club, event_id: int, table_type: str, people: str, bottles: tuple[str]):

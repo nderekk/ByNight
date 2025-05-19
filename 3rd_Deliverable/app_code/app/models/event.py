@@ -17,6 +17,7 @@ class Event(Base):
   club = relationship("Club", back_populates="events")
    
   reservations = relationship("Reservation", back_populates="event", cascade="all, delete-orphan")
+  reviews = relationship("Review", back_populates="event", cascade="all, delete-orphan")
   
   @classmethod
   def get_event_datetime(cls, event_id: int):
