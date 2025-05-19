@@ -40,10 +40,10 @@ class AddReviewApp(QWidget):
 
         # Title with Back Button
         title_layout = QHBoxLayout()
-        back_btn = QPushButton("←")
-        back_btn.setFixedSize(30, 30)
-        back_btn.setStyleSheet("font-size: 14pt;")
-        title_layout.addWidget(back_btn)
+        self.back_btn = QPushButton("←")
+        self.back_btn.setFixedSize(30, 30)
+        self.back_btn.setStyleSheet("font-size: 14pt;")
+        title_layout.addWidget(self.back_btn)
 
         title = QLabel("Add Review")
         title.setStyleSheet("font-size: 16pt; font-weight: bold;")
@@ -85,7 +85,7 @@ class AddReviewApp(QWidget):
         comment_box.setStyleSheet("font-size: 10pt; padding: 5px;")
         layout.addWidget(comment_box)
 
-        # Submit Button 
+        # Submit Button (Optional)
         submit_btn = QPushButton("Submit Review")
         submit_btn.setStyleSheet("padding: 10px; font-size: 12pt; background-color: #333; color: white;")
         layout.addWidget(submit_btn)

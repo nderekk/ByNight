@@ -104,7 +104,7 @@ class DiscountPage(QWidget):
         main_layout.addWidget(scroll_area)
 
     def go_back(self):
-        # Implement back navigation here, e.g., self.close() or show another screen
+        # Implement back navigation here
         print("Back button clicked")
 
 

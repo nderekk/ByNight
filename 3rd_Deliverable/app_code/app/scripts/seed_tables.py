@@ -104,7 +104,7 @@ def seed():
                 table = tables[1],
                 num_of_people= 3,
                 order= order,
-                date=datetime(2025, 6, 1, 22, 0),
+                date=datetime(2024, 6, 1, 22, 0),
                 club= dummy_clubs[2],
                 qrcode= 'Qrcode',
                 event= events[0]

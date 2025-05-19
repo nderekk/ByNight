@@ -49,7 +49,7 @@ class ProfileApp(QWidget):
         profile_layout.addSpacing(20)
         layout.addLayout(profile_layout)
 
-        # Individual Info Fields (each below the other)
+        # Individual Info Fields
         layout.addLayout(self.create_info_column("name", "Nick"))
         layout.addLayout(self.create_info_column("surname", "Dagkalis"))
         layout.addLayout(self.create_info_column("date of birth", "30/10/2004"))
