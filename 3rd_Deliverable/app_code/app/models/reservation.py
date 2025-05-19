@@ -25,6 +25,46 @@ class Reservation(Base):
   event = relationship("Event", back_populates="reservations")
   table = relationship("Table", back_populates="reservations")
   
+  @classmethod
+  def create_res(cls, club, event_id: int, table_type: str, people: str, bottles: tuple[str]):
+    session = Container.resolve(DatabaseSession)
+    from app.models import Order, Table,TableType, User, Event
+    from datetime import datetime
+
+    table = Table(
+      capacity=6,
+      club=club,
+      table_type = TableType(table_type)
+    )
+
+    user=Container.resolve(User)
+    reservation = Reservation(
+      user=user,  
+      club=club,
+      event_id=event_id,
+      table=table,
+      num_of_people= people,
+      date=Event.get_event_datetime(event_id)
+    )
+
+    order = Order(
+      cost=bottles[1]*120 + bottles[0]*80,
+      reservation=reservation,
+      premium_bottles=bottles[1],
+      regular_bottles=bottles[0]
+    )
+
+    session.add(reservation)
+    mapper = {
+      "bar": "bar_available",
+      "VIP": "vip_available",
+      "Pass": "pass_available"
+    }
+    new_type = TableType(table_type)
+    setattr(club, f"{new_type.lower()}_available", getattr(club, f"{new_type.lower()}_available") - 1)
+    session.commit()
+    return True
+  
   def update_res(self, table_type: str, people: str, bottles: tuple[str]):
     from app.models import Table, Order, TableType
     from app.services import ReservationValidator
@@ -41,10 +81,7 @@ class Reservation(Base):
     setattr(self.club, f"{old_type.lower()}_available", getattr(self.club, f"{old_type.lower()}_available") + 1)
     response = ReservationValidator.check(table_type, people, bottles, self.club)
     setattr(self.club, f"{new_type.lower()}_available", getattr(self.club, f"{new_type.lower()}_available") - 1)
-    # setattr(self.club, mapper[self.get_table_type()], mapper[self.get_table_type()]+1)
-    # setattr(self.club, mapper[table_type], mapper[table_type]-1)
-    # mapper[self.get_table_type()] += 1
-    # mapper[table_type] -= 1
+
     if not response[0]:
       return response
     
@@ -61,16 +98,12 @@ class Reservation(Base):
     session = Container.resolve(DatabaseSession)
     session.commit()
     return response
-    # res = Reservation(
-    #   user= usr,
-    #   club=c,
-    #   table=tabl,
-    #   order=ord,
-    #   num_of_people=people,
-    #   date=datetime.now(tz=None),
-    #   qrcode='QR',
-    #   event=self.event
-    # )
+  
+  def cancel_res(self, reservation):
+    session = Container.resolve(DatabaseSession)
+    session.delete(reservation)
+    print("Reservation Deleted")
+    session.commit()
   
   def get_club(self):
     return self.club

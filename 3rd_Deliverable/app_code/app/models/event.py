@@ -16,4 +16,11 @@ class Event(Base):
   club_id = Column(Integer, ForeignKey("clubs.id"), nullable=False)
   club = relationship("Club", back_populates="events")
    
-  reservations = relationship("Reservation", back_populates="event", cascade="all, delete-orphan")     
+  reservations = relationship("Reservation", back_populates="event", cascade="all, delete-orphan")
+  
+  @classmethod
+  def get_event_datetime(cls, event_id: int):
+    from app.utils.container import Container
+    from app.services.db_session import DatabaseSession
+    session = Container.resolve(DatabaseSession)
+    return session.get(cls, event_id).date

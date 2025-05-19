@@ -42,50 +42,24 @@ class MakeReservationController(QObject):
     def handle_submit(self):
         people = int(self.view.guest_input.text())
         table_type = self.view.table_dropdown.currentText()
-        bottles = (int(self.view.premium_spinbox.value()) , int(self.view.regular_spinbox.value()))
+        bottles = (int(self.view.regular_spinbox.value()) , int(self.view.premium_spinbox.value()))
         event_id = int(self.view.event_dropdown.currentData())  
         club = self.club
 
-     
+        print(table_type, people, bottles, club)
         from app.services.reservation_validator import ReservationValidator
         valid = ReservationValidator.check(table_type, people, bottles, club)
 
         if not valid[0]:
             from PySide6.QtWidgets import QMessageBox
             QMessageBox.warning(self.view, "Validation Error", valid[1])
-            return
-
-    
-        session = Container.resolve(DatabaseSession)
-        from app.models import Reservation, Order, Table,TableType
-        from datetime import datetime
-
-        table = Table(
-            capacity=6,
-            club=self.club,
-            table_type = TableType(table_type)
-        )
-        #table = club.get_available_table(table_type)   
-
-        user=Container.resolve(User)
-        reservation = Reservation(
-            user=user,  
-            club=self.club,
-            event_id=event_id,
-            table=table,
-            num_of_people= people,
-            date=datetime.now()
-        )
-
-        order = Order(
-            cost=bottles[1]*120 + bottles[0]*80,
-            reservation=reservation,
-            premium_bottles=bottles[1],
-            regular_bottles=bottles[0]
-        )
-
-        session.add(reservation)
-        session.commit()
-
-        from PySide6.QtWidgets import QMessageBox
-        QMessageBox.information(self.view, "Success", "Reservation Confirmed!")
+        else:
+            from app.models import Reservation
+            ok = Reservation.create_res(club, event_id, table_type, people, bottles)
+            if ok:
+                from PySide6.QtWidgets import QMessageBox
+                QMessageBox.information(self.view, "Success", "Reservation Confirmed!")
+            else:
+                from PySide6.QtWidgets import QMessageBox
+                QMessageBox.warning(self.view, "Sorry", "An Error has Occured")
+        self.handle_back()
