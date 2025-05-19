@@ -11,6 +11,7 @@ class LoginView(QWidget):
   signup_attempted = Signal(str, str, str)  # email, password, user_type
   google_login_attempted = Signal()
   apple_login_attempted = Signal()
+  continue_clicked = Signal()  # New signal for continue button click
 
   def __init__(self):
     super().__init__()
@@ -36,6 +37,7 @@ class LoginView(QWidget):
     self.email_input.setPlaceholderText("email@domain.com")
     self.email_input.setFixedHeight(40)
     self.email_input.setStyleSheet("padding: 8px; font-size: 14px;")
+    self.email_input.returnPressed.connect(self.on_continue_clicked)  # Add Enter key handler
 
     # Password input (initially hidden)
     self.password_input = QLineEdit()
@@ -44,6 +46,7 @@ class LoginView(QWidget):
     self.password_input.setFixedHeight(40)
     self.password_input.setStyleSheet("padding: 8px; font-size: 14px;")
     self.password_input.hide()
+    self.password_input.returnPressed.connect(self.on_continue_clicked)  # Add Enter key handler
 
     # Continue/Login button
     self.continue_btn = QPushButton("Continue")
@@ -126,22 +129,6 @@ class LoginView(QWidget):
 
     self.setLayout(layout)
 
-  def on_continue_clicked(self):
-    email = self.email_input.text().strip()
-    if not self.password_input.isVisible():
-      # First step: email validation
-      if not self.validate_email(email):
-        self.show_error("Please enter a valid email address")
-        return
-      self.show_password_step()
-    else:
-      # Second step: password and login/signup
-      password = self.password_input.text()
-      if not password:
-        self.show_error("Please enter your password")
-        return
-      self.login_attempted.emit(email, password)
-
   def on_google_clicked(self):
     self.google_login_attempted.emit()
 
@@ -157,15 +144,13 @@ class LoginView(QWidget):
   def show_error(self, message):
     QMessageBox.critical(self, "Error", message)
 
-  def validate_email(self, email):
-    import re
-    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    return re.match(pattern, email) is not None
-
   def reset(self):
     self.email_input.clear()
     self.email_input.setEnabled(True)
     self.password_input.clear()
     self.password_input.hide()
     self.continue_btn.setText("Continue")
-    self.subtitle.setText("Create an account\nEnter your email to sign up for this app") 
+    self.subtitle.setText("Create an account\nEnter your email to sign up for this app")
+
+  def on_continue_clicked(self):
+    self.continue_clicked.emit() 

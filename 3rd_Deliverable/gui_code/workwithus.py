@@ -97,7 +97,7 @@ class WorkWithUsApp(QWidget):
         underline.setStyleSheet("margin-top: -10px; margin-bottom: 10px;")
         main_layout.addWidget(underline)
 
-        # Greek title
+        # title
         greek_title = QLabel("Αίτηση υποβολής")
         greek_title.setStyleSheet("font-size: 12pt; font-weight: bold;")
         greek_title.setAlignment(Qt.AlignCenter)
@@ -114,7 +114,7 @@ class WorkWithUsApp(QWidget):
 
         main_layout.addStretch()
 
-        # Submit button (black)
+        # Submit button
         submit_btn = QPushButton("✓ Υποβολή")
         submit_btn.setStyleSheet("""
             QPushButton {
