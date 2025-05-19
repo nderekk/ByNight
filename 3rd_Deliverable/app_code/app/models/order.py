@@ -14,7 +14,7 @@ class Order(Base):
   cost = Column(Float, nullable=False)
   delivered = Column(Boolean, default=False)
   paid = Column(Boolean, default=False)
-  bottle_type = Column(SQLAlchemyEnum(BottleType), nullable=False)
+  # bottle_type = Column(SQLAlchemyEnum(BottleType), nullable=False)
   regular_bottles = Column(Integer, default=0)
   premium_bottles = Column(Integer, default=0)
   reservation_id = Column(Integer, ForeignKey("reservations.id"), unique=True)
