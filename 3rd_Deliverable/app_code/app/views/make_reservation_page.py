@@ -169,8 +169,8 @@ class MakeReservationPage(QWidget):
         main_layout.addWidget(card)
 
         # Confirm Button
-        confirm_btn = QPushButton("Confirm Reservation")
-        confirm_btn.setStyleSheet("""
+        self.confirm_btn = QPushButton("Confirm Reservation")
+        self.confirm_btn.setStyleSheet("""
             QPushButton {
                 background-color: #333;
                 color: white;
@@ -183,10 +183,16 @@ class MakeReservationPage(QWidget):
                 background-color: #444;
             }
         """)
-        confirm_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.confirm_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         main_layout.addStretch()
-        main_layout.addWidget(confirm_btn)
+        main_layout.addWidget(self.confirm_btn)
+
+        self.guest_input = guest_input
+        self.table_dropdown = table_dropdown
+        self.premium_spinbox = premium_spinbox
+        self.regular_spinbox = regular_spinbox
+
 
      def set_name(self, club: Club):
       self.venue_label.setText(club.name)

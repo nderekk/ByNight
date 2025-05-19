@@ -73,3 +73,10 @@ class Club(Base):
     if mapper[table_type] > 0:
       return True
     return False
+  
+  def get_available_table(self, table_type: str):
+    
+    for table in self.tables:
+        if table.table_type.value == table_type and table.is_available:
+            return table
+    raise Exception("No available table found")
