@@ -41,16 +41,16 @@ class ModifyReservationController(QObject):
     
     self.club = self.reservation.get_club()
     self.table_type = self.view.table_type_combo.currentText()
-    self.people = self.view.people_spin.text()
-    response = ReservationValidator.check(self.table_type, self.people, 2, self.club)
-    print(f"\nresponse: {response}\n")
-    # result = ReservationValidator.check(self.table_type, self.people, self.bottles, self.club)
+    self.people = int(self.view.people_spin.value())
+    self.bottles = (1, 0) # hardcoded for now, TODO get from user modify mod res page
+    # print(f"bottles: {self.bottles[0]} , {self.bottles[1]}\n")
+    response = self.reservation.update_res(self.table_type, self.people, self.bottles)
     if response[0]:
-      # self.reservation.update_res(self.table_type, self.people, 2)
-      # self.reservation.update_res(self.table_type, self.people, self.bottles)
-      popup = MessagePopup(success=True, message="Your reservation has been updated successfully.")
+      popup = MessagePopup(success=True, message=response[1])
       popup.exec()
+      self.handle_back()
     else:
-      popup = MessagePopup(success=False, message=str(response[1]))
+      popup = MessagePopup(success=False, message=response[1])
       popup.exec()
+    
     
