@@ -3,6 +3,7 @@ from PySide6.QtCore import QObject, Signal
 from app.models import User
 from app.views import CustomerViewReservations
 from app.utils.container import Container
+from app.services.db_session import DatabaseSession
 
 class ViewReservationsController(QObject):
   # Signals for view updates
@@ -13,9 +14,12 @@ class ViewReservationsController(QObject):
   
   def __init__(self, show_page: callable):
     super().__init__()
-    # upcoming, past = self.get_dummy_data()
     self.show_page = show_page
-    self.upcoming, self.past = Container.resolve(User).get_reservations()
+    session = Container.resolve(DatabaseSession)
+    user = Container.resolve(User)
+    # Refresh the user object to get updated reservations
+    session.refresh(user)
+    self.upcoming, self.past = user.get_reservations()
     self.fomrat_for_card()
     # if not Container.is_initialized(CustomerViewReservations):
     #   self.view = CustomerViewReservations(self.upcoming, self.past)
