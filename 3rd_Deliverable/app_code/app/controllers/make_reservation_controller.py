@@ -58,6 +58,7 @@ class MakeReservationController(QObject):
     
         session = Container.resolve(DatabaseSession)
         from app.models import Reservation, Order, Table,TableType
+        from datetime import datetime
 
         table = Table(
             capacity=6,
@@ -67,11 +68,6 @@ class MakeReservationController(QObject):
         #table = club.get_available_table(table_type)   
         
 
-        order = Order(
-        reservation=reservation,
-        premium_bottles=bottles[1],
-        regular_bottles=bottles[0]
-        )
 
         user=Container.resolve(User)
         reservation = Reservation(
@@ -79,10 +75,16 @@ class MakeReservationController(QObject):
             club=self.club,
             event_id=event_id,
             table=table,
-            num_of_people= people
+            num_of_people= people,
+            date=datetime.now()
         )
 
-         
+        order = Order(
+            cost=bottles[1]*120 + bottles[0]*80,
+            reservation=reservation,
+            premium_bottles=bottles[1],
+            regular_bottles=bottles[0]
+        )
 
         session.add(reservation)
         session.commit()
