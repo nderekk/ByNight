@@ -121,6 +121,11 @@ class Reservation(Base):
     from app.models import Event
     return self.event.title
   
+  def get_event_date(self):
+    from app.models import Event
+    return self.event.date
+
+  
   def get_table(self):
     from app.models import Table 
     return self.table

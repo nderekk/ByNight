@@ -5,6 +5,9 @@ from app.utils.container import Container
 from app.services.db_session import DatabaseSession
 from sqlalchemy import distinct, and_
 from sqlalchemy.orm import joinedload
+from app.models.review import Review   
+
+
 
 class Club(Base):
   __tablename__ = "clubs"
@@ -22,7 +25,7 @@ class Club(Base):
   events = relationship("Event", back_populates="club", cascade="all, delete-orphan")
   tables = relationship("Table", back_populates="club", cascade="all, delete-orphan")
   reservations = relationship("Reservation", back_populates="club", cascade="all, delete-orphan")
-  reviews = relationship("Review", back_populates="club", cascade="all, delete-orphan")
+   
 
   # staff_members = relationship("StaffMember", back_populates="club", cascade="all, delete-orphan")
   # statistics = relationship("ClubStatistics", back_populates="club", uselist=False)

@@ -21,7 +21,7 @@ class ClickableReservationCard(QFrame):
 
 class CustomerViewReservations(QWidget):
     reservation_clicked = Signal(int)
-    review_button_clicked = Signal(int)  # NEW SIGNAL for review buttons
+    review_button_clicked = Signal(int)  # NEW SIGNAL for review buttons 
 
     def __init__(self, upcoming_reservations: list, past_reservations: list):
         super().__init__()

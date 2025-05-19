@@ -28,8 +28,8 @@ class ViewReservationsController(QObject):
     self.upcoming = [(r.club.name, r.date, r.id, r.event.title) for r in self.upcoming]
     self.past = [(r.club.name, r.date, r.id, r.event.title) for r in self.past]
   
-  def handle_view_review(self):
-    self.review_page_controller = AddReviewController(self.show_page)
+  def handle_view_review(self, id:int):
+    self.review_page_controller = AddReviewController(self.show_page, id)
     self.show_page('customer_view_button', self.review_page_controller)
       
   def handle_back(self):

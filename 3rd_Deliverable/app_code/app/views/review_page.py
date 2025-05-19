@@ -27,9 +27,11 @@ class StarRating(QWidget):
             self.stars[i].setText("★" if i < rating else "☆")
 
 
-class ReviewPage():
-    def __init__(self):
+class ReviewPage(QWidget):
+    def __init__(self, event_info: tuple):
      super().__init__()
+     self.event_info=event_info
+     self.setup_ui()
        
        
        
@@ -38,10 +40,10 @@ class ReviewPage():
 
         # Title with Back Button
         title_layout = QHBoxLayout()
-        back_btn = QPushButton("←")
-        back_btn.setFixedSize(30, 30)
-        back_btn.setStyleSheet("font-size: 14pt;")
-        title_layout.addWidget(back_btn)
+        self.back_btn = QPushButton("←")
+        self.back_btn.setFixedSize(30, 30)
+        self.back_btn.setStyleSheet("font-size: 14pt;")
+        title_layout.addWidget(self.back_btn)
 
         title = QLabel("Add Review")
         title.setStyleSheet("font-size: 16pt; font-weight: bold;")
@@ -57,8 +59,11 @@ class ReviewPage():
         image.setFixedSize(80, 80)
         image.setScaledContents(True)
 
+        
         info_layout = QVBoxLayout()
-        info_layout.addWidget(QLabel("Date: 3/4/2025  Event: Kultura"))
+        date, event_title = self.event_info
+        info_label = QLabel(f"Date: {date}  Event: {event_title}")
+        info_layout.addWidget(info_label)
 
         top_info = QHBoxLayout()
         top_info.addWidget(image)
