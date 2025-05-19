@@ -23,9 +23,10 @@ class AddReviewController(QObject):
   
   def handle_back(self):
     from app.controllers.view_res_controller import ViewReservationsController
-    
-    self.view_res_controller = Container.resolve(ViewReservationsController)
+    self.view_res_controller = ViewReservationsController(self.show_page)
     self.show_page('view_res_controller', self.view_res_controller)
+
+
    
   def show(self):
     self.view.show() 

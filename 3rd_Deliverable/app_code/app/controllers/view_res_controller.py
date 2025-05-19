@@ -20,8 +20,7 @@ class ViewReservationsController(QObject):
     self.setup_connections()
   
   def setup_connections(self):
-    # Connect view signals to controller methods
-    self.view.review_button.clicked.connect(self.handle_view_review)
+    self.view.review_button_clicked.connect(self.handle_view_review)
     self.view.back_btn.clicked.connect(self.handle_back)
     self.view.reservation_clicked.connect(self.handle_res_details)
       
@@ -30,12 +29,8 @@ class ViewReservationsController(QObject):
     self.past = [(r.club.name, r.date, r.id, r.event.title) for r in self.past]
   
   def handle_view_review(self):
-    if not Container.is_initialized(AddReviewController):
-      self.review_button = AddReviewController(self.show_page)
-      Container.add_existing_instance(AddReviewController, self.review_button)
-    else: 
-      self.review_button = Container.resolve(AddReviewController)
-    self.show_page('customer_view_button', self.review_button)
+    self.review_page_controller = AddReviewController(self.show_page)
+    self.show_page('customer_view_button', self.review_page_controller)
       
   def handle_back(self):
     from app.controllers import HomePageController
