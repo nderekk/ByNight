@@ -2,7 +2,7 @@ from PySide6.QtCore import QObject, Signal
 from app.services.auth_service import AuthService
 from app.views import LoginView
 from app.utils.container import Container
-from app.models import User
+from app.models import User, Staff
 
 class LoginController(QObject):
   # Signals for view updates
@@ -86,6 +86,7 @@ class LoginController(QObject):
     elif user.role == Role.MANAGER:
       pass
     elif user.role == Role.STAFF:
+      Container.register(Staff, Staff)
       self.staff_home_page_controller = StaffHomePageController(self.show_page)
       Container.add_existing_instance(StaffHomePageController, self.staff_home_page_controller)
       self.show_page('staff_home_page', self.staff_home_page_controller)
