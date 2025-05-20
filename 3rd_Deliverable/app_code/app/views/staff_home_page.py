@@ -34,9 +34,10 @@ class ReservationCard(QFrame):
 class StaffHomePage(QWidget):
   camera_clicked = Signal()  # ✅ Signal for camera icon
 
-  def __init__(self, reservations: list[dict]):
+  def __init__(self, club_name: str, reservations: list[dict]):
     super().__init__()
     self.setWindowTitle("Staff Home Page")
+    self.club_name = club_name
     self.cards = {}  # ✅ Dictionary to keep track of cards
     self.setup_ui(reservations)
 
@@ -45,7 +46,7 @@ class StaffHomePage(QWidget):
 
     # Header with title and camera button
     header_layout = QHBoxLayout()
-    title = QLabel("Tonight's Reservations")
+    title = QLabel(f"{self.club_name} - Tonight's Reservations")
     title.setStyleSheet("font-weight: bold; font-size: 18pt; margin: 10px 0;")
 
     camera_btn = QPushButton("📷")

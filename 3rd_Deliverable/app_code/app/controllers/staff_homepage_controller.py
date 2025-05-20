@@ -1,5 +1,5 @@
 from PySide6.QtCore import QObject, Signal
-from app.models import Staff
+from app.models import User, Reservation
 from app.views import StaffHomePage, MessagePopup
 from app.utils import Container
 
@@ -7,13 +7,14 @@ class StaffHomePageController(QObject):
   def __init__(self, show_page: callable):
     super().__init__()
     self.show_page = show_page
-    self.user = Container.resolve(Staff)
+    self.user = Container.resolve(User)
+    print(self.user.full_name)
     reservations = self.user.get_upcoming_club_reservations()
     print(reservations)
     reservations_data = [
       {
         "id": res.id,
-        "full_name": self.user.full_name
+        "full_name": res.get_user_name()
       } 
       for res in reservations
     ] 
@@ -22,7 +23,7 @@ class StaffHomePageController(QObject):
     # {"id": 102, "full_name": "Bob Smith"},
     # {"id": 103, "full_name": "Carla Gomez"},
     # ]
-    self.view = StaffHomePage(reservations_data)
+    self.view = StaffHomePage(self.user.works_at.name, reservations_data)
     self.setup_connections()
 
   def setup_connections(self):

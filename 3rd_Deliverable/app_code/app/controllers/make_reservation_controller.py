@@ -21,7 +21,7 @@ class MakeReservationController(QObject):
 
 
     def handle_back(self):
-        from app.controllers.home_page_controller import ClubMainPageController
+        from app.controllers import ClubMainPageController
         
         self.controller = ClubMainPageController(self.show_page, self.club)
         self.show_page('customer_club_main_page', self.controller)
