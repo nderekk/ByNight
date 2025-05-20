@@ -42,13 +42,70 @@ def seed():
                 age=40,
                 role=Role.MANAGER,
                 phone=4567890123,
-                email="toulas@example.com",
-                password="password"
+                email="toulas@ceid.gr",
+                password="slet"
             )
         ]
         session.add_all(managers)
         session.flush()  # Flush to get the IDs
 
+        # 3. Create Customer
+        customers = [
+            Customer(
+                full_name="BIG FUCKING SIOU",
+                age=50,
+                role=Role.CUSTOMER,
+                phone=1234567890,
+                email="spiros@ceid.gr",
+                password="slet"
+            ),
+            Customer(
+                full_name="BIG PSARAKIS GOAT",
+                age=55,
+                role=Role.CUSTOMER,
+                phone=1234567890,
+                email="fishakis@ceid.gr",
+                password="slet"
+            ),
+            Customer(
+                full_name="GABRIEL",
+                age=23,
+                role=Role.CUSTOMER,
+                phone=1234567890,
+                email="gabriel@ceid.gr",
+                password="slet"
+            ),
+            Customer(
+                full_name="FARMAKIS O FARMAKOPOIOS",
+                age=23,
+                role=Role.CUSTOMER,
+                phone=1234567890,
+                email="aofarmakis@ceid.gr",
+                password="slet"
+            ),
+            Customer(
+                full_name="SKEGIAS O DIAKSTIS",
+                age=23,
+                role=Role.CUSTOMER,
+                phone=1234567890,
+                email="skegias@ceid.gr",
+                password="slet"
+            ),
+        ]
+        session.add_all(customers)
+        
+        # 4. Create Staff
+        stf = Staff(
+            full_name="Paris",
+            age=21,
+            role=Role.STAFF,
+            phone=1234567890,
+            email="giparis@ceid.gr",
+            password="slet"
+        )
+        session.add(stf)
+        session.flush()
+        
         # 2. Create Clubs with manager references
         dummy_clubs = [
             Club(name="Navona", address="Hfaistou 8", location="Patra", manager_id=managers[0].id, vip_available=0),
@@ -59,28 +116,15 @@ def seed():
         session.add_all(dummy_clubs)
         session.flush()  # Flush to get the IDs
 
-        # 3. Create Customer
-        customer = Customer(
-            full_name="BIG FUCKING SIOU",
-            age=25,
-            role=Role.CUSTOMER,
-            phone=1234567890,
-            email="spiros@ceid.gr",
-            password="slet"
-        )
-        session.add(customer)
-        
-        # 4. Create Staff
-        staff = Staff(
-            full_name="BIG FUCKING SIOU",
-            age=25,
-            role=Role.STAFF,
-            phone=1234567890,
-            email="skerdi@ceid.gr",
-            password="slet"
-        )
-        session.add(staff)
+        # Set staff's club
+        stf.works_at = dummy_clubs[3]  # Assign staff to Marquee club
         session.flush()
+        
+        # Debug prints
+        print("\nVerifying relationships:")
+        print(f"Staff's club: {stf.works_at.name if stf.works_at else 'None'}")
+        print(f"Club's staff: {dummy_clubs[3].staff.full_name if dummy_clubs[3].staff else 'None'}")
+        print()
 
         # 5. Create Event
         events = [
@@ -129,33 +173,57 @@ def seed():
         # 8. Create Reservation and link everything
         dummy_reservations = [
             Reservation(
-                user=customer,
+                user=customers[0],
                 table=tables[0],
                 num_of_people=4,
                 order=order,
                 date=datetime(2026, 1, 1, 22, 0),
                 club=dummy_clubs[3],
-                qrcode='Qrcode',
                 event=events[0]
             ),
             Reservation(
-                user=customer,
+                user=customers[0],
                 table=tables[1],
                 num_of_people=2,
                 order=order,
                 date=datetime(2024, 6, 1, 22, 0),
-                club=dummy_clubs[0],
-                qrcode='Qrcode',
+                club=dummy_clubs[3],
                 event=events[1]
             ),
             Reservation(
-                user=customer,
+                user=customers[2],
+                table=tables[1],
+                num_of_people=2,
+                order=order,
+                date=datetime(2027, 6, 1, 22, 0),
+                club=dummy_clubs[3],
+                event=events[1]
+            ),
+            Reservation(
+                user=customers[3],
+                table=tables[1],
+                num_of_people=2,
+                order=order,
+                date=datetime(2027, 6, 1, 22, 0),
+                club=dummy_clubs[3],
+                event=events[1]
+            ),
+            Reservation(
+                user=customers[4],
+                table=tables[1],
+                num_of_people=2,
+                order=order,
+                date=datetime(2025, 12, 9, 23, 30),
+                club=dummy_clubs[3],
+                event=events[1]
+            ),
+            Reservation(
+                user=customers[1],
                 table=tables[1],
                 num_of_people=3,
                 order=order,
-                date=datetime(2025, 6, 1, 22, 0),
-                club=dummy_clubs[2],
-                qrcode='Qrcode',
+                date=datetime(2025, 10, 28, 22, 0),
+                club=dummy_clubs[3],
                 event=events[0]
             )
         ]
