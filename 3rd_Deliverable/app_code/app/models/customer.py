@@ -10,7 +10,7 @@ class Customer(User):
     id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 
     __mapper_args__ = {
-        "polymorphic_identity": Role.CUSTOMER.value,
+        "polymorphic_identity": Role.CUSTOMER,
     }
 
     # Customer-specific methods can be added here

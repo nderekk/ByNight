@@ -8,3 +8,4 @@ from app.controllers.mod_res_controller import ModifyReservationController
 from app.controllers.canc_res_controller import CancelReservationController
 from app.controllers.qrcode_controller import QRcodeController
 from app.controllers.staff_homepage_controller import StaffHomePageController
+from app.controllers.make_reservation_controller import MakeReservationController

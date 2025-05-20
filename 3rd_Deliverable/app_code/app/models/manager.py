@@ -13,7 +13,7 @@ class Manager(User):
     managed_clubs = relationship("Club", back_populates="manager", cascade="all, delete-orphan")
 
     __mapper_args__ = {
-        "polymorphic_identity": Role.MANAGER.value,
+        "polymorphic_identity": Role.MANAGER,
     }
 
     # Manager-specific methods

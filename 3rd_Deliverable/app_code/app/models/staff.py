@@ -9,13 +9,16 @@ class Staff(User):
 
     id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 
-    # New relationship example
-    works_at = relationship("Club", back_populates="staff")
+    # One-to-one relationship with Club
+    works_at = relationship("Club", back_populates="staff", uselist=False)
 
     __mapper_args__ = {
-        "polymorphic_identity": Role.STAFF.value,
+        "polymorphic_identity": Role.STAFF,
     }
 
     # Extra method
     def get_upcoming_club_reservations(self) -> list[dict]:
-        return self.works_at.get_club_reservations()
+        print(f"\n{self.works_at}\n")
+        if not self.works_at:
+            return []
+        return self.works_at.get_upcoming_club_reservations()

@@ -19,8 +19,8 @@ class User(Base):
     reservations = relationship("Reservation", back_populates="user", cascade="all, delete-orphan")
     
     __mapper_args__ = {
-        "polymorphic_on": role,
-        "polymorphic_abstract": True
+        'polymorphic_on': role,
+        'with_polymorphic': '*',  # Ensures subclass is always returned
     }
 
     def verify_password(self, password: str) -> bool:
