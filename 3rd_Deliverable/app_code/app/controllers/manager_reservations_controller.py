@@ -1,7 +1,8 @@
 from app.utils.container import Container
 from PySide6.QtCore import QObject, Signal
 from app.models.user import User
-from app.views.manager_reservations_view import ReservationCard
+from app.views.manager_reservations_view import ManagerReservationPage
+
 from app.utils.container import Container
 class ManagerViewReservationsController(QObject):
   # Signals for view updates
@@ -14,7 +15,7 @@ class ManagerViewReservationsController(QObject):
     super().__init__()
     # upcoming, past = self.get_dummy_data()
     self.show_page = show_page
-    self.view = ReservationCard()
+    self.view = ManagerReservationPage()
     self.setup_connections()
   
   def setup_connections(self):

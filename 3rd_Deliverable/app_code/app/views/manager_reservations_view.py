@@ -1,131 +1,136 @@
-import sys
 from PySide6.QtWidgets import (
-    QApplication, QWidget, QLabel, QPushButton,
-    QVBoxLayout, QScrollArea, QFrame, QSizePolicy, QMessageBox
+    QWidget, QLabel, QPushButton, QVBoxLayout, QScrollArea, QFrame,
+    QSizePolicy, QMessageBox, QHBoxLayout
 )
-from PySide6.QtGui import QFont, QCursor
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont, QCursor, QMouseEvent
+from PySide6.QtCore import Qt, Signal
 
 
-class ReservationCard(QFrame):
-    def __init__(self):
+class ClickableReservationCard(QFrame):
+    clicked = Signal(object)  # Emits the reservation data (dict)
+
+    def __init__(self, reservation_data, card_widget):
         super().__init__()
-
-        # Hardcoded data
-        self.table_no = 7
-        self.reserved_by = "Alex Johnson"
-        self.event = "Latin Night"
-        self.ID = 101
-        self.time = "9:00 PM"
-        self.people = 4
-        self.order = "Tacos and Margaritas"
-        self.cost = 95.50
-
-        self.setStyleSheet("""
-            QFrame {
-                background-color: #333333;
-                color: white;
-                border-radius: 10px;
-            }
-            QLabel {
-                font-size: 14px;
-            }
-        """)
-
-        layout = QVBoxLayout()
-        layout.setContentsMargins(15, 10, 15, 10)
-        layout.setSpacing(5)
-
-        label1 = QLabel(f"<b>Table No: {self.table_no}</b>")
-        label2 = QLabel(f"Reserved by: <b>{self.reserved_by}</b>")
-        label3 = QLabel(f"Event: {self.event} | ID: {self.ID} | {self.time}")
-        label4 = QLabel(f"People: {self.people} | Order: {self.order}")
-        label5 = QLabel(f"<b>Cost: €{self.cost:.2f}</b>")
-
-        for label in (label1, label2, label3, label4, label5):
-            label.setWordWrap(True)
-            layout.addWidget(label)
-
-        self.setLayout(layout)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.reservation_data = reservation_data
+        self.setLayout(card_widget.layout())
+        self.setStyleSheet("background-color: #333333; color: white; border-radius: 10px;")
         self.setCursor(QCursor(Qt.PointingHandCursor))
 
-    def mousePressEvent(self, event):
-        message = (
-            f"Table No: {self.table_no}\n"
-            f"Reserved by: {self.reserved_by}\n"
-            f"Event: {self.event}\n"
-            f"ID: {self.ID}\n"
-            f"Time: {self.time}\n"
-            f"People: {self.people}\n"
-            f"Order: {self.order}\n"
-            f"Cost: €{self.cost:.2f}"
-        )
-        QMessageBox.information(self, "Reservation Details", message)
+    def mousePressEvent(self, event: QMouseEvent):
+        if event.button() == Qt.LeftButton:
+            self.clicked.emit(self.reservation_data)
 
 
-class ManagerHomePage(QWidget):
+class ManagerReservationPage(QWidget):
+    reservation_clicked = Signal(dict)
+
     def __init__(self, show_page: callable = None):
         super().__init__()
         self.show_page = show_page
+        self.sample_data = self.load_reservations()
+        self.setup_ui()
 
+    def setup_ui(self):
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(15, 15, 15, 15)
         main_layout.setSpacing(15)
 
         # Header
-        header_layout = QVBoxLayout()
-        back_btn = QPushButton("←")
-        back_btn.setFixedSize(30, 30)
-        back_btn.setStyleSheet("font-size: 18px; background-color: #555; color: white; border: none;")
-        back_btn.clicked.connect(self.on_back_clicked)
+        header_layout = QHBoxLayout()
+        self.back_btn = QPushButton("←")
+        self.back_btn.setFixedSize(30, 30)
+        self.back_btn.setStyleSheet("font-size: 18px; background-color: #555; color: white; border: none;")
+        self.back_btn.clicked.connect(self.on_back_clicked)
 
         title = QLabel("Manage Reservations")
         title.setFont(QFont("Arial", 18, QFont.Bold))
+        title.setStyleSheet("margin-left: 10px;")
+
+        header_layout.addWidget(self.back_btn)
+        header_layout.addWidget(title)
+        header_layout.addStretch()
+
+        main_layout.addLayout(header_layout)
 
         subtitle = QLabel("Keep track of your club’s reservations. Tap them to see detailed info about them!")
         subtitle.setWordWrap(True)
         subtitle.setStyleSheet("color: gray;")
-
-        header_layout.addWidget(back_btn, alignment=Qt.AlignLeft)
-        header_layout.addWidget(title)
-        header_layout.addWidget(subtitle)
-        header_layout.setSpacing(10)
-
-        main_layout.addLayout(header_layout)
+        main_layout.addWidget(subtitle)
 
         # Scrollable content
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
+
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
         content_layout.setContentsMargins(10, 10, 10, 10)
         content_layout.setSpacing(20)
 
-        # Add hardcoded reservation cards
-        content_layout.addWidget(QLabel("<b>Sunday (Today)</b>"))
-        for _ in range(2):
-            content_layout.addWidget(ReservationCard())
-
-        content_layout.addSpacing(20)
-        content_layout.addWidget(QLabel("<b>Monday</b>"))
-        for _ in range(2):
-            content_layout.addWidget(ReservationCard())
+        for day, reservations in self.sample_data.items():
+            content_layout.addWidget(QLabel(f"<b>{day}</b>"))
+            for res in reservations:
+                card = self.create_reservation_card(res)
+                content_layout.addWidget(card)
 
         scroll.setWidget(content_widget)
         main_layout.addWidget(scroll)
 
+    def create_reservation_card(self, res):
+        # Card layout
+        card = QFrame()
+        layout = QVBoxLayout()
+        layout.setContentsMargins(15, 10, 15, 10)
+        layout.setSpacing(5)
+
+        label1 = QLabel(f"<b>Table No: {res['table_no']}</b>")
+        label2 = QLabel(f"Reserved by: <b>{res['reserved_by']}</b>")
+        label3 = QLabel(f"Event: {res['event']} | ID: {res['id']} | {res['time']}")
+        label4 = QLabel(f"People: {res['people']} | Order: {res['order']}")
+        label5 = QLabel(f"<b>Cost: {res['cost']}</b>")
+
+        for label in (label1, label2, label3, label4, label5):
+            label.setWordWrap(True)
+            layout.addWidget(label)
+
+        card.setLayout(layout)
+        card.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        clickable = ClickableReservationCard(reservation_data=res, card_widget=card)
+        clickable.clicked.connect(self.handle_card_click)
+        return clickable
+
+    def handle_card_click(self, reservation_data):
+        msg = (
+            f"Table No: {reservation_data['table_no']}\n"
+            f"Reserved by: {reservation_data['reserved_by']}\n"
+            f"Event: {reservation_data['event']}\n"
+            f"ID: {reservation_data['id']}\n"
+            f"Time: {reservation_data['time']}\n"
+            f"People: {reservation_data['people']}\n"
+            f"Order: {reservation_data['order']}\n"
+            f"Cost: {reservation_data['cost']}"
+        )
+        QMessageBox.information(self, "Reservation Details", msg)
+        self.reservation_clicked.emit(reservation_data)
+
+    def load_reservations(self):
+        return {
+            "Sunday (Today)": [
+                {"table_no": 1, "reserved_by": "Spyros Sioutas", "event": "Koultoura",
+                 "id": 2, "time": "12:00", "people": 5, "order": 2, "cost": 120},
+                {"table_no": 3, "reserved_by": "Alex Papadopoulos", "event": "Salsa Night",
+                 "id": 3, "time": "14:00", "people": 3, "order": 1, "cost": 90}
+            ],
+            "Monday": [
+                {"table_no": 4, "reserved_by": "Maria Georgiou", "event": "Jazz Night",
+                 "id": 4, "time": "18:30", "people": 6, "order": 3, "cost": 160},
+                {"table_no": 5, "reserved_by": "Kostas Theodorou", "event": "Tech Meetup",
+                 "id": 5, "time": "20:00", "people": 2, "order": 1, "cost": 70}
+            ]
+        }
+
     def on_back_clicked(self):
         if self.show_page:
-            self.show_page("previous_page")  # Placeholder for navigation callback
+            self.show_page("previous_page")
         else:
             self.close()
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = ManagerHomePage()
-    window.resize(600, 800)
-    window.setWindowTitle("Reservations")
-    window.show()
-    sys.exit(app.exec())

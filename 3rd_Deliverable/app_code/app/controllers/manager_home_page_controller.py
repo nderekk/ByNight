@@ -1,7 +1,6 @@
 from PySide6.QtCore import QObject
 from app.models.user import User
 from app.views.manager_home_page_view import ManagerUI
-from app.views.manager_reservations_view import ManagerHomePage
 from app.utils.container import Container
 
 
@@ -14,13 +13,11 @@ class ManagerHomePageController(QObject):
         self.setup_connections()
 
     def setup_connections(self):
-            self.view.viewResButton.clicked.connect(self.ReservationButton)
+            self.view.viewResButton.clicked.connect(self.handle_view_man_res_page)
     
     
-    def ReservationButton(self):
-        if not Container.is_initialized(ManagerHomePage):
-            self.view_res_controller = ManagerHomePage(self.show_page)
-            Container.add_existing_instance(ManagerHomePage, self.view_res_controller)
-        else:
-            self.view_res_controller = Container.resolve(ManagerHomePage)
-            self.show_page('manager_view_res_page', self.view_res_controller)    
+    def handle_view_man_res_page(self):
+        from app.controllers.manager_reservations_controller import ManagerViewReservationsController
+
+        self.manager_reservations_controller = ManagerViewReservationsController(self.show_page)
+        self.show_page('manager_view_res_page', self.manager_reservations_controller)
