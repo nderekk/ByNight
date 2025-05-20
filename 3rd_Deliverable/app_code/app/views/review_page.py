@@ -74,27 +74,31 @@ class ReviewPage(QWidget):
 
         # Rating labels and stars
         rating_layout = QGridLayout()
-        criteria = ["Music", "Atmosphere", "Service", "Price", "Overall Experience"]
 
+        self.rating_widgets = {}
+
+        criteria = ["Music", "Atmosphere", "Service", "Overall Experience"]
         for i, label in enumerate(criteria):
-            rating_layout.addWidget(QLabel(f"<b>{label}</b>"), i, 0)
-            rating_layout.addWidget(StarRating(), i, 1)
+            rating_label = QLabel(f"<b>{label}</b>")
+            rating_widget = StarRating()
+            rating_layout.addWidget(rating_label, i, 0)
+            rating_layout.addWidget(rating_widget, i, 1)
+            self.rating_widgets[label] = rating_widget
 
         layout.addLayout(rating_layout)
 
-        # Comment box
-        comment_box = QTextEdit()
-        comment_box.setPlaceholderText("Leave a comment here...")
-        comment_box.setStyleSheet("font-size: 10pt; padding: 5px;")
-        layout.addWidget(comment_box)
+        
+        self.comment_box = QTextEdit()
+        self.comment_box.setPlaceholderText("Leave a comment here...")
+        self.comment_box.setStyleSheet("font-size: 10pt; padding: 5px;")
+        layout.addWidget(self.comment_box)
 
-        # Submit Button 
-        submit_btn = QPushButton("Submit Review")
-        submit_btn.setStyleSheet("padding: 10px; font-size: 12pt; background-color: #333; color: white;")
-        layout.addWidget(submit_btn)
+             
+        self.submit_btn = QPushButton("Submit Review")
+        self.submit_btn.setStyleSheet("padding: 10px; font-size: 12pt; background-color: #333; color: white;")
+        layout.addWidget(self.submit_btn)
 
         self.setLayout(layout)
-
- 
+    
 
     

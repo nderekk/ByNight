@@ -12,6 +12,7 @@ class Review(Base):
     music_rating = Column(Integer, nullable=False)
     atmosphere_rating = Column(Integer, nullable=False)
     service_rating = Column(Integer, nullable=False)
+    overall_experience =  Column(Integer, nullable=False)
     comments = Column(String)
 
     reservation_id = Column(Integer, ForeignKey("reservations.id"), nullable=False, unique=True)
@@ -25,11 +26,13 @@ class Review(Base):
         CheckConstraint('music_rating BETWEEN 1 AND 5', name='music_rating_range'),
         CheckConstraint('atmosphere_rating BETWEEN 1 AND 5', name='atmosphere_rating_range'),
         CheckConstraint('service_rating BETWEEN 1 AND 5', name='service_rating_range'),
+        CheckConstraint('overall_experience BETWEEN 1 AND 5', name='overall_rating_range')
+
     )
 
 
     @classmethod
-    def create_review(cls, music_rating: int, atmosphere_rating: int, service_rating: int,  comment: str, reservation_id: int):
+    def create_review(cls, music_rating: int, atmosphere_rating: int, service_rating: int,overall_experience: int,  comment: str, reservation_id: int) :
         from app.models import Reservation
 
         session = Container.resolve(DatabaseSession)
@@ -40,7 +43,9 @@ class Review(Base):
         music_rating=music_rating,
         atmosphere_rating=atmosphere_rating,
         service_rating=service_rating,
+        overall_experience=overall_experience,
         comments=comment
+
     )
 
         session.add(review)
