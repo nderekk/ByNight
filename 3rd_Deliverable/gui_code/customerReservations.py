@@ -16,7 +16,7 @@ class ReservationApp(QWidget):
     def setup_ui(self):
         layout = QVBoxLayout()
 
-        # Header with back button
+        # Header
         header_layout = QHBoxLayout()
         back_btn = QPushButton("←")
         back_btn.setFixedSize(30, 30)
@@ -70,7 +70,7 @@ class ReservationApp(QWidget):
         details_layout.addWidget(QLabel("Saint Club"))
         details_layout.addWidget(QLabel("30/5/2025 | 00:30 | ID: 123456789"))
 
-        # Clickable event label
+        # Event label
         event_label = QLabel('<a href="#">Event: Kultura</a>')
         event_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
         event_label.setOpenExternalLinks(False)

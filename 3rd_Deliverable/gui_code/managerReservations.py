@@ -47,7 +47,6 @@ class ReservationCard(QFrame):
         self.setLayout(layout)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
         
-        # Set cursor to pointer to indicate it's clickable
         self.setCursor(QCursor(Qt.PointingHandCursor))
 
     def mousePressEvent(self, event):
@@ -115,7 +114,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(main_widget)
 
     def on_back_clicked(self):
-        # Here, you can either close the window or switch to a previous window
+        # Implement back button functionality
         self.close()
 
 

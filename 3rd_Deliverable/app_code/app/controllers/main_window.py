@@ -1,8 +1,8 @@
 from app.controllers.login_controller import LoginController
-from app.controllers.view_res_controller import ViewReservationsController
 from app.services.auth_service import AuthService
 from app.utils.container import Container
-from app.data.repositories.user_repository import UserRepository
+from app.data.database import SessionLocal
+from app.services.db_session import DatabaseSession
 from PySide6.QtWidgets import QStackedWidget, QMainWindow
 from PySide6.QtCore import QObject, Signal
 
@@ -16,12 +16,16 @@ class MainWindow(QMainWindow):
     self.stack = QStackedWidget()
     self.setCentralWidget(self.stack)
     
+    self.session = DatabaseSession(SessionLocal)
+    Container.register(DatabaseSession, self.session.get_session)
+    
     # Initialize pages dictionary
     self.pages = {}
 
     # set up controllers
-    self.auth_service = AuthService(Container.resolve(UserRepository))
-    self.login_controller = LoginController(self.auth_service, self.show_page)
+    Container.register(AuthService, AuthService)
+    self.auth_service = Container.resolve(AuthService)
+    self.login_controller = LoginController(self.show_page)
     
     # self.view_res = ViewReservationsController()
     # Start with login page
@@ -32,8 +36,17 @@ class MainWindow(QMainWindow):
     if page_name not in self.pages:
       self.pages[page_name] = page_controller.view
       self.stack.addWidget(self.pages[page_name])
+    else:
+      self.pages[page_name] = page_controller.view
+      self.stack.addWidget(self.pages[page_name])
+    print("widget set ", page_name)
     self.stack.setCurrentWidget(self.pages[page_name])
 
+  def closeEvent(self, event):
+    print("🛑 Closing app — cleaning up session.")
+    self.session.close()
+    super().closeEvent(event)
+    
   # def show_login(self):
   #   if 'login_page' not in self.pages:
   #     self.login_page = self.login_controller.view

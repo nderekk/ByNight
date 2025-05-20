@@ -85,7 +85,7 @@ class AddReviewApp(QWidget):
         comment_box.setStyleSheet("font-size: 10pt; padding: 5px;")
         layout.addWidget(comment_box)
 
-        # Submit Button (Optional)
+        # Submit Button 
         submit_btn = QPushButton("Submit Review")
         submit_btn.setStyleSheet("padding: 10px; font-size: 12pt; background-color: #333; color: white;")
         layout.addWidget(submit_btn)

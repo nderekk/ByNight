@@ -39,7 +39,7 @@ class LoginSignupWindow(QWidget):
         continue_btn.setFixedHeight(40)
         continue_btn.setStyleSheet("background-color: black; color: white; font-size: 14px;")
 
-        # Divider ("or" centered)
+        # Divider
         divider_layout = QHBoxLayout()
         divider_layout.setContentsMargins(0, 20, 0, 10)
 
