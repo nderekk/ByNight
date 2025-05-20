@@ -42,6 +42,7 @@ class Club(Base):
     reservations = session.query(Reservation).filter(
       Reservation.club_id == self.id,
       Reservation.date > datetime.now()
+      # Reservation.date == datetime.now() uncomment in the future
     ).all()
     
     print(f"Found {len(reservations)} upcoming reservations")

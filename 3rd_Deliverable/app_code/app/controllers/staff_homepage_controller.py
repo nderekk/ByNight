@@ -36,7 +36,7 @@ class StaffHomePageController(QObject):
       card = self.view.cards.get(detected_id)
       if card:
         card.checkbox.setChecked(True)
-        popup = MessagePopup(success=True, message=f"Reservation {detected_id}\nChecked In")
+        popup = MessagePopup(success=True, message=f"ID: {detected_id} | {self.user.full_name}\nChecked In")
         popup.exec()
         # TODO notification code
         
