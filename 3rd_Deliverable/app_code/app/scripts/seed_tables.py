@@ -22,15 +22,25 @@ def seed():
     # (session.add(c) for c in dummy_clubs)
 
     # 2. Create User
-    user = User(
-      full_name="BIG FUCKING SIOU",
-      age=25,
-      role=Role.CUSTOMER,
-      phone=1234567890,
-      email="spiros@ceid.gr",
-      password="slet"
-    )
-    session.add(user)
+    user = [ 
+        User(
+        full_name="BIG FUCKING SIOU",
+        age=25,
+        role=Role.CUSTOMER,
+        phone=1234567890,
+        email="spiros@ceid.gr",
+        password="slet"
+        ),
+        User(
+        full_name="BIG FUCKING GREG",
+        age=25,
+        role=Role.MANAGER,
+        phone=1234567890,
+        email="greg@ceid.gr",
+        password="slet"
+        )
+      ]  
+    session.add_all(user)
 
     # 3. Create Event
     events = [
@@ -80,7 +90,7 @@ def seed():
     
     dummy_reservations = [
               Reservation(
-                user= user,
+                user= user[0],
                 table = tables[0],
                 num_of_people= 4,
                 order= order,
@@ -90,7 +100,7 @@ def seed():
                 event= events[0]
             ),
             Reservation(
-                user= user,
+                user= user[0],
                 table = tables[1],
                 num_of_people= 2,
                 order= order,
@@ -100,7 +110,7 @@ def seed():
                 event= events[1]
             ),
             Reservation(
-                user= user,
+                user= user[0],
                 table = tables[1],
                 num_of_people= 3,
                 order= order,
