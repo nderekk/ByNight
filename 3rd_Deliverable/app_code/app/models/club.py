@@ -1,10 +1,11 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from app.data.database import Base
 from app.utils.container import Container
 from app.services.db_session import DatabaseSession
 from sqlalchemy import distinct, and_
 from sqlalchemy.orm import joinedload
+from datetime import datetime
 
 class Club(Base):
   __tablename__ = "clubs"
@@ -13,7 +14,7 @@ class Club(Base):
   name = Column(String, unique=True, nullable=False)
   address = Column(String, nullable=False)
   location = Column(String, nullable=False)
-  manager = Column(String, nullable=False)
+  manager_id = Column(Integer, ForeignKey("managers.id"), nullable=True)
   vip_available = Column(Integer, nullable=False, default=5)
   pass_available = Column(Integer, nullable=False, default=30)
   bar_available = Column(Integer, nullable=False, default=30)
@@ -22,9 +23,33 @@ class Club(Base):
   events = relationship("Event", back_populates="club", cascade="all, delete-orphan")
   tables = relationship("Table", back_populates="club", cascade="all, delete-orphan")
   reservations = relationship("Reservation", back_populates="club", cascade="all, delete-orphan")
+  
+  staff_id = Column(Integer, ForeignKey("staff.id"), nullable=True)
+  staff = relationship("Staff", back_populates="works_at", uselist=False)
 
   # staff_members = relationship("StaffMember", back_populates="club", cascade="all, delete-orphan")
   # statistics = relationship("ClubStatistics", back_populates="club", uselist=False)
+  
+  manager = relationship("Manager", back_populates="managed_clubs")
+  
+  def get_upcoming_club_reservations(self):
+    from app.models import Reservation
+    session = Container.resolve(DatabaseSession)
+    print(f"\nGetting upcoming reservations for club: {self.name}")
+    print(f"Club ID: {self.id}")
+    print(f"Current time: {datetime.now()}")
+    
+    reservations = session.query(Reservation).filter(
+      Reservation.club_id == self.id,
+      Reservation.date > datetime.now()
+      # Reservation.date == datetime.now() uncomment in the future
+    ).all()
+    
+    print(f"Found {len(reservations)} upcoming reservations")
+    for res in reservations:
+        print(f"- Reservation {res.id} on {res.date}")
+    
+    return reservations
   
   @classmethod
   def get_clubs_all(cls):
