@@ -7,6 +7,7 @@ import sys
 class FileUploadField(QWidget):
     def __init__(self, label_text):
         super().__init__()
+        self.file_path = None
 
         layout = QHBoxLayout()
         layout.setContentsMargins(10, 5, 10, 5)
@@ -50,10 +51,16 @@ class FileUploadField(QWidget):
         file_dialog = QFileDialog()
         file_path, _ = file_dialog.getOpenFileName(self, "Select File")
         if file_path:
-            print(f"Selected file for {self.findChild(QLabel).text()}: {file_path}")
+            self.file_path = file_path 
+            self.button.setText("✔ Υποβλήθηκε")
 
     def remove_clicked(self):
-        print(f"Remove clicked for {self.findChild(QLabel).text()}")
+        self.file_path = None  # <- καθάρισε
+        self.button.setText("Input File")
+        print(f"Remove clicked for {self.label_text}")
+
+    def get_file_path(self):
+        return self.file_path
 
 
 class WorkWithUsPage(QWidget):
@@ -112,8 +119,8 @@ class WorkWithUsPage(QWidget):
         main_layout.addStretch()
 
         # Submit button (black)
-        submit_btn = QPushButton("✓ Υποβολή")
-        submit_btn.setStyleSheet("""
+        self.submit_btn = QPushButton("✓ Υποβολή")
+        self.submit_btn.setStyleSheet("""
             QPushButton {
                 padding: 10px;
                 font-size: 11pt;
@@ -122,14 +129,25 @@ class WorkWithUsPage(QWidget):
                 border-radius: 6px;
             }
         """)
-        submit_btn.setFixedSize(140, 40)
+        self.submit_btn.setFixedSize(140, 40)
         #submit_btn.clicked.connect(self.submit_clicked)
 
         submit_layout = QHBoxLayout()
         submit_layout.addStretch()
-        submit_layout.addWidget(submit_btn)
+        submit_layout.addWidget(self.submit_btn)
         main_layout.addLayout(submit_layout)
 
         self.setLayout(main_layout)
+
+
+
+    def get_uploaded_files(self) -> list[str]:
+        return [field.get_file_path() for field in self.upload_fields if field.get_file_path() is not None]
+    
+
+
+
+    def show_error(self, message: str):
+        QMessageBox.critical(self, "Σφάλμα", message)
 
 

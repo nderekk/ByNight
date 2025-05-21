@@ -61,3 +61,13 @@ class HomePageController(QObject):
     self.access_work_with_us = WorkWithUsController(self.show_page)
     self.show_page('work_with_us_page', self.access_work_with_us)
 
+  def update(self):
+    from app.controllers.manager_home_page_controller import ManagerHomePageController
+    self.manager_controller = ManagerHomePageController(self.show_page)
+    self.show_page("manager_home_page", self.manager_controller)
+
+    user=Container.resolve(User)
+    user.update_to_manager()
+
+
+
