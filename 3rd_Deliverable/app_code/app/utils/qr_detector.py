@@ -44,6 +44,5 @@ def decode_qr():
       print("\n🎉 Final Decoded String:", decoded_string)
       return int(decoded_string.strip().split()[-1])
   print("\n❌ No QR code was detected.")
-  return -1
-      
+  return -1      
   

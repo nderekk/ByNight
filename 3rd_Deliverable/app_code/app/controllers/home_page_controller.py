@@ -1,6 +1,10 @@
 from PySide6.QtCore import QObject, Signal
 from app.views import CustomerHomePage
-from app.models import Club
+from app.views.manager_home_page_view import ManagerUI
+from app.controllers import ClubMainPageController
+from app.models import User, Role, Club
+from app.utils.container import Container
+from app.controllers.make_reservation_controller import MakeReservationController
 
 class HomePageController(QObject):
   # Signals for view updates
@@ -11,7 +15,7 @@ class HomePageController(QObject):
     self.clubs = Club.get_clubs_all()
     self.filters = Club.get_club_filters()
     self.show_page = show_page
-    self.view = CustomerHomePage(clubs=self.clubs, filters=self.filters)
+    self.view = CustomerHomePage(self.clubs,self.filters)
     self.setup_connections()
 
   def setup_connections(self):
@@ -22,6 +26,7 @@ class HomePageController(QObject):
     self.view.eventDropdown.currentTextChanged.connect(self.apply_filters)
     self.view.searchLineEdit.textChanged.connect(self.apply_filters)
     self.view.make_reservation_clicked.connect(self.handle_make_res_page)
+    self.view.menuButton.clicked.connect(self.handle_work_with_us)
     
   def hand_view_res(self):
     from app.controllers import ViewReservationsController
@@ -51,4 +56,18 @@ class HomePageController(QObject):
     
     self.view.update_club_display(self.filtered_clubs)
     
-  
+  def handle_work_with_us(self):
+    from app.controllers.work_with_us_controller import WorkWithUsController
+    self.access_work_with_us = WorkWithUsController(self.show_page)
+    self.show_page('work_with_us_page', self.access_work_with_us)
+
+  def update(self):
+    from app.controllers.manager_home_page_controller import ManagerHomePageController
+    self.manager_controller = ManagerHomePageController(self.show_page)
+    self.show_page("manager_home_page", self.manager_controller)
+
+    user=Container.resolve(User)
+    user.update_to_manager()
+
+
+
