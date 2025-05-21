@@ -10,7 +10,6 @@ class StaffHomePageController(QObject):
     self.user = Container.resolve(User)
     print(self.user.full_name)
     reservations = self.user.get_upcoming_club_reservations()
-    print(reservations)
     reservations_data = [
       {
         "id": res.id,
@@ -18,11 +17,6 @@ class StaffHomePageController(QObject):
       } 
       for res in reservations
     ] 
-    # reservations_data = [
-    # {"id": 1, "full_name": "Alice Johnson"},
-    # {"id": 102, "full_name": "Bob Smith"},
-    # {"id": 103, "full_name": "Carla Gomez"},
-    # ]
     self.view = StaffHomePage(self.user.works_at.name, reservations_data)
     self.setup_connections()
 
@@ -34,9 +28,10 @@ class StaffHomePageController(QObject):
     detected_id = decode_qr()
     if detected_id in self.view.cards.keys() and detected_id != -1:
       card = self.view.cards.get(detected_id)
+      res = Reservation.get_res_from_id(detected_id)
       if card:
         card.checkbox.setChecked(True)
-        popup = MessagePopup(success=True, message=f"ID: {detected_id} | {self.user.full_name}\nChecked In")
+        popup = MessagePopup(success=True, message=f"ID: {detected_id} | {res.get_user_name()}\nChecked In")
         popup.exec()
         # TODO notification code
         
