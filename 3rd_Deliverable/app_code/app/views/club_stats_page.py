@@ -69,22 +69,19 @@ class ClubStatsWindow(QWidget):
         subtitle.setStyleSheet("color: gray; font-size: 12px;")
         main_layout.addWidget(subtitle)
 
-        # Date and Time Pickers
+        # Date pickers
         today = QDate.currentDate()
-        now = QTime.currentTime()
 
         from_label = QLabel("From:")
         to_label = QLabel("To:")
 
         self.from_date = QDateEdit(today)
-        self.from_time = QTimeEdit(now)
         self.to_date = QDateEdit(today)
-        self.to_time = QTimeEdit(now)
 
-        for widget in [self.from_date, self.from_time, self.to_date, self.to_time]:
+        for widget in [self.from_date, self.to_date]:
             widget.setCalendarPopup(True)
             widget.setStyleSheet("""
-                QDateEdit, QTimeEdit {
+                QDateEdit {
                     padding: 6px;
                     font-size: 12px;
                     background-color: #f0f0f0;
@@ -94,18 +91,31 @@ class ClubStatsWindow(QWidget):
                 }
             """)
 
-        from_layout = QHBoxLayout()
-        from_layout.addWidget(from_label)
-        from_layout.addWidget(self.from_date)
-        from_layout.addWidget(self.from_time)
+        date_layout = QHBoxLayout()
+        date_layout.addWidget(from_label)
+        date_layout.addWidget(self.from_date)
+        date_layout.addSpacing(16)
+        date_layout.addWidget(to_label)
+        date_layout.addWidget(self.to_date)
 
-        to_layout = QHBoxLayout()
-        to_layout.addWidget(to_label)
-        to_layout.addWidget(self.to_date)
-        to_layout.addWidget(self.to_time)
+        main_layout.addLayout(date_layout)
 
-        main_layout.addLayout(from_layout)
-        main_layout.addLayout(to_layout)
+        # Load button
+        self.load_button = QPushButton("Load")
+        self.load_button.setStyleSheet("""
+            QPushButton {
+                background-color: #007bff;
+                color: white;
+                font-weight: bold;
+                padding: 6px 12px;
+                border-radius: 4px;
+            }
+            QPushButton:hover {
+                background-color: #0056b3;
+            }
+        """)
+        self.load_button.setCursor(Qt.PointingHandCursor)
+        main_layout.addWidget(self.load_button, alignment=Qt.AlignLeft)
 
         # Statistic cards
         main_layout.addWidget(self.create_divider())
