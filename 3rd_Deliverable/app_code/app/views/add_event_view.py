@@ -110,9 +110,3 @@ class AddEventPage(QMainWindow):
     def go_back(self):
         print("Back button clicked")
 
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = AddEventWindow()
-    window.show()
-    sys.exit(app.exec())

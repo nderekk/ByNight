@@ -15,6 +15,8 @@ class ManagerHomePageController(QObject):
     def setup_connections(self):
             self.view.viewResButton.clicked.connect(self.handle_view_man_res_page)
             self.view.addEventButton.clicked.connect(self.handle_add_event_page)
+            self.view.viewStatsButton.clicked.connect(self.handle_stats_page)
+            self.view.giveDiscountsButton.clicked.connect(self.handle_discount_page)
     
     
     def handle_view_man_res_page(self):
@@ -28,5 +30,15 @@ class ManagerHomePageController(QObject):
 
          self.add_event_controller = AddEventController(self.show_page)
          self.show_page('add_event_view_page', self.add_event_controller)
-         
 
+    def handle_stats_page(self):
+         from app.controllers.club_stats_controller import ClubStatsController
+
+         self.club_stats_controller = ClubStatsController(self.show_page)
+         self.show_page('club_stats_view_page', self.club_stats_controller)         
+
+    def handle_discount_page(self):
+         from app.controllers.discount_controller import DiscountController
+
+         self.discount_controller = DiscountController(self.show_page)
+         self.show_page('discount_view_page', self.discount_controller)
