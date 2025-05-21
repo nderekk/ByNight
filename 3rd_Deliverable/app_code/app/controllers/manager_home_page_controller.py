@@ -14,6 +14,7 @@ class ManagerHomePageController(QObject):
 
     def setup_connections(self):
             self.view.viewResButton.clicked.connect(self.handle_view_man_res_page)
+            self.view.addEventButton.clicked.connect(self.handle_add_event_page)
     
     
     def handle_view_man_res_page(self):
@@ -21,3 +22,11 @@ class ManagerHomePageController(QObject):
 
         self.manager_reservations_controller = ManagerViewReservationsController(self.show_page)
         self.show_page('manager_view_res_page', self.manager_reservations_controller)
+
+    def handle_add_event_page(self):
+         from app.controllers.add_event_controller import AddEventController
+
+         self.add_event_controller = AddEventController(self.show_page)
+         self.show_page('add_event_view_page', self.add_event_controller)
+         
+
