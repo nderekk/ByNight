@@ -29,6 +29,17 @@ class ViewReservationsController(QObject):
     self.past = [(r.club.name, r.date, r.id, r.event.title) for r in self.past]
   
   def handle_view_review(self, id:int):
+    from app.models.review import Review
+    from PySide6.QtWidgets import QMessageBox
+
+
+    session = Container.resolve(DatabaseSession)
+
+    existing_review = session.query(Review).filter_by(reservation_id=id).first()
+    if existing_review:
+      QMessageBox.warning(self.view, "Already Reviewed", "You have already submitted a review for this reservation.")
+      return
+
     self.review_page_controller = AddReviewController(self.show_page, id)
     self.show_page('customer_view_button', self.review_page_controller)
       
