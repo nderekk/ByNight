@@ -87,16 +87,13 @@ class LoginController(QObject):
       Container.add_existing_instance(HomePageController, self.home_page_controller)
       self.show_page('customer_home_page', self.home_page_controller)
     elif user.role == Role.MANAGER:
-      pass
+      self.manager_home_page_controller = ManagerHomePageController(self.show_page)
+      Container.add_existing_instance(ManagerHomePageController, self.manager_home_page_controller)
+      self.show_page('manager_home_page', self.manager_home_page_controller)
     elif user.role == Role.STAFF:
       self.staff_home_page_controller = StaffHomePageController(self.show_page)
       Container.add_existing_instance(StaffHomePageController, self.staff_home_page_controller)
-      self.show_page('staff_home_page', self.staff_home_page_controller)
-
-    elif user.role == Role.MANAGER:
-        self.manager_home_page_controller = ManagerHomePageController(user, self.show_page)
-        Container.add_existing_instance(ManagerHomePageController, self.manager_home_page_controller)
-        self.show_page('manager_home_page', self.manager_home_page_controller)
+      self.show_page('staff_home_page', self.staff_home_page_controller)        
 
   def show(self):
     self.view.show() 

@@ -5,9 +5,9 @@ from app.utils.container import Container
 
 
 class ManagerHomePageController(QObject):
-    def __init__(self, user: User, show_page: callable):
+    def __init__(self, show_page: callable):
         super().__init__()
-        self.user = user
+        self.user = Container.resolve(User)
         self.show_page = show_page
         self.view = ManagerUI()
         self.setup_connections()

@@ -15,10 +15,7 @@ class HomePageController(QObject):
     self.clubs = Club.get_clubs_all()
     self.filters = Club.get_club_filters()
     self.show_page = show_page
-    if self.user.role == Role.CUSTOMER:
-      self.view = CustomerHomePage(self.clubs)
-    else:
-      self.view = ManagerUI()
+    self.view = CustomerHomePage(self.clubs)
     self.setup_connections()
 
   def setup_connections(self):
