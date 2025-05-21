@@ -4,12 +4,13 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QFont
 from PySide6.QtCore import Qt, QSize, Signal
-from app.models import Club
+from app.models import Club,User
 
 
 class CustomerHomePage(QWidget):
     more_button_clicked=Signal(Club)
     make_reservation_clicked=Signal(Club)
+    
     
     def __init__(self, clubs: list[Club], filters: dict[str: list[str]]):
         super().__init__()
@@ -25,6 +26,7 @@ class CustomerHomePage(QWidget):
         top_bar.addWidget(self.searchLineEdit)
         main_layout.addLayout(top_bar)
 
+
         # --- Menu Buttons ---
         menu_bar = QHBoxLayout()
         self.menuButton = QPushButton("Work With Us")
@@ -35,6 +37,8 @@ class CustomerHomePage(QWidget):
         menu_bar.addWidget(self.viewResButton)
         menu_bar.addWidget(self.profileButton)
         main_layout.addLayout(menu_bar)
+
+        
 
         # --- Dropdowns ---
         filter_layout = QVBoxLayout()

@@ -15,7 +15,7 @@ class HomePageController(QObject):
     self.clubs = Club.get_clubs_all()
     self.filters = Club.get_club_filters()
     self.show_page = show_page
-    self.view = CustomerHomePage(self.clubs)
+    self.view = CustomerHomePage(self.clubs,self.filters)
     self.setup_connections()
 
   def setup_connections(self):
@@ -26,6 +26,7 @@ class HomePageController(QObject):
     self.view.eventDropdown.currentTextChanged.connect(self.apply_filters)
     self.view.searchLineEdit.textChanged.connect(self.apply_filters)
     self.view.make_reservation_clicked.connect(self.handle_make_res_page)
+    self.view.menuButton.clicked.connect(self.handle_work_with_us)
     
   def hand_view_res(self):
     from app.controllers import ViewReservationsController
@@ -55,4 +56,8 @@ class HomePageController(QObject):
     
     self.view.update_club_display(self.filtered_clubs)
     
-  
+  def handle_work_with_us(self):
+    from app.controllers.work_with_us_controller import WorkWithUsController
+    self.access_work_with_us = WorkWithUsController(self.show_page)
+    self.show_page('work_with_us_page', self.access_work_with_us)
+
