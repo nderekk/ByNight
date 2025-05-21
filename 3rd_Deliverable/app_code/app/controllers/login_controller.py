@@ -1,10 +1,9 @@
 from PySide6.QtCore import QObject, Signal
 from app.services.auth_service import AuthService
 from app.views import LoginView
-from app.controllers import HomePageController
 from app.controllers.manager_home_page_controller import ManagerHomePageController
 from app.utils.container import Container
-from app.models import User
+from app.models import User, Staff, Customer, Manager
 from app.models import Role
 
 
@@ -50,14 +49,6 @@ class LoginController(QObject):
 
   def handle_signup(self, email: str, password: str, user_type: str):
     self.login_failed.emit("Feature Not Yet Implimented")
-    # try:
-    #   user = self.auth_service.signup(email, password, user_type)
-    #   if user:
-    #     self.signup_successful.emit()
-    #   else:
-    #     self.signup_failed.emit("Failed to create account")
-    # except Exception as e:
-    #   self.signup_failed.emit(str(e))
     
   def on_continue_clicked(self):
     email = self.view.email_input.text().strip()
@@ -87,12 +78,20 @@ class LoginController(QObject):
     self.login_failed.emit("Feature Not Yet Implimented")
     
   def handle_next_page(self, user: User):
+    from app.models import Role
+    from app.controllers import HomePageController, StaffHomePageController
     Container.add_existing_instance(User, user)
     
     if user.role == Role.CUSTOMER:
-        self.home_page_controller = HomePageController(user, self.show_page)
-        Container.add_existing_instance(HomePageController, self.home_page_controller)
-        self.show_page('customer_home_page', self.home_page_controller)
+      self.home_page_controller = HomePageController(self.show_page)
+      Container.add_existing_instance(HomePageController, self.home_page_controller)
+      self.show_page('customer_home_page', self.home_page_controller)
+    elif user.role == Role.MANAGER:
+      pass
+    elif user.role == Role.STAFF:
+      self.staff_home_page_controller = StaffHomePageController(self.show_page)
+      Container.add_existing_instance(StaffHomePageController, self.staff_home_page_controller)
+      self.show_page('staff_home_page', self.staff_home_page_controller)
 
     elif user.role == Role.MANAGER:
         self.manager_home_page_controller = ManagerHomePageController(user, self.show_page)
