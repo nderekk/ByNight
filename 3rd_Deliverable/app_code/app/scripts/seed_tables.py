@@ -90,7 +90,7 @@ def seed():
                 phone=1234567890,
                 email="skegias@ceid.gr",
                 password="slet"
-            ),
+            )
         ]
         session.add_all(customers)
         
@@ -209,7 +209,7 @@ def seed():
                 event=events[1]
             ),
             Reservation(
-                user=customers[4],
+                user=customers[1],
                 table=tables[1],
                 num_of_people=2,
                 order=order,
