@@ -27,12 +27,14 @@ class User(Base):
     def update_to_manager(self):
         from app.utils.container import Container
         from app.services.db_session import DatabaseSession
+        from app.models.manager import Manager
 
         session = Container.resolve(DatabaseSession)
         self.role = Role.MANAGER
 
         
         session.add(self)
+        Manager.create_manager(self.id)
         session.commit()
 
 

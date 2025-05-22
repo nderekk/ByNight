@@ -13,7 +13,7 @@ class Customer(User):
         "polymorphic_identity": Role.CUSTOMER,
     }
 
-    # Customer-specific methods can be added here
+    
     def get_loyalty_points(self) -> int:
         # Example method - implement your loyalty system logic here
         return len(self.get_past_reservations_for_display()) 
