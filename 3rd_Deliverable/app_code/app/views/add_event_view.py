@@ -4,11 +4,11 @@ from PySide6.QtWidgets import (
     QVBoxLayout, QHBoxLayout, QScrollArea
 )
 from PySide6.QtGui import QFont, QPixmap, QIcon
-from PySide6.QtCore import Qt, QDate
-from datetime import timedelta
+from PySide6.QtCore import Qt, QDate, Signal
+from datetime import timedelta, datetime
 
-class DayEntry(QWidget):
-    def __init__(self, date_obj, event_info=None, image_path=None):
+class DayEntry(QWidget):    
+    def __init__(self, date_obj, sig=None, event_info=None, image_path=None):
         super().__init__()
         layout = QHBoxLayout()
         layout.setContentsMargins(10, 5, 10, 5)
@@ -47,19 +47,21 @@ class DayEntry(QWidget):
             edit_icon = QLabel()
             edit_icon.setPixmap(QPixmap.fromImage(QIcon.fromTheme("document-edit").pixmap(24, 24).toImage()))
             layout.addWidget(edit_icon)
-
-        # Plus button (always present)
-        plus_btn = QPushButton("➕")
-        plus_btn.setFixedSize(30, 30)
-        plus_btn.setStyleSheet("font-size: 18px; border: none; background: transparent;")
-        plus_btn.setCursor(Qt.PointingHandCursor)
-        plus_btn.clicked.connect(lambda: print(f"Add event for {day}"))
-        layout.addWidget(plus_btn)
+        else:
+            plus_btn = QPushButton("➕")
+            plus_btn.setFixedSize(30, 30)
+            plus_btn.setStyleSheet("font-size: 18px; border: none; background: transparent;")
+            plus_btn.setCursor(Qt.PointingHandCursor)
+            plus_btn.clicked.connect(lambda: sig.emit(date_obj))
+            layout.addWidget(plus_btn)
 
         self.setLayout(layout)
 
 
 class AddEventPage(QWidget):
+    add_button_clicked = Signal(datetime)
+    edit_button_clicked = Signal(datetime)
+
     def __init__(self):
         super().__init__()
 
@@ -73,8 +75,7 @@ class AddEventPage(QWidget):
         self.back_btn.setFixedSize(30, 30)
         self.back_btn.setStyleSheet("font-size: 18px; border: none; background: transparent;")
         self.back_btn.setCursor(Qt.PointingHandCursor)
-        self.back_btn.clicked.connect(self.go_back)
-
+        
         title = QLabel("Add Event")
         title.setFont(QFont("Arial", 20, QFont.Bold))
 
@@ -99,9 +100,6 @@ class AddEventPage(QWidget):
         
         scroll.setWidget(content_widget)
         main_layout.addWidget(scroll)
-
-    def go_back(self):
-        print("Back button clicked")
         
     def update_week(self, start_date, events_by_date):
         # Clear existing day entries
@@ -114,12 +112,11 @@ class AddEventPage(QWidget):
         for i in range(7):
             day_date = start_date + timedelta(days=i)
             day_name = weekdays[i]
-            events = events_by_date.get(day_date)
+            event = events_by_date.get(day_date)
             
-            if events:
-                # You could also support multiple events here
-                event_info = f"Event: {events[0].title}\nOpen Doors: {events[0].time.strftime('%H:%M')}"
-                self.content_layout.addWidget(DayEntry(day_date, event_info))
+            if event:
+                event_info = f"Event: {event.title}\nDoors Open: {event.time.strftime('%H:%M')}"
+                self.content_layout.addWidget(DayEntry(day_date, event_info=event_info))
             else:
-                self.content_layout.addWidget(DayEntry(day_date))
+                self.content_layout.addWidget(DayEntry(day_date, self.add_button_clicked))
 
