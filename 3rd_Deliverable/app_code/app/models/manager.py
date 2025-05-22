@@ -10,7 +10,7 @@ class Manager(User):
     id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 
     # Relationship to managed clubs
-    managed_clubs = relationship("Club", back_populates="manager", cascade="all, delete-orphan")
+    managed_club = relationship("Club", back_populates="manager", cascade="all, delete-orphan", uselist=False)
 
     __mapper_args__ = {
         "polymorphic_identity": Role.MANAGER,

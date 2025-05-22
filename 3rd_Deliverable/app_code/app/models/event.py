@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Enum, Date, Time, ForeignKey
 from sqlalchemy.orm import relationship
 from app.data.database import Base
+from datetime import timedelta
 import app.models
 
 class Event(Base):
