@@ -2,6 +2,8 @@ from app.utils.container import Container
 from PySide6.QtCore import QObject, Signal
 from app.utils.container import Container
 from app.views.club_stats_page import ClubStatsWindow
+from app.services.statistics_validator import ValidateDate
+
 
 class ClubStatsController(QObject):
   
@@ -30,6 +32,8 @@ class ClubStatsController(QObject):
   def handle_input(self):
     fromdate = self.view.from_date.date()
     todate = self.view.to_date.date()
+    ValidateDate.validate(fromdate, todate, self.view)
+
     print(fromdate, todate)
 
     
