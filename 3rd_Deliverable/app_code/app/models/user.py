@@ -31,10 +31,14 @@ class User(Base):
 
         session = Container.resolve(DatabaseSession)
         self.role = Role.MANAGER
+        session.add(self)
+        session.commit()
+
 
         
-        session.add(self)
-        Manager.create_manager(self.id)
+        
+        manager_record = Manager(id=self.id)
+        session.add(manager_record)
         session.commit()
 
 
