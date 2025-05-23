@@ -23,6 +23,25 @@ class User(Base):
         'with_polymorphic': '*',  # Ensures subclass is always returned
     }
 
+    
+    def update_to_manager(self):
+        from app.utils.container import Container
+        from app.services.db_session import DatabaseSession
+        from app.models.manager import Manager
+
+        session = Container.resolve(DatabaseSession)
+        self.role = Role.MANAGER
+        session.add(self)
+        session.commit()
+
+
+        
+        
+        manager_record = Manager(id=self.id)
+        session.add(manager_record)
+        session.commit()
+
+
     def verify_password(self, password: str) -> bool:
         return self.password == password
     

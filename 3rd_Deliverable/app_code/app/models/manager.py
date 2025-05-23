@@ -16,7 +16,7 @@ class Manager(User):
         "polymorphic_identity": Role.MANAGER,
     }
 
-    # Manager-specific methods
+    
     def get_managed_clubs(self):
         return self.managed_clubs
 
@@ -28,4 +28,6 @@ class Manager(User):
                 "total_reservations": len(club.reservations),
                 "total_staff": len(club.staff)
             }
-        return stats 
+        return stats
+    
+    

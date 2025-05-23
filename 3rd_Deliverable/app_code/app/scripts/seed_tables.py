@@ -44,6 +44,14 @@ def seed():
                 phone=4567890123,
                 email="toulas@ceid.gr",
                 password="slet"
+            ),
+            Manager(
+                full_name="BIG FUCKING SIOU",
+                age=50,
+                role=Role.MANAGER,
+                phone=1234567890,
+                email="spiros@ceid.gr",
+                password="slet"
             )
         ]
         session.add_all(managers)
@@ -51,14 +59,6 @@ def seed():
 
         # 3. Create Customer
         customers = [
-            Customer(
-                full_name="BIG FUCKING SIOU",
-                age=50,
-                role=Role.CUSTOMER,
-                phone=1234567890,
-                email="spiros@ceid.gr",
-                password="slet"
-            ),
             Customer(
                 full_name="BIG PSARAKIS GOAT",
                 age=55,
@@ -90,7 +90,7 @@ def seed():
                 phone=1234567890,
                 email="skegias@ceid.gr",
                 password="slet"
-            ),
+            )
         ]
         session.add_all(customers)
         
@@ -209,7 +209,7 @@ def seed():
                 event=events[1]
             ),
             Reservation(
-                user=customers[4],
+                user=customers[1],
                 table=tables[1],
                 num_of_people=2,
                 order=order,

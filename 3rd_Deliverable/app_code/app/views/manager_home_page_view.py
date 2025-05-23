@@ -63,8 +63,4 @@ class ManagerUI(QWidget):
         main_layout.addWidget(club_details)
 
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = ManagerUI()
-    window.show()
-    sys.exit(app.exec())
+ 
