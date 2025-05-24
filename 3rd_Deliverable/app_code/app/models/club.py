@@ -15,6 +15,7 @@ class Club(Base):
   address = Column(String, nullable=False)
   location = Column(String, nullable=False)
   manager_id = Column(Integer, ForeignKey("managers.id"), nullable=True)
+  max_capacity = Column(Integer, nullable=False, default=100)
   vip_available = Column(Integer, nullable=False, default=5)
   pass_available = Column(Integer, nullable=False, default=30)
   bar_available = Column(Integer, nullable=False, default=30)

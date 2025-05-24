@@ -7,6 +7,7 @@ from PySide6.QtCore import Qt, QDate, QTime
 from PySide6.QtGui import QFont
 
 
+
 class StatCard(QWidget):
     def __init__(self, title, value):
         super().__init__()
@@ -21,15 +22,15 @@ class StatCard(QWidget):
         title_label.setStyleSheet("color: white; font-weight: bold; font-size: 14px;")
 
         # Value and Placeholder Chart
-        value_label = QLabel(f"{value}%")
-        value_label.setStyleSheet("color: white; font-size: 20px; font-weight: bold;")
+        self.value_label = QLabel(f"{value}%")
+        self.value_label.setStyleSheet("color: white; font-size: 20px; font-weight: bold;")
 
-        placeholder_chart = QLabel("📈")  # Placeholder for real chart
+        placeholder_chart = QLabel("📈")
         placeholder_chart.setAlignment(Qt.AlignRight)
         placeholder_chart.setStyleSheet("font-size: 20px; color: #007bff;")
 
         top = QHBoxLayout()
-        top.addWidget(value_label)
+        top.addWidget(self.value_label)
         top.addStretch()
         top.addWidget(placeholder_chart)
 
@@ -38,9 +39,14 @@ class StatCard(QWidget):
 
         self.setLayout(layout)
 
+    def set_value(self, value):
+        self.value_label.setText(f"{value:.2f}%")
+
+
+
 
 class ClubStatsWindow(QWidget):
-    def __init__(self):
+    def __init__(self, attendance=0):
         super().__init__()
 
         main_layout = QVBoxLayout()
@@ -53,8 +59,6 @@ class ClubStatsWindow(QWidget):
         self.back_button.setFixedSize(30, 30)
         self.back_button.setStyleSheet("font-size: 18px; border: none; background: transparent;")
         self.back_button.setCursor(Qt.PointingHandCursor)
-        self.back_button.clicked.connect(self.go_back)
-
         header_layout.addWidget(self.back_button)
         header_layout.addStretch()
         main_layout.addLayout(header_layout)
@@ -71,7 +75,6 @@ class ClubStatsWindow(QWidget):
 
         # Date pickers
         today = QDate.currentDate()
-
         from_label = QLabel("From:")
         to_label = QLabel("To:")
 
@@ -119,7 +122,8 @@ class ClubStatsWindow(QWidget):
 
         # Statistic cards
         main_layout.addWidget(self.create_divider())
-        main_layout.addWidget(StatCard("Attendance", 82))
+        self.attendance_card = StatCard("Attendance", attendance)
+        main_layout.addWidget(self.attendance_card)
         main_layout.addWidget(self.create_divider())
         main_layout.addWidget(StatCard("Sales", 95))
         main_layout.addWidget(self.create_divider())
@@ -135,7 +139,9 @@ class ClubStatsWindow(QWidget):
         line.setStyleSheet("color: lightgray;")
         return line
 
-    def go_back(self):
-        print("Back button clicked")
+    def update_attendance(self, attendance: float):
+        self.attendance_card.set_value(attendance)
+
+    
 
 
