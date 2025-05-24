@@ -10,15 +10,14 @@ class CustomerClubMainPage(QWidget):
 
     def __init__(self, club: Club):
         super().__init__()
-        self.club=club
+        self.club = club
         self.name = QLabel()
         self.setup_ui()
         
-
     def setup_ui(self):
         main_layout = QVBoxLayout()
 
-        # Back Button & Header Image
+        # Back Button & Header Layout
         header_layout = QHBoxLayout()
         self.back_btn = QPushButton("←")
         self.back_btn.setFixedSize(30, 30)
@@ -27,13 +26,11 @@ class CustomerClubMainPage(QWidget):
         header_layout.addStretch()
         main_layout.addLayout(header_layout)
 
-        # Main Club Image
-        club_image = QLabel()
-        header_pixmap = QPixmap(400, 200)
-        header_pixmap.fill(Qt.darkMagenta)  # Replace with image: QPixmap("path.jpg")
-        club_image.setPixmap(header_pixmap)
-        club_image.setScaledContents(True)
+        # Replace purple club header image with disco ball emoji 🪩
+        club_image = QLabel("🪩")
+        club_image.setAlignment(Qt.AlignCenter)
         club_image.setFixedHeight(200)
+        club_image.setStyleSheet("font-size: 100pt;")  # Large emoji size
         main_layout.addWidget(club_image)
 
         # Club Name & Address
@@ -63,7 +60,7 @@ class CustomerClubMainPage(QWidget):
 
         event_image = QLabel()
         event_pixmap = QPixmap(150, 150)
-        event_pixmap.fill(Qt.red)  # Replace with event image
+        event_pixmap.fill(Qt.red)  # Replace with event image if you want
         event_image.setPixmap(event_pixmap)
         event_image.setScaledContents(True)
         event_image.setFixedSize(150, 150)
@@ -72,11 +69,15 @@ class CustomerClubMainPage(QWidget):
 
         # Event Info and Reservation Buttons
         btn_event_info = QPushButton("Event Info")
-        btn_event_info.setStyleSheet("padding: 8px; font-size: 11pt; background-color: #333; color: white; border-radius: 8px;")
+        btn_event_info.setStyleSheet(
+            "padding: 8px; font-size: 11pt; background-color: #333; color: white; border-radius: 8px;"
+        )
         btn_event_info.setFixedWidth(120)
 
         self.btn_reserve = QPushButton("Reservation")
-        self.btn_reserve.setStyleSheet("padding: 10px; font-size: 12pt; background-color: #111; color: white; border-radius: 8px;")
+        self.btn_reserve.setStyleSheet(
+            "padding: 10px; font-size: 12pt; background-color: #111; color: white; border-radius: 8px;"
+        )
         self.btn_reserve.setFixedWidth(180)
 
         main_layout.addWidget(btn_event_info, alignment=Qt.AlignHCenter)
@@ -97,7 +98,3 @@ class CustomerClubMainPage(QWidget):
 
     def set_name(self, club: Club):
         self.name.setText(club.address)
-
-
-
-
