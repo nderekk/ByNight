@@ -42,10 +42,10 @@ class ManagerUI(QWidget):
         club_details_layout.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
 
         # Club Image
-        self.clubImage = QLabel("ClubIMG")
+        self.clubImage = QLabel("🪩")
         self.clubImage.setFixedSize(300, 200)
-        self.clubImage.setStyleSheet("background-color: lightgray; border: 1px solid #ccc;")
         self.clubImage.setAlignment(Qt.AlignCenter)
+        self.clubImage.setStyleSheet("font-size: 120pt;")
         club_details_layout.addWidget(self.clubImage)
 
         # Club Info
