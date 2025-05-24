@@ -66,7 +66,10 @@ class CustomerHomePage(QWidget):
 
         # --- Recommended Clubs Label ---
         self.recClubsText = QLabel("Recommended Clubs")
-        self.recClubsText.setFont(QFont("", italic=True))
+        font = QFont()
+        font.setPointSize(16)
+        font.setItalic(True)
+        self.recClubsText.setFont(font)
         self.recClubsText.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(self.recClubsText)
 
