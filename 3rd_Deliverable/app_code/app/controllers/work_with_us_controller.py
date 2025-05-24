@@ -39,7 +39,7 @@ class WorkWithUsController(QObject):
        home_controller.update()
        
     else:
-        self.view.show_error("Η εγγραφή απέτυχε. Ελέγξτε τα αρχεία σας.")
+        self.view.show_error("Registry denied. Check ur licences.")
 
   def show(self):
     self.view.show() 

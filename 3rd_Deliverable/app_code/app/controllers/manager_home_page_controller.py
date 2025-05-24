@@ -10,6 +10,7 @@ class ManagerHomePageController(QObject):
         self.user = Container.resolve(User)
         self.show_page = show_page
         self.view = ManagerUI()
+        self.load_club_info()
         self.setup_connections()
 
     def setup_connections(self):
@@ -17,6 +18,26 @@ class ManagerHomePageController(QObject):
             self.view.addEventButton.clicked.connect(self.handle_add_event_page)
             self.view.viewStatsButton.clicked.connect(self.handle_stats_page)
             self.view.giveDiscountsButton.clicked.connect(self.handle_discount_page)
+            self.view.urClubButton.clicked.connect(self.handle_ur_club)
+
+
+    def load_club_info(self):
+        from app.services.db_session import DatabaseSession
+        from app.models.club import Club
+
+        session = Container.resolve(DatabaseSession)
+        manager_id = self.user.id
+
+        club = session.query(Club).filter_by(manager_id=manager_id).first()
+
+        if club:
+            self.view.clubName.setText(f"Club Name: {club.name}")
+            self.view.clubDesc.setText(f"{club.address}, {club.location}")
+        else:
+            # Δεν έχει δηλωμένο club ακόμη
+            self.view.clubName.setText("Club Name: -")
+            self.view.clubDesc.setText("Club Details: -")
+
     
     
     def handle_view_man_res_page(self):
@@ -35,7 +56,19 @@ class ManagerHomePageController(QObject):
          from app.controllers.club_stats_controller import ClubStatsController
 
          self.club_stats_controller = ClubStatsController(self.show_page)
-         self.show_page('club_stats_view_page', self.club_stats_controller)         
+         self.show_page('club_stats_view_page', self.club_stats_controller)
+
+    def handle_ur_club(self):
+        from app.services.club_creator import ClubCreator
+        self.club_creator = ClubCreator(self.show_page, self.club_details)
+        self.club_creator.ur_club()         
+
+    def club_details(self, details:dict):
+         self.update_club_view(details)
+
+    def update_club_view(self, club_data: dict):
+        self.view.clubName.setText(f"Club Name: {club_data['name']}")
+        self.view.clubDesc.setText(f"Address: {club_data['address']}, Location: {club_data['location']}")
 
     def handle_discount_page(self):
          from app.controllers.discount_controller import DiscountController
