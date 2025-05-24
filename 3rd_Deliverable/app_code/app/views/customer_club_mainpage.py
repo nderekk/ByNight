@@ -58,13 +58,11 @@ class CustomerClubMainPage(QWidget):
         main_layout.addSpacing(10)
         main_layout.addWidget(QLabel("<b>Tonight's Event:</b>"))
 
-        event_image = QLabel()
-        event_pixmap = QPixmap(150, 150)
-        event_pixmap.fill(Qt.red)  # Replace with event image if you want
-        event_image.setPixmap(event_pixmap)
-        event_image.setScaledContents(True)
-        event_image.setFixedSize(150, 150)
+        # Replace red event image box with ticket emoji 🎟️
+        event_image = QLabel("🎟️")
         event_image.setAlignment(Qt.AlignCenter)
+        event_image.setFixedSize(150, 150)
+        event_image.setStyleSheet("font-size: 120pt;")  # Large emoji size
         main_layout.addWidget(event_image, alignment=Qt.AlignHCenter)
 
         # Event Info and Reservation Buttons
