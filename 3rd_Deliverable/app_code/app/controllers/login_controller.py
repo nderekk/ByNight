@@ -3,15 +3,13 @@ from app.services.auth_service import AuthService
 from app.views import LoginView
 from app.controllers.manager_home_page_controller import ManagerHomePageController
 from app.utils.container import Container
-from app.models import User, Staff, Customer, Manager, Role
+from app.models import User, Role
 
 
 class LoginController(QObject):
     # Signals for view updates
     login_successful = Signal(User)
     login_failed = Signal(str)
-    signup_successful = Signal()
-    signup_failed = Signal(str)
 
     def __init__(self, show_page):
         super().__init__()
@@ -23,21 +21,23 @@ class LoginController(QObject):
     def setup_connections(self):
         # Connect view signals to controller methods
         self.view.login_attempted.connect(self.handle_login)
-        self.view.signup_attempted.connect(self.handle_signup)
         self.view.google_login_attempted.connect(self.handle_google_login)
         self.view.apple_login_attempted.connect(self.handle_apple_login)
-        self.view.continue_clicked.connect(self.on_continue_clicked)
 
         # Connect controller signals to view methods
         self.login_successful.connect(self.handle_next_page)
         self.login_failed.connect(self.view.show_error)
-        self.signup_successful.connect(self.view.reset)
-        self.signup_failed.connect(self.view.show_error)
-
-        self.view.continue_btn.clicked.connect(self.on_continue_clicked)
 
     def handle_login(self, email: str, password: str):
         """Authenticate user with email and password."""
+        email = email.strip()
+        if not self._validate_email(email):
+            self.login_failed.emit("Please enter a valid email address")
+            return
+        if not password:
+            self.login_failed.emit("Please enter your password")
+            return
+
         try:
             success, user = self.auth_service.authenticate(email, password)
             if success:
@@ -47,61 +47,34 @@ class LoginController(QObject):
         except Exception as e:
             self.login_failed.emit(str(e))
 
-    def handle_signup(self, email: str, password: str, user_type: str):
-        """Signup functionality - currently not implemented."""
-        try:
-            self.login_failed.emit("Feature Not Yet Implemented")
-        except Exception as e:
-            self.signup_failed.emit(str(e))
-
-    def on_continue_clicked(self):
-        """Handle the two-step login: email validation, then password."""
-        email = self.view.email_input.text().strip()
-        if not self.view.password_input.isVisible():
-            if not self._validate_email(email):
-                self.view.show_error("Please enter a valid email address")
-                return
-            self.view.show_password_step()
-        else:
-            password = self.view.password_input.text()
-            if not password:
-                self.view.show_error("Please enter your password")
-                return
-            self.handle_login(email, password)
-
     def _validate_email(self, email: str) -> bool:
-        """Validate email format using regex."""
         import re
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         return re.match(pattern, email) is not None
 
     def handle_google_login(self):
-        """Stub for Google login."""
         self.login_failed.emit("Feature Not Yet Implemented")
 
     def handle_apple_login(self):
-        """Stub for Apple login."""
         self.login_failed.emit("Feature Not Yet Implemented")
 
     def handle_next_page(self, user: User):
-        """Navigate to the correct home page based on user role."""
         from app.controllers import HomePageController, StaffHomePageController
 
         Container.add_existing_instance(User, user)
 
         if user.role == Role.CUSTOMER:
-            self.home_page_controller = HomePageController(self.show_page)
-            Container.add_existing_instance(HomePageController, self.home_page_controller)
-            self.show_page('customer_home_page', self.home_page_controller)
+            home_page_controller = HomePageController(self.show_page)
+            Container.add_existing_instance(HomePageController, home_page_controller)
+            self.show_page('customer_home_page', home_page_controller)
         elif user.role == Role.MANAGER:
-            self.manager_home_page_controller = ManagerHomePageController(self.show_page)
-            Container.add_existing_instance(ManagerHomePageController, self.manager_home_page_controller)
-            self.show_page('manager_home_page', self.manager_home_page_controller)
+            manager_home_page_controller = ManagerHomePageController(self.show_page)
+            Container.add_existing_instance(ManagerHomePageController, manager_home_page_controller)
+            self.show_page('manager_home_page', manager_home_page_controller)
         elif user.role == Role.STAFF:
-            self.staff_home_page_controller = StaffHomePageController(self.show_page)
-            Container.add_existing_instance(StaffHomePageController, self.staff_home_page_controller)
-            self.show_page('staff_home_page', self.staff_home_page_controller)
+            staff_home_page_controller = StaffHomePageController(self.show_page)
+            Container.add_existing_instance(StaffHomePageController, staff_home_page_controller)
+            self.show_page('staff_home_page', staff_home_page_controller)
 
     def show(self):
-        """Show the login view."""
         self.view.show()
