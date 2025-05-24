@@ -26,11 +26,10 @@ class CustomerClubMainPage(QWidget):
         header_layout.addStretch()
         main_layout.addLayout(header_layout)
 
-        # Replace purple club header image with disco ball emoji 🪩
         club_image = QLabel("🪩")
         club_image.setAlignment(Qt.AlignCenter)
         club_image.setFixedHeight(200)
-        club_image.setStyleSheet("font-size: 100pt;")  # Large emoji size
+        club_image.setStyleSheet("font-size: 100pt;") 
         main_layout.addWidget(club_image)
 
         # Club Name & Address
@@ -58,11 +57,10 @@ class CustomerClubMainPage(QWidget):
         main_layout.addSpacing(10)
         main_layout.addWidget(QLabel("<b>Tonight's Event:</b>"))
 
-        # Replace red event image box with ticket emoji 🎟️
         event_image = QLabel("🎟️")
         event_image.setAlignment(Qt.AlignCenter)
         event_image.setFixedSize(150, 150)
-        event_image.setStyleSheet("font-size: 120pt;")  # Large emoji size
+        event_image.setStyleSheet("font-size: 120pt;")
         main_layout.addWidget(event_image, alignment=Qt.AlignHCenter)
 
         # Event Info and Reservation Buttons
