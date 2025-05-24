@@ -84,6 +84,14 @@ def seed():
                 password="slet"
             ),
             Customer(
+                full_name="Drivi",
+                age=21,
+                role=Role.CUSTOMER,
+                phone=1234567890,
+                email="drivi@ceid.gr",
+                password="oly"
+            ),
+            Customer(
                 full_name="SKEGIAS O DIAKSTIS",
                 age=23,
                 role=Role.CUSTOMER,
