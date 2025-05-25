@@ -31,7 +31,6 @@ class StaffHomePageController(QObject):
       res = Reservation.get_res_from_id(detected_id)
       if card:
         card.checkbox.setChecked(True)
-        popup = MessagePopup(success=True, message=f"ID: {detected_id} | {res.get_user_name()}\nChecked In")
-        popup.exec()
+        MessagePopup(success=True, message=f"ID: {detected_id} | {res.get_user_name()}\nChecked In")
         # TODO notification code
         

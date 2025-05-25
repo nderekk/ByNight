@@ -23,15 +23,13 @@ class CancelReservationController(QObject):
     if allowed:
       self.view.exec()
     else:
-      popup = MessagePopup(success=False, message="Cancellations less than 2 hours before are prohibited!")
-      popup.exec()
+      MessagePopup(success=False, message="Cancellations less than 2 hours before are prohibited!")
   
   def confirm_cancellation(self):
     self.reservation.cancel_res(self.reservation)
     
-    popup = MessagePopup(success=True, message="Your Reservation has been Cancelled.\nWe're Sorry to see you go :(")
-    popup.exec()
-    
+    MessagePopup(success=True, message="Your Reservation has been Cancelled.\nWe're Sorry to see you go :(")
+        
     from app.controllers import ViewReservationsController
     self.controller = ViewReservationsController(self.show_page)
     self.show_page('view_res_controller', self.controller)    
