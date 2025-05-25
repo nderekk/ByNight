@@ -1,15 +1,23 @@
 import sys
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout,
-    QDateEdit, QTimeEdit, QFrame, QPushButton
+    QDateEdit, QFrame, QPushButton
 )
-from PySide6.QtCore import Qt, QDate, QTime
-from PySide6.QtGui import QFont
+from PySide6.QtCore import Qt, QDate, Signal
+from PySide6.QtGui import QFont, QMouseEvent, QCursor
 
+
+
+class ClickableLabel(QLabel):
+    clicked = Signal()
+
+    def mousePressEvent(self, event: QMouseEvent):
+        if event.button() == Qt.LeftButton:
+            self.clicked.emit()
 
 
 class StatCard(QWidget):
-    def __init__(self, title, value):
+    def __init__(self, title, value, on_chart_clicked=None):
         super().__init__()
         self.setStyleSheet("background-color: #2f2f2f; border-radius: 8px;")
         self.setFixedHeight(100)
@@ -17,22 +25,25 @@ class StatCard(QWidget):
         layout = QVBoxLayout()
         layout.setContentsMargins(12, 8, 12, 8)
 
-        # Title
         title_label = QLabel(title)
         title_label.setStyleSheet("color: white; font-weight: bold; font-size: 14px;")
 
-        # Value and Placeholder Chart
         self.value_label = QLabel(f"{value}%")
         self.value_label.setStyleSheet("color: white; font-size: 20px; font-weight: bold;")
 
-        placeholder_chart = QLabel("📈")
-        placeholder_chart.setAlignment(Qt.AlignRight)
-        placeholder_chart.setStyleSheet("font-size: 20px; color: #007bff;")
+        self.chart_icon = ClickableLabel("📈")
+        self.chart_icon.setAlignment(Qt.AlignRight)
+        self.chart_icon.setStyleSheet("font-size: 20px; color: #007bff;")
+        self.chart_icon.setCursor(QCursor(Qt.PointingHandCursor))
+
+
+        if on_chart_clicked:
+            self.chart_icon.clicked.connect(on_chart_clicked)
 
         top = QHBoxLayout()
         top.addWidget(self.value_label)
         top.addStretch()
-        top.addWidget(placeholder_chart)
+        top.addWidget(self.chart_icon)
 
         layout.addWidget(title_label)
         layout.addLayout(top)
@@ -58,7 +69,7 @@ class ClubStatsWindow(QWidget):
         self.back_button = QPushButton("←")
         self.back_button.setFixedSize(30, 30)
         self.back_button.setStyleSheet("font-size: 18px; border: none; background: transparent;")
-        self.back_button.setCursor(Qt.PointingHandCursor)
+        self.back_button.setCursor(QCursor(Qt.PointingHandCursor))
         header_layout.addWidget(self.back_button)
         header_layout.addStretch()
         main_layout.addLayout(header_layout)
@@ -141,6 +152,10 @@ class ClubStatsWindow(QWidget):
 
     def update_attendance(self, attendance: float):
         self.attendance_card.set_value(attendance)
+
+    def set_graph_callback(self, callback):
+        self.attendance_card.chart_icon.clicked.connect(callback)
+
 
     
 

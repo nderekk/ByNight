@@ -7,13 +7,16 @@ from app.models import Club
 from PySide6.QtCore import QDate
 
 
+
 class ClubStatsController(QObject):
     def __init__(self, show_page: callable):
         super().__init__()
         self.show_page = show_page
 
         self.view = ClubStatsWindow(attendance=0)
+        self.view.set_graph_callback(self.show_attendance_graph)
         self.setup_connections()
+        
 
     def setup_connections(self):
         self.view.back_button.clicked.connect(self.handle_back)
@@ -39,3 +42,10 @@ class ClubStatsController(QObject):
         self.view.update_attendance(self.attendance)
         print("Attendance updated:", self.attendance) 
         
+    def show_attendance_graph(self):
+        fromdate = self.view.from_date.date().toPython()
+        todate = self.view.to_date.date().toPython()
+
+        Statistics.plot_reservation_attendance(fromdate, todate, 4) 
+
+  
