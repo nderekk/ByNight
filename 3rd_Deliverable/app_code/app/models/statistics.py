@@ -1,5 +1,5 @@
 from sqlalchemy import func
-from app.models import Reservation, Club
+from app.models import Reservation, Club, Order
 from app.data.database import Base
 from app.services.db_session import DatabaseSession
 from app.utils.container import Container
@@ -24,6 +24,31 @@ class Statistics(Base):
         ).all()
 
     @classmethod
+    def get_orders(cls, reservations_id):
+        session = cls._get_session()
+        
+        # Safety: convert to list if it's a generator
+        reservations_id = list(reservations_id)
+        print("Looking for orders with reservation_id in:", reservations_id)
+
+        if not reservations_id:
+            print("No reservation IDs provided.")
+            return []
+
+        # Print all orders in the DB to compare
+        all_orders = session.query(Order).all()
+        print("All orders in DB with reservation_id:")
+        for order in all_orders:
+            print(f"Order ID: {order.id}, Reservation ID: {order.reservation_id}, Cost: {order.cost}")
+
+        # Actual query
+        orders = session.query(Order).filter(Order.reservation_id.in_(reservations_id)).all()
+        print(f"Found {len(orders)} matching orders.")
+
+        return orders
+
+
+    @classmethod
     def get_attendance_percentage(cls, from_datetime, to_datetime, club_id):
         reservations = cls._get_reservations(from_datetime, to_datetime, club_id)
 
@@ -36,6 +61,20 @@ class Statistics(Base):
             return 0
 
         return min(100, (total_attendance / max_capacity) * 100)
+
+    @classmethod
+    def get_sale(cls, from_datetime, to_datetime, club_id):
+        reservations = cls._get_reservations(from_datetime, to_datetime, club_id)
+        reservations_id = [res.id for res in reservations]
+
+        orders = cls.get_orders(reservations_id)
+        print("ORDERS", orders)
+        sales = sum(ord.cost for ord in orders)
+
+        print("SALES", sales) 
+
+        return sales
+
 
     @classmethod
     def plot_reservation_attendance(cls, from_datetime, to_datetime, club_id):
@@ -69,3 +108,6 @@ class Statistics(Base):
         plt.tight_layout()
         plt.grid(True)
         plt.show()
+    
+
+    

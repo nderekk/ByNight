@@ -34,13 +34,11 @@ class ClubStatsController(QObject):
         fromdate = self.view.from_date.date().toPython()
         todate = self.view.to_date.date().toPython()
         ValidateDate.validate(fromdate, todate, self.view)
-        print(type(fromdate), fromdate)
-        print(type(todate), todate)
-
 
         self.attendance = Statistics.get_attendance_percentage(fromdate, todate, 4)
         self.view.update_attendance(self.attendance)
-        print("Attendance updated:", self.attendance) 
+        self.sales = Statistics.get_sale(fromdate,  todate, 4)
+        self.view.update_sales(self.sales)
         
     def show_attendance_graph(self):
         fromdate = self.view.from_date.date().toPython()

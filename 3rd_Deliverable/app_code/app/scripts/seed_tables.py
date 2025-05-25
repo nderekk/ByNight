@@ -163,20 +163,23 @@ def seed():
         session.add_all(tables)
 
         # 7. Create Order
-        order = Order(
-            cost=150.0,
-            delivered=True,
-            paid=True
-        )
-        session.add(order)
-
-        # 8. Create Reservation and link everything
+        orders = [
+            Order(cost=150.0, delivered=True, paid=True, regular_bottles=2),
+            Order(cost=120.0, delivered=True, paid=True, regular_bottles=1),
+            Order(cost=130.0, delivered=True, paid=False, regular_bottles=2),
+            Order(cost=140.0, delivered=False, paid=True, regular_bottles=1),
+            Order(cost=160.0, delivered=True, paid=True, regular_bottles=3),
+            Order(cost=170.0, delivered=True, paid=True, regular_bottles=4)
+        ]
+        session.add_all(orders)
+        
+# 8. Create Reservations and link them to individual orders
         dummy_reservations = [
             Reservation(
                 user=customers[0],
                 table=tables[0],
                 num_of_people=4,
-                order=order,
+                order=orders[0],
                 date=datetime(2026, 1, 1, 22, 0),
                 club=dummy_clubs[3],
                 event=events[0]
@@ -185,7 +188,7 @@ def seed():
                 user=customers[0],
                 table=tables[1],
                 num_of_people=2,
-                order=order,
+                order=orders[1],
                 date=datetime(2024, 6, 1, 22, 0),
                 club=dummy_clubs[3],
                 event=events[1]
@@ -194,8 +197,8 @@ def seed():
                 user=customers[2],
                 table=tables[1],
                 num_of_people=2,
-                order=order,
-                date=datetime(2027, 6, 1, 22, 0),
+                order=orders[2],
+                date=datetime(2024, 6, 1, 22, 0),
                 club=dummy_clubs[3],
                 event=events[1]
             ),
@@ -203,8 +206,8 @@ def seed():
                 user=customers[3],
                 table=tables[1],
                 num_of_people=2,
-                order=order,
-                date=datetime(2027, 6, 1, 22, 0),
+                order=orders[3],
+                date=datetime(2024, 6, 1, 22, 0),
                 club=dummy_clubs[3],
                 event=events[1]
             ),
@@ -212,7 +215,7 @@ def seed():
                 user=customers[1],
                 table=tables[1],
                 num_of_people=2,
-                order=order,
+                order=orders[4],
                 date=datetime(2025, 12, 9, 23, 30),
                 club=dummy_clubs[3],
                 event=events[1]
@@ -221,13 +224,14 @@ def seed():
                 user=customers[1],
                 table=tables[1],
                 num_of_people=3,
-                order=order,
+                order=orders[5],
                 date=datetime(2025, 10, 28, 22, 0),
                 club=dummy_clubs[3],
                 event=events[0]
             )
         ]
         session.add_all(dummy_reservations)
+
 
         # 9. Commit all
         session.commit()
