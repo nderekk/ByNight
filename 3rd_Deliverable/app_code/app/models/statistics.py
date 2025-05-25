@@ -109,5 +109,52 @@ class Statistics(Base):
         plt.grid(True)
         plt.show()
     
+    @classmethod
+    def plot_daily_sales(cls, from_datetime, to_datetime, club_id):
+        reservations = cls._get_reservations(from_datetime, to_datetime, club_id)
+
+        if not reservations:
+            print("No reservations found.")
+            return
+
+        reservation_ids = [res.id for res in reservations]
+
+        session = cls._get_session()
+        try:
+            orders = session.query(Order).filter(Order.reservation_id.in_(reservation_ids)).all()
+        finally:
+            session.close()
+
+        if not orders:
+            print("No orders found for selected reservations.")
+            return
+
+        # Map reservation_id to date
+        reservation_date_map = {res.id: res.date.strftime('%Y-%m-%d') for res in reservations}
+
+        # Aggregate sales by date
+        sales_by_date = defaultdict(float)
+        for order in orders:
+            date_str = reservation_date_map.get(order.reservation_id)
+            if date_str:
+                sales_by_date[date_str] += order.cost
+
+        # Sort by date
+        sorted_dates = sorted(sales_by_date)
+        sorted_sales = [sales_by_date[date] for date in sorted_dates]
+
+        cls.plot_sales_graph(sorted_dates, sorted_sales)
+
+    @staticmethod
+    def plot_sales_graph(dates, sales):
+        plt.figure(figsize=(10, 5))
+        plt.plot(dates, sales, marker='o', linestyle='-', color='green')
+        plt.xlabel("Reservation Date")
+        plt.ylabel("Total Sales (€)")
+        plt.title("Daily Sales Over Time")
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.grid(True)
+        plt.show()
 
     

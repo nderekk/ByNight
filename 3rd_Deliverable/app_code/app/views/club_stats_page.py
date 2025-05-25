@@ -158,10 +158,11 @@ class ClubStatsWindow(QWidget):
         self.sales_card.set_value(sales)
         
 
-    def set_graph_callback(self, callback):
+    def set_graph_attendace_callback(self, callback):
         self.attendance_card.chart_icon.clicked.connect(callback)
 
-
+    def set_graph_sales_callback(self, callback):
+        self.sales_card.chart_icon.clicked.connect(callback)    
     
 
 

@@ -189,7 +189,7 @@ def seed():
                 table=tables[1],
                 num_of_people=2,
                 order=orders[1],
-                date=datetime(2024, 6, 1, 22, 0),
+                date=datetime(2024, 8, 1, 22, 0),
                 club=dummy_clubs[3],
                 event=events[1]
             ),
@@ -198,7 +198,7 @@ def seed():
                 table=tables[1],
                 num_of_people=2,
                 order=orders[2],
-                date=datetime(2024, 6, 1, 22, 0),
+                date=datetime(2024, 7, 1, 22, 0),
                 club=dummy_clubs[3],
                 event=events[1]
             ),

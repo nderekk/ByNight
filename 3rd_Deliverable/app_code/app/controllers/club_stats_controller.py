@@ -14,7 +14,8 @@ class ClubStatsController(QObject):
         self.show_page = show_page
 
         self.view = ClubStatsWindow(attendance=0)
-        self.view.set_graph_callback(self.show_attendance_graph)
+        self.view.set_graph_attendace_callback(self.show_attendance_graph)
+        self.view.set_graph_sales_callback(self.show_sales_graph)
         self.setup_connections()
         
 
@@ -46,4 +47,8 @@ class ClubStatsController(QObject):
 
         Statistics.plot_reservation_attendance(fromdate, todate, 4) 
 
-  
+    def show_sales_graph(self):
+        fromdate = self.view.from_date.date().toPython()
+        todate = self.view.to_date.date().toPython()
+
+        Statistics.plot_daily_sales(fromdate, todate, 4)
