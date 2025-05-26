@@ -1,5 +1,6 @@
 from app.data.database import SessionLocal
 from app.models import Club, Customer, Event, Reservation, Order, Table, Role, TableType, Staff, Manager
+from app.models.review import Review
 from datetime import datetime, date, time
 
 # WINDOWS
@@ -147,6 +148,8 @@ def seed():
         ]
         session.add_all(events)
 
+
+
         # 6. Create Table
         tables = [
             Table(
@@ -228,6 +231,37 @@ def seed():
             )
         ]
         session.add_all(dummy_reservations)
+
+        reviews = [
+        
+        Review(
+            reservation_id=3,
+            music_rating=4,
+            atmosphere_rating=3,
+            service_rating=4,
+            overall_experience=4,
+            comments="Great night, a bit crowded but fun."
+        ),
+        Review(
+            reservation_id=4,
+            music_rating=3,
+            atmosphere_rating=3,
+            service_rating=3,
+            overall_experience=3,
+            comments="It was okay. Nothing too exciting."
+        ),
+        Review(
+            reservation_id=5,
+            music_rating=2,
+            atmosphere_rating=2,
+            service_rating=1,
+            overall_experience=2,
+            comments="Poor service and the music was too loud."
+        ),
+    ]
+
+        session.add_all(reviews)
+     
 
         # 9. Commit all
         session.commit()

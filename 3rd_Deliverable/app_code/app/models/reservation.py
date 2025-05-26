@@ -101,6 +101,9 @@ class Reservation(Base):
     session.commit()
     return response
   
+   
+
+  
   def cancel_res(self, reservation):
     session = Container.resolve(DatabaseSession)
     session.delete(reservation)
