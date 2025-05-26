@@ -1,5 +1,5 @@
 from app.data.database import SessionLocal
-from app.models import Club, Customer, Event, Reservation, Order, Table, Role, TableType, Staff, Manager
+from app.models import Club, Customer, Event, Reservation, Order, Table, Role, TableType, Staff, Manager, Review
 from datetime import datetime, date, time
 
 # WINDOWS
@@ -279,6 +279,18 @@ def seed():
             )
         ]
         session.add_all(dummy_reservations)
+        session.flush()
+
+        dummy_review= [
+            Review(
+                music_rating = 5,
+                atmosphere_rating = 5,
+                service_rating = 5,
+                overall_experience = 5,
+                reservation=dummy_reservations[2]
+            )
+        ]
+        session.add_all(dummy_review)
 
 
         # 9. Commit all

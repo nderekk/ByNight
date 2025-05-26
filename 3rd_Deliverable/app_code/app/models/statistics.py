@@ -1,10 +1,11 @@
 from sqlalchemy import func
-from app.models import Reservation, Club, Order
+from app.models import Reservation, Club, Order, Review
 from app.data.database import Base
 from app.services.db_session import DatabaseSession
 from app.utils.container import Container
 import matplotlib.pyplot as plt
 from collections import defaultdict
+from statistics import mean
 
 
 class Statistics(Base):
@@ -74,6 +75,24 @@ class Statistics(Base):
         percentage_larger_drinks = (larger / total_bottles) * 100
 
         return percentage_larger_drinks
+
+
+    @classmethod
+    def get_rating(cls, from_datetime, to_datetime, club_id):
+        session = cls._get_session()
+
+        reviews = session.query(Review).join(Review.reservation).filter(
+          Reservation.date >= from_datetime,
+          Reservation.date <= to_datetime,
+          Reservation.club_id == club_id
+        ).all()
+    
+        if not reviews:
+            return 0.0  
+
+        total_score = sum(review.overall_experience for review in reviews)
+        average_score = total_score / len(reviews)
+        return average_score
 
 
 
@@ -205,4 +224,57 @@ class Statistics(Base):
         plt.legend()
         plt.tight_layout()
         plt.grid(axis='y')
+        plt.show()
+
+
+    @classmethod
+    def plot_rating(cls, from_datetime, to_datetime, club_id):
+        reservations = cls._get_reservations(from_datetime, to_datetime, club_id)
+
+        if not reservations:
+            print("No reservations found.")
+            return
+
+        reservation_ids = [res.id for res in reservations]
+
+        session = cls._get_session()
+        try:
+            reviews = (
+                session.query(Review)
+                .filter(Review.reservation_id.in_(reservation_ids))
+                .all()
+            )
+        finally:
+            session.close()
+
+        if not reviews:
+            print("No reviews found.")
+            return
+
+       
+        reservation_date_map = {res.id: res.date.strftime('%Y-%m-%d') for res in reservations}
+
+        ratings_by_date = defaultdict(list)
+        for review in reviews:
+            date_str = reservation_date_map.get(review.reservation_id)
+            if date_str:
+                ratings_by_date[date_str].append(review.overall_experience)
+
+        
+        sorted_dates = sorted(ratings_by_date)
+        avg_ratings = [mean(ratings_by_date[date]) for date in sorted_dates]
+
+        cls.plot_rating_graph(sorted_dates, avg_ratings)
+
+    @staticmethod
+    def plot_rating_graph(dates, ratings):
+        plt.figure(figsize=(10, 5))
+        plt.plot(dates, ratings, marker='o', linestyle='-', color='blue')
+        plt.xlabel("Reservation Date")
+        plt.ylabel("Average Overall Experience Rating")
+        plt.title("Overall Experience Rating Over Time")
+        plt.xticks(rotation=45)
+        plt.ylim(0, 5.5)
+        plt.tight_layout()
+        plt.grid(True)
         plt.show()

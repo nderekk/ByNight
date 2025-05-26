@@ -7,11 +7,11 @@ class ValidateDate:
         today = QDate.currentDate()
 
         if from_date > today:
-            QMessageBox.warning(parent_widget, "Invalid Date", "The 'From' date cannot be in the future.")
+            QMessageBox.warning(parent_widget, "Μη έγκυρη χρονική περίοδο")
             return False
 
         if from_date > to_date:
-            QMessageBox.warning(parent_widget, "Invalid Range", "The 'From' date must be before or equal to the 'To' date.")
+            QMessageBox.warning(parent_widget, "Μη έγκυρη χρονική περίοδο")
             return False
 
         return True
