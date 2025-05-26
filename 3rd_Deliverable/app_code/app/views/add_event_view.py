@@ -1,24 +1,27 @@
 import sys
 from PySide6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QLabel, QPushButton,
+    QWidget, QLabel, QPushButton, QDateEdit,
     QVBoxLayout, QHBoxLayout, QScrollArea
 )
 from PySide6.QtGui import QFont, QPixmap, QIcon
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QDate, Signal
+from datetime import timedelta, datetime
 
-
-class DayEntry(QWidget):
-    def __init__(self, day, event_info=None, image_path=None):
+class DayEntry(QWidget):    
+    def __init__(self, date_obj, sig=None, event_info=None, image_path=None):
         super().__init__()
         layout = QHBoxLayout()
         layout.setContentsMargins(10, 5, 10, 5)
         layout.setSpacing(15)
+        
+        day_text = date_obj.strftime("%a - %d/%m/%Y")
 
         # Day label
-        day_label = QLabel(day)
-        day_label.setFont(QFont("Arial", 12, QFont.Bold))
-        day_label.setFixedWidth(90)
-        layout.addWidget(day_label)
+        day_label = QLabel(day_text)
+        day_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        day_label.setFixedWidth(130)  # Set a consistent width
+        day_label.setStyleSheet("font-weight: bold; font-size: 14px;")
+        layout.addWidget(day_label, alignment=Qt.AlignmentFlag.AlignCenter)
 
         # Optional image
         if image_path:
@@ -44,26 +47,25 @@ class DayEntry(QWidget):
             edit_icon = QLabel()
             edit_icon.setPixmap(QPixmap.fromImage(QIcon.fromTheme("document-edit").pixmap(24, 24).toImage()))
             layout.addWidget(edit_icon)
-
-        # Plus button (always present)
-        plus_btn = QPushButton("➕")
-        plus_btn.setFixedSize(30, 30)
-        plus_btn.setStyleSheet("font-size: 18px; border: none; background: transparent;")
-        plus_btn.setCursor(Qt.PointingHandCursor)
-        plus_btn.clicked.connect(lambda: print(f"Add event for {day}"))
-        layout.addWidget(plus_btn)
+        else:
+            plus_btn = QPushButton("➕")
+            plus_btn.setFixedSize(30, 30)
+            plus_btn.setStyleSheet("font-size: 18px; border: none; background: transparent;")
+            plus_btn.setCursor(Qt.PointingHandCursor)
+            plus_btn.clicked.connect(lambda: sig.emit(date_obj))
+            layout.addWidget(plus_btn)
 
         self.setLayout(layout)
 
 
-class AddEventPage(QMainWindow):
+class AddEventPage(QWidget):
+    add_button_clicked = Signal(datetime)
+    edit_button_clicked = Signal(datetime)
+
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Add Event")
-        self.setMinimumSize(500, 600)
 
-        central = QWidget()
-        main_layout = QVBoxLayout(central)
+        main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(15, 15, 15, 15)
         main_layout.setSpacing(10)
 
@@ -73,16 +75,18 @@ class AddEventPage(QMainWindow):
         self.back_btn.setFixedSize(30, 30)
         self.back_btn.setStyleSheet("font-size: 18px; border: none; background: transparent;")
         self.back_btn.setCursor(Qt.PointingHandCursor)
-        self.back_btn.clicked.connect(self.go_back)
-
+        
         title = QLabel("Add Event")
         title.setFont(QFont("Arial", 20, QFont.Bold))
 
         header_layout.addWidget(self.back_btn)
         header_layout.addWidget(title)
         header_layout.addStretch()
-        date_label = QLabel("Date: Current Week")
-        header_layout.addWidget(date_label)
+        self.date_picker = QDateEdit()
+        self.date_picker.setCalendarPopup(True)
+        self.date_picker.setDate(QDate.currentDate())
+        self.date_picker.setDisplayFormat("yyyy-MM-dd")
+        header_layout.addWidget(self.date_picker)
 
         main_layout.addLayout(header_layout)
 
@@ -92,21 +96,27 @@ class AddEventPage(QMainWindow):
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
         content_layout.setSpacing(20)
-
-        # Sample week layout
-        content_layout.addWidget(DayEntry("Monday"))
-        content_layout.addWidget(DayEntry("Tuesday"))
-        content_layout.addWidget(DayEntry("Wednesday", "Event: Kultura   Open Doors: 12:00", "event1.jpg"))
-        content_layout.addWidget(DayEntry("Thursday", "Event: Lunes Colpa   Open Doors: 12:00", "event2.jpg"))
-        content_layout.addWidget(DayEntry("Friday", "Supporting line text lorem ipsum dolor sit amet, consectetur."))
-        content_layout.addWidget(DayEntry("Saturday", "Supporting line text lorem ipsum dolor sit amet, consectetur."))
-        content_layout.addWidget(DayEntry("Sunday", "Supporting line text lorem ipsum dolor sit amet, consectetur."))
-
+        self.content_layout = content_layout
+        
         scroll.setWidget(content_widget)
         main_layout.addWidget(scroll)
+        
+    def update_week(self, start_date, events_by_date):
+        # Clear existing day entries
+        for i in reversed(range(self.content_layout.count())):
+            widget = self.content_layout.itemAt(i).widget()
+            if widget:
+                widget.setParent(None)
 
-        self.setCentralWidget(central)
-
-    def go_back(self):
-        print("Back button clicked")
+        weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        for i in range(7):
+            day_date = start_date + timedelta(days=i)
+            day_name = weekdays[i]
+            event = events_by_date.get(day_date)
+            
+            if event:
+                event_info = f"Event: {event.title}\nDoors Open: {event.time.strftime('%H:%M')}"
+                self.content_layout.addWidget(DayEntry(day_date, event_info=event_info))
+            else:
+                self.content_layout.addWidget(DayEntry(day_date, self.add_button_clicked))
 

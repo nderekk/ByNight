@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Enum, Date, Time, ForeignKey
 from sqlalchemy.orm import relationship
 from app.data.database import Base
+from datetime import timedelta
 import app.models
 
 class Event(Base):
@@ -24,3 +25,22 @@ class Event(Base):
     from app.services.db_session import DatabaseSession
     session = Container.resolve(DatabaseSession)
     return session.get(cls, event_id).date
+  
+  @classmethod 
+  def create_event(cls, title, description, music, date, time, club):
+    from app.utils.container import Container
+    from app.services.db_session import DatabaseSession
+    session = Container.resolve(DatabaseSession)
+    
+    event = Event(
+      title=title,
+      description=description,
+      music=music,
+      date=date,
+      time=time,
+      club=club
+    )
+    
+    session.add(event)
+    session.commit()
+    return True

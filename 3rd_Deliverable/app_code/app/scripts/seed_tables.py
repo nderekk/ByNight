@@ -148,9 +148,49 @@ def seed():
                 title="Kultura",
                 description="Gxhan",
                 music="Hip-Hop/Rap",
-                date=date(2025, 7, 1),
+                date=date(2025, 6, 1),
                 time=time(23, 0),
-                club=dummy_clubs[1]
+                club=dummy_clubs[3]
+            ),
+            Event(
+                title="RnB Night",
+                description="Brent Faiyaz",
+                music="R&B",
+                date=date(2025, 6, 2),
+                time=time(23, 0),
+                club=dummy_clubs[3]
+            ),
+            Event(
+                title="Lules Culpa",
+                description="Liva K",
+                music="House",
+                date=date(2025, 6, 3),
+                time=time(23, 0),
+                club=dummy_clubs[3]
+            ),
+            Event(
+                title="Greek Night",
+                description="patris thriskeia oikogeneia",
+                music="Laika",
+                date=date(2025, 6, 4),
+                time=time(23, 0),
+                club=dummy_clubs[3]
+            ),
+            Event(
+                title="boy lover night",
+                description="Drake",
+                music="drake-music",
+                date=date(2025, 6, 10),
+                time=time(23, 0),
+                club=dummy_clubs[3]
+            ),
+            Event(
+                title="Old skool",
+                description="oldheadades elate edw",
+                music="Hip-Hop/Rap",
+                date=date(2025, 6, 12),
+                time=time(23, 0),
+                club=dummy_clubs[3]
             ),
         ]
         session.add_all(events)

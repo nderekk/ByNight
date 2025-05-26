@@ -8,17 +8,18 @@ class ManagerHomePageController(QObject):
     def __init__(self, show_page: callable):
         super().__init__()
         self.user = Container.resolve(User)
+        self.club = self.user.managed_club
         self.show_page = show_page
         self.view = ManagerUI()
         self.load_club_info()
         self.setup_connections()
 
     def setup_connections(self):
-            self.view.viewResButton.clicked.connect(self.handle_view_man_res_page)
-            self.view.addEventButton.clicked.connect(self.handle_add_event_page)
-            self.view.viewStatsButton.clicked.connect(self.handle_stats_page)
-            self.view.giveDiscountsButton.clicked.connect(self.handle_discount_page)
-            self.view.urClubButton.clicked.connect(self.handle_ur_club)
+        self.view.viewResButton.clicked.connect(self.handle_view_man_res_page)
+        self.view.addEventButton.clicked.connect(self.handle_add_event_page)
+        self.view.viewStatsButton.clicked.connect(self.handle_stats_page)
+        self.view.giveDiscountsButton.clicked.connect(self.handle_discount_page)
+        self.view.urClubButton.clicked.connect(self.handle_ur_club)
 
 
     def load_club_info(self):
@@ -49,7 +50,7 @@ class ManagerHomePageController(QObject):
     def handle_add_event_page(self):
          from app.controllers.add_event_controller import AddEventController
 
-         self.add_event_controller = AddEventController(self.show_page)
+         self.add_event_controller = AddEventController(self.club, self.show_page)
          self.show_page('add_event_view_page', self.add_event_controller)
 
     def handle_stats_page(self):
