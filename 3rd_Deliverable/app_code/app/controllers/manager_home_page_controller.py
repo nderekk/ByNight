@@ -34,7 +34,7 @@ class ManagerHomePageController(QObject):
             self.view.clubName.setText(f"Club Name: {club.name}")
             self.view.clubDesc.setText(f"{club.address}, {club.location}")
         else:
-            # Δεν έχει δηλωμένο club ακόμη
+            
             self.view.clubName.setText("Club Name: -")
             self.view.clubDesc.setText("Club Details: -")
 
