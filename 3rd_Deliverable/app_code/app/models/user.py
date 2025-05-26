@@ -25,22 +25,33 @@ class User(Base):
 
     
     def update_to_manager(self):
-        from app.utils.container import Container
-        from app.services.db_session import DatabaseSession
-        from app.models.manager import Manager
+     from app.utils.container import Container
+     from app.services.db_session import DatabaseSession
+     from app.models.manager import Manager
 
-        session = Container.resolve(DatabaseSession)
-        self.role = Role.MANAGER
-        session.add(self)
+     session = Container.resolve(DatabaseSession)
+
+     
+     customer_entry = session.query(app.models.Customer).filter_by(id=self.id).first()
+     if customer_entry:
+        session.delete(customer_entry)
         session.commit()
 
+     
+     new_manager = Manager(
+        id=self.id,   
+        full_name=self.full_name,
+        age=self.age,
+        role=Role.MANAGER,
+        phone=self.phone,
+        email=self.email,
+        password=self.password
+    )
+
+     session.merge(new_manager)   
+     session.commit()
 
         
-        
-        manager_record = Manager(id=self.id)
-        session.add(manager_record)
-        session.commit()
-
 
     def verify_password(self, password: str) -> bool:
         return self.password == password

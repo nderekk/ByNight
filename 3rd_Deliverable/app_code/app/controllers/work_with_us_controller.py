@@ -28,7 +28,7 @@ class WorkWithUsController(QObject):
   def handle_upload(self):
     file_paths = self.view.get_uploaded_files()
 
-    if len(file_paths) < 4:  # ή όσα απαιτούνται
+    if len(file_paths) < 4:  
             self.view.show_error("U should upload all the files")
             return
 
@@ -39,7 +39,7 @@ class WorkWithUsController(QObject):
        home_controller.update()
        
     else:
-        self.view.show_error("Η εγγραφή απέτυχε. Ελέγξτε τα αρχεία σας.")
+        self.view.show_error("Registry denied. Check ur licences.")
 
   def show(self):
     self.view.show() 

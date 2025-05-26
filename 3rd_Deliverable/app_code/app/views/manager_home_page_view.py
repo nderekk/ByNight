@@ -26,6 +26,8 @@ class ManagerUI(QWidget):
 
         # --- Manager Actions ---
         actions_bar = QHBoxLayout()
+        self.urClubButton = QPushButton("Ur Club")
+        actions_bar.addWidget(self.urClubButton)
         self.viewResButton = QPushButton("View Reservations")
         self.addEventButton = QPushButton("Add Event")
         self.viewStatsButton = QPushButton("View Stats")
