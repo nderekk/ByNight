@@ -16,6 +16,7 @@ class ClubStatsController(QObject):
         self.view = ClubStatsWindow(attendance=0)
         self.view.set_graph_attendace_callback(self.show_attendance_graph)
         self.view.set_graph_sales_callback(self.show_sales_graph)
+        self.view.set_graph_drinks_callback(self.show_drinks_graph)
         self.setup_connections()
         
 
@@ -40,7 +41,9 @@ class ClubStatsController(QObject):
         self.view.update_attendance(self.attendance)
         self.sales = Statistics.get_sale(fromdate,  todate, 4)
         self.view.update_sales(self.sales)
-        
+        self.percentage_larger_drinks = Statistics.get_drinks(fromdate,  todate, 4)
+        self.view.update_drinks(self.percentage_larger_drinks)
+
     def show_attendance_graph(self):
         fromdate = self.view.from_date.date().toPython()
         todate = self.view.to_date.date().toPython()
@@ -52,3 +55,9 @@ class ClubStatsController(QObject):
         todate = self.view.to_date.date().toPython()
 
         Statistics.plot_daily_sales(fromdate, todate, 4)
+
+    def show_drinks_graph(self):
+        fromdate = self.view.from_date.date().toPython()
+        todate = self.view.to_date.date().toPython()
+
+        Statistics.plot_bottle_amounts(fromdate, todate, 4)

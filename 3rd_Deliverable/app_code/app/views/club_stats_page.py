@@ -57,7 +57,7 @@ class StatCard(QWidget):
 
 
 class ClubStatsWindow(QWidget):
-    def __init__(self, attendance=0, sales=0):
+    def __init__(self, attendance=0, sales=0, percentage_larger_drinks=0):
         super().__init__()
 
         main_layout = QVBoxLayout()
@@ -139,7 +139,8 @@ class ClubStatsWindow(QWidget):
         self.sales_card = (StatCard("Sales", sales))
         main_layout.addWidget(self.sales_card)
         main_layout.addWidget(self.create_divider())
-        main_layout.addWidget(StatCard("Drink Distribution", 14))
+        self.drinks_card = (StatCard("Drink Distribution", percentage_larger_drinks))
+        main_layout.addWidget(self.drinks_card)
         main_layout.addWidget(self.create_divider())
         main_layout.addWidget(StatCard("Rating", 14))
 
@@ -156,6 +157,9 @@ class ClubStatsWindow(QWidget):
 
     def update_sales(self, sales: int):
         self.sales_card.set_value(sales)
+    
+    def update_drinks(self, percentage_larger_drinks: int):
+        self.drinks_card.set_value(percentage_larger_drinks)
         
 
     def set_graph_attendace_callback(self, callback):
@@ -164,5 +168,7 @@ class ClubStatsWindow(QWidget):
     def set_graph_sales_callback(self, callback):
         self.sales_card.chart_icon.clicked.connect(callback)    
     
+    def set_graph_drinks_callback(self, callback):
+        self.drinks_card.chart_icon.clicked.connect(callback) 
 
 

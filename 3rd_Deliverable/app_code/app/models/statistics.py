@@ -27,24 +27,11 @@ class Statistics(Base):
     def get_orders(cls, reservations_id):
         session = cls._get_session()
         
-        # Safety: convert to list if it's a generator
-        reservations_id = list(reservations_id)
-        print("Looking for orders with reservation_id in:", reservations_id)
-
         if not reservations_id:
             print("No reservation IDs provided.")
             return []
-
-        # Print all orders in the DB to compare
-        all_orders = session.query(Order).all()
-        print("All orders in DB with reservation_id:")
-        for order in all_orders:
-            print(f"Order ID: {order.id}, Reservation ID: {order.reservation_id}, Cost: {order.cost}")
-
-        # Actual query
+        
         orders = session.query(Order).filter(Order.reservation_id.in_(reservations_id)).all()
-        print(f"Found {len(orders)} matching orders.")
-
         return orders
 
 
@@ -68,12 +55,26 @@ class Statistics(Base):
         reservations_id = [res.id for res in reservations]
 
         orders = cls.get_orders(reservations_id)
-        print("ORDERS", orders)
         sales = sum(ord.cost for ord in orders)
 
-        print("SALES", sales) 
-
         return sales
+    
+    @classmethod
+    def get_drinks(cls, from_datetime, to_datetime, club_id):
+        reservations = cls._get_reservations(from_datetime, to_datetime, club_id)
+        reservations_id = [res.id for res in reservations]
+
+        orders = cls.get_orders(reservations_id)
+        total_premium = sum(ord.premium_bottles for ord in orders)
+        total_regular = sum(ord.regular_bottles for ord in orders) 
+        
+        total_bottles = total_premium + total_regular
+
+        larger = max(total_premium, total_regular)
+        percentage_larger_drinks = (larger / total_bottles) * 100
+
+        return percentage_larger_drinks
+
 
 
     @classmethod
@@ -129,10 +130,8 @@ class Statistics(Base):
             print("No orders found for selected reservations.")
             return
 
-        # Map reservation_id to date
         reservation_date_map = {res.id: res.date.strftime('%Y-%m-%d') for res in reservations}
 
-        # Aggregate sales by date
         sales_by_date = defaultdict(float)
         for order in orders:
             date_str = reservation_date_map.get(order.reservation_id)
@@ -157,4 +156,53 @@ class Statistics(Base):
         plt.grid(True)
         plt.show()
 
-    
+    @classmethod
+    def plot_bottle_amounts(cls, from_datetime, to_datetime, club_id):
+        reservations = cls._get_reservations(from_datetime, to_datetime, club_id)
+        if not reservations:
+            print("No reservations found.")
+            return
+
+        reservation_ids = [res.id for res in reservations]
+        reservation_labels = [f"Res {res.id}" for res in reservations]  # Or res.date.strftime('%Y-%m-%d')
+
+        session = cls._get_session()
+        try:
+            orders = session.query(Order).filter(Order.reservation_id.in_(reservation_ids)).all()
+        finally:
+            session.close()
+
+        if not orders:
+            print("No orders found for selected reservations.")
+            return
+
+        data = defaultdict(lambda: {"premium": 0, "regular": 0})
+
+        for order in orders:
+            data[order.reservation_id]["premium"] += order.premium_bottles
+            data[order.reservation_id]["regular"] += order.regular_bottles
+
+        premium_values = [data[res_id]["premium"] for res_id in reservation_ids]
+        regular_values = [data[res_id]["regular"] for res_id in reservation_ids]
+
+        cls.plot_bottle_amounts_graph(reservation_labels, premium_values, regular_values)
+
+    @staticmethod
+    def plot_bottle_amounts_graph(reservation_labels, premium_values, regular_values):
+        import numpy as np
+
+        x = np.arange(len(reservation_labels))
+        width = 0.35
+
+        plt.figure(figsize=(12, 6))
+        plt.bar(x - width / 2, premium_values, width, label='Premium Bottles', color='orange')
+        plt.bar(x + width / 2, regular_values, width, label='Regular Bottles', color='blue')
+
+        plt.xlabel('Reservation')
+        plt.ylabel('Number of Bottles')
+        plt.title('Bottle Amounts by Category for Each Reservation')
+        plt.xticks(x, reservation_labels, rotation=45)
+        plt.legend()
+        plt.tight_layout()
+        plt.grid(axis='y')
+        plt.show()
