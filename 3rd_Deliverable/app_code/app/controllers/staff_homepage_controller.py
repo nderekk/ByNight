@@ -21,9 +21,9 @@ class StaffHomePageController(QObject):
     self.setup_connections()
 
   def setup_connections(self):
-    self.view.camera_clicked.connect(self.handle_qrcode)
+    self.view.camera_clicked.connect(self.handle_scanqrcode)
     
-  def handle_qrcode(self):
+  def handle_scanqrcode(self):
     from app.utils import decode_qr
     detected_id = decode_qr()
     if detected_id in self.view.cards.keys() and detected_id != -1:
