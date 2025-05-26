@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox, QFormLayout
 from app.models.club import Club
 from app.models.user import User
 from app.services.db_session import DatabaseSession
@@ -14,23 +14,24 @@ class ClubCreator:
     def ur_club(self):
         self.window = QWidget()
         self.window.setWindowTitle("Create or Edit Your Club")
-        layout = QVBoxLayout(self.window)
+        
+        main_layout = QVBoxLayout(self.window)
 
+        form_layout = QFormLayout()
         self.name_input = QLineEdit()
-        self.name_input.setPlaceholderText("Club Name")
         self.addr_input = QLineEdit()
-        self.addr_input.setPlaceholderText("Address")
         self.loc_input = QLineEdit()
-        self.loc_input.setPlaceholderText("Location")
+
+        form_layout.addRow("Club Name:", self.name_input)
+        form_layout.addRow("Address:", self.addr_input)
+        form_layout.addRow("Location:", self.loc_input)
 
         self.submit_btn = QPushButton("Save Club")
         self.submit_btn.clicked.connect(self.save_or_update_club)
 
-        layout.addWidget(QLabel("Enter or Update Your Club Info:"))
-        layout.addWidget(self.name_input)
-        layout.addWidget(self.addr_input)
-        layout.addWidget(self.loc_input)
-        layout.addWidget(self.submit_btn)
+        main_layout.addWidget(QLabel("Enter or Update Your Club Info:"))
+        main_layout.addLayout(form_layout)
+        main_layout.addWidget(self.submit_btn)
 
         
         existing_club = self.session.query(Club).filter_by(manager_id=self.user.id).first()
@@ -52,7 +53,6 @@ class ClubCreator:
             QMessageBox.warning(self.window, "Validation Error", "All fields are required.")
             return
 
-         
         if self.existing_club:
             self.existing_club.name = name
             self.existing_club.address = address
@@ -60,7 +60,6 @@ class ClubCreator:
             self.session.commit()
             QMessageBox.information(self.window, "Success", "Club updated successfully!")
         else:
-             
             if self.session.query(Club).filter_by(name=name).first():
                 QMessageBox.critical(self.window, "Error", "Club with this name already exists.")
                 return
