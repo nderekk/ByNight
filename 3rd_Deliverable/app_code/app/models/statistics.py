@@ -65,6 +65,9 @@ class Statistics(Base):
         reservations = cls._get_reservations(from_datetime, to_datetime, club_id)
         reservations_id = [res.id for res in reservations]
 
+        if not reservations:
+          return 0 
+
         orders = cls.get_orders(reservations_id)
         total_premium = sum(ord.premium_bottles for ord in orders)
         total_regular = sum(ord.regular_bottles for ord in orders) 
