@@ -60,10 +60,10 @@ class User(Base):
         return self.get_upcoming_reservations_for_display(), self.get_past_reservations_for_display()
     
     def get_upcoming_reservations_for_display(self):
-        upcoming = [r for r in self.reservations if r.date > datetime.now()]
+        upcoming = [r for r in self.reservations if datetime.combine(r.date, datetime.min.time()) > datetime.now()]
         return upcoming
     
     def get_past_reservations_for_display(self):
-        past = [r for r in self.reservations if r.date < datetime.now()]
+        past = [r for r in self.reservations if datetime.combine(r.date, datetime.min.time()) < datetime.now()]
         return past
   

@@ -24,7 +24,7 @@ class EventCreatorController(QObject):
     time = self.view.time_input.time().toPython()
     ok = Event.create_event(title, desc, music, date, time, self.club) 
     if ok:
-      MessagePopup(True, "Event Added!").exec()
+      MessagePopup(True, "Event Added!")
       # TODO notification
     else:
       MessagePopup(False, "There was an Internal Error")
