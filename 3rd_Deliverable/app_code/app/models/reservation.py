@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Computed, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Computed, Integer, String, DateTime, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from app.data.database import Base
 from app.utils.container import Container
@@ -18,6 +18,8 @@ class Reservation(Base):
   num_of_people = Column(Integer)
   date = Column(DateTime)
   qrcode = Column(String) # to do
+  regular_discount = Column(Float, default=0.0)
+  premium_discount = Column(Float, default=0.0)
 
   club = relationship("Club", back_populates="reservations")
   order = relationship("Order", back_populates="reservation", uselist=False, cascade="all, delete-orphan")
@@ -46,11 +48,13 @@ class Reservation(Base):
       event_id=event_id,
       table=table,
       num_of_people= people,
-      date=Event.get_event_datetime(event_id)
+      date=Event.get_event_datetime(event_id),
+      regular_discount=0.0,
+      premium_discount=0.0,
     )
 
     order = Order(
-      cost=bottles[1]*120 + bottles[0]*80,
+      cost=bottles[1]*120*(1 - reservation.premium_discount) + bottles[0]*80*(1 - reservation.regular_discount),
       reservation=reservation,
       premium_bottles=bottles[1],
       regular_bottles=bottles[0]
@@ -89,7 +93,7 @@ class Reservation(Base):
     
     self.table.table_type = TableType(table_type)
 
-    self.order.cost = bottles[0]*80 + bottles[1]*120
+    cost=bottles[1]*120*(1 - self.premium_discount) + bottles[0]*80*(1 - self.regular_discount)
     self.order.regular_bottles=bottles[0]
     self.order.premium_bottles=bottles[1]
     
