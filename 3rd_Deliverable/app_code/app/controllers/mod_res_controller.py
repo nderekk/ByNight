@@ -8,13 +8,15 @@ class ModifyReservationController(QObject):
     super().__init__()
     self.res_id = res_id
     self.reservation = Reservation.get_res_from_id(res_id)
+    reg_bottles = self.reservation.order.regular_bottles
+    prem_bottles = self.reservation.order.premium_bottles
     self.show_page = show_page
     # if not Container.is_initialized(ModifyReservationPage):
     #   self.view = ModifyReservationPage(self.reservation.get_table_type(), self.reservation.num_of_people)
     #   Container.add_existing_instance(ModifyReservationPage, self.view)
     # else:
     #   self.view = Container.resolve(ModifyReservationPage)
-    self.view = ModifyReservationPage(self.reservation.get_table_type(), self.reservation.num_of_people)
+    self.view = ModifyReservationPage(self.reservation.get_table_type(), self.reservation.num_of_people, reg_bottles, prem_bottles)
     self.setup_connections()
 
   def setup_connections(self):
@@ -23,10 +25,11 @@ class ModifyReservationController(QObject):
   
   def refresh_mod_fields(self, id: int):
     self.reservation = Reservation.get_res_from_id(id)
-    print(f"RES_ID: {id}")
     current_table_type = self.reservation.get_table_type()
     current_num_of_people = self.reservation.num_of_people
-    self.view.refresh_page(current_table_type, current_num_of_people)
+    reg_bottles = self.reservation.order.regular_bottles
+    prem_bottles = self.reservation.order.premium_bottles
+    self.view.refresh_page(current_table_type, current_num_of_people, reg_bottles, prem_bottles)
     
   def handle_back(self):
     from app.controllers import ReservationDetailsController
@@ -36,9 +39,7 @@ class ModifyReservationController(QObject):
     self.controller = ReservationDetailsController(self.res_id, self.show_page)
     self.show_page('res_details_controller', self.controller)
     
-  def handle_save_changes(self):
-    from app.services import ReservationValidator
-    
+  def handle_save_changes(self):   
     self.club = self.reservation.get_club()
     self.table_type = self.view.table_type_combo.currentText()
     self.people = int(self.view.people_spin.value())
@@ -46,11 +47,9 @@ class ModifyReservationController(QObject):
     # print(f"bottles: {self.bottles[0]} , {self.bottles[1]}\n")
     response = self.reservation.update_res(self.table_type, self.people, self.bottles)
     if response[0]:
-      popup = MessagePopup(success=True, message=response[1])
-      popup.exec()
+      MessagePopup(success=True, message=response[1])
       self.handle_back()
     else:
-      popup = MessagePopup(success=False, message=response[1])
-      popup.exec()
+      MessagePopup(success=False, message=response[1])
     
     

@@ -50,3 +50,11 @@ class Review(Base):
 
         session.add(review)
         session.commit()
+
+
+    @classmethod
+    def get_reviews(cls, event_id: int):
+        from app.models import Reservation
+
+        session = Container.resolve(DatabaseSession)
+        return session.query(cls).join(cls.reservation).filter(Reservation.event_id == event_id).all()

@@ -7,6 +7,7 @@ from PySide6.QtCore import Qt
 from app.models.club import Club
 from app.utils.container import Container                
 from app.services.db_session import DatabaseSession      
+from datetime import datetime, date
 import app.models                                        
 
 
@@ -204,7 +205,8 @@ class MakeReservationPage(QWidget):
         self.event_dropdown.clear()
 
         events = session.query(app.models.Event)\
-                        .filter(app.models.Event.club_id == self.club.id)\
+                        .filter(app.models.Event.club_id == self.club.id )\
+                        .filter(app.models.Event.date >= date.today())\
                         .order_by(app.models.Event.date.asc())\
                         .all()
 

@@ -42,7 +42,7 @@ class CustomerHomePage(QWidget):
 
         # --- Dropdowns ---
         filter_layout = QVBoxLayout()
-        self.addressLabel = QLabel("address")
+        self.addressLabel = QLabel("Location")
         self.addressDropdown = QComboBox()
         self.addressDropdown.addItem("Any")
         self.addressDropdown.addItems(filters["location"])

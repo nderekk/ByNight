@@ -1,10 +1,11 @@
 import sys
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QScrollArea,
-    QCheckBox, QSizePolicy, QFrame, QPushButton
+    QCheckBox, QSizePolicy, QFrame, QPushButton, QDateEdit, QLineEdit
 )
-from PySide6.QtGui import QFont, QColor, QPainter, QBrush
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont, QColor, QPainter, QBrush, QIntValidator
+from PySide6.QtCore import Qt, QDate
+from app.models.discount import Discount
 
 
 class CircleAvatar(QLabel):
@@ -26,6 +27,38 @@ class CircleAvatar(QLabel):
         painter.drawText(self.rect(), Qt.AlignCenter, self.letter)
 
 
+class PercentageInput(QWidget):
+    def __init__(self, value="0"):
+        super().__init__()
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        self.line_edit = QLineEdit()
+        self.line_edit.setValidator(QIntValidator(0, 100))
+        self.line_edit.setFixedWidth(40)
+        self.line_edit.setAlignment(Qt.AlignRight)
+        self.line_edit.setText(str(value).replace('%', ''))
+
+        percent_label = QLabel("%")
+        percent_label.setFixedWidth(15)
+        percent_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+        layout.addWidget(self.line_edit)
+        layout.addWidget(percent_label)
+
+    def value(self):
+        try:
+            return float(self.line_edit.text()) / 100
+        except ValueError:
+            return 0.0
+
+    def setEnabled(self, enabled):
+        self.line_edit.setEnabled(enabled)
+
+    def text(self):
+        return self.line_edit.text() + "%"
+
+
 class DiscountPage(QWidget):
     def __init__(self):
         super().__init__()
@@ -35,75 +68,124 @@ class DiscountPage(QWidget):
         main_layout = QVBoxLayout(self)
         self.setLayout(main_layout)
 
-        # --- Header ---
+        # Header
         header = QHBoxLayout()
         self.back_button = QPushButton("←")
         self.back_button.setFixedWidth(30)
         self.back_button.setStyleSheet("font-size: 14pt;")
-        self.back_button.clicked.connect(self.go_back)
+        
 
         title = QLabel("Discount Tab")
         title.setAlignment(Qt.AlignCenter)
         title.setFont(QFont("", 14, QFont.Bold))
 
-        date_label = QLabel("13/5/2025")
-        date_label.setStyleSheet("background-color: #; border-radius: 10px; padding: 5px;")
+        self.date_edit = QDateEdit() 
+        self.date_edit.setDate(QDate.currentDate())
+        self.date_edit.setCalendarPopup(True)
+        self.date_edit.dateChanged.connect(self.update_discounts_from_db)
+        
 
         header.addWidget(self.back_button)
         header.addStretch()
         header.addWidget(title)
         header.addStretch()
-        header.addWidget(date_label)
+        header.addWidget(self.date_edit)
         main_layout.addLayout(header)
 
-        # --- Divider ---
+        # Divider
         divider = QLabel()
         divider.setFixedHeight(2)
         divider.setStyleSheet("background-color: black; margin: 8px;")
         main_layout.addWidget(divider)
 
-        # --- Scrollable List ---
+        # Scrollable List
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
-        list_widget = QWidget()
-        list_layout = QVBoxLayout(list_widget)
+        self.list_widget = QWidget()
+        self.list_layout = QVBoxLayout(self.list_widget)
 
-        # Drink items
-        drinks = [
-            ("V", "Serkova", "50%"),
-            ("V", "Absolute", "12%"),
-            ("V", "Ciroc", "17%"),
-            ("W", "Johny Black", "25%"),
-            ("W", "Johny Red", "20%"),
-            ("W", "Johny Gold", "20%"),
-            ("G", "Gordons", "20%"),
-            ("G", "Bombay", "20%"),
+        self.drinks = [
+            ("V", "Regular", "50%"),
+            ("V", "Premium", "12%"),
         ]
 
-        for icon, name, discount in drinks:
+        self.discount_fields = []
+
+        for icon, name, discount in self.drinks:
             row = QHBoxLayout()
 
             avatar = CircleAvatar(icon)
             name_label = QLabel(name)
             name_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-            discount_label = QLabel(discount)
+
+            discount_edit = PercentageInput(discount)
+
             checkbox = QCheckBox()
             checkbox.setChecked(True)
+            self.connect_checkbox_to_lineedit(checkbox, discount_edit)
 
             row.addWidget(avatar)
             row.addSpacing(10)
             row.addWidget(name_label)
-            row.addWidget(discount_label)
+            row.addWidget(discount_edit)
             row.addWidget(checkbox)
 
             container = QFrame()
             container.setLayout(row)
-            list_layout.addWidget(container)
+            self.list_layout.addWidget(container)
+            self.discount_fields.append((name, discount_edit, checkbox))
 
-        scroll_area.setWidget(list_widget)
+        self.update_discounts_from_db() 
+
+        scroll_area.setWidget(self.list_widget)
         main_layout.addWidget(scroll_area)
 
-    def go_back(self):
-        # Implement back navigation here
-        print("Back button clicked")
+        # Footer (No Enter button)
+        footer = QHBoxLayout()
+        self.load_button = QPushButton("Load")
+        self.load_button.clicked.connect(self.load_discounts)
+
+        footer.addStretch()
+        footer.addWidget(self.load_button)
+        main_layout.addLayout(footer)
+
+    def update_discounts_from_db(self):
+        qdate = self.date_edit.date()
+        selected_date = qdate.toPython()  
+
+
+        discounts = Discount.get_discounts_by_date(selected_date)  
+
+        for name, lineedit, checkbox in self.discount_fields:
+            value = 0.0
+            if name == "Regular":
+                value = discounts.get("regular", 0.0)
+            elif name == "Premium":
+                value = discounts.get("premium", 0.0)
+
+            # Set value (in percent)
+            lineedit.line_edit.setText(str(int(value * 100)))
+            lineedit.setEnabled(True)
+            checkbox.setChecked(True)
+
+    def load_discounts(self):
+        print("Loading discounts...")
+        for name, lineedit, checkbox in self.discount_fields:
+            lineedit.setEnabled(checkbox.isChecked())
+
+    def connect_checkbox_to_lineedit(self, checkbox, lineedit):
+        checkbox.stateChanged.connect(
+            lambda state: lineedit.setEnabled(state == Qt.Checked)
+        )
+
+    def get_selected_date(self):
+        return self.date_edit.date()
+
+    def get_discount_values(self):
+        discounts = {}
+        for name, lineedit, checkbox in self.discount_fields:
+            if checkbox.isChecked():
+                discounts[name] = lineedit.value()  # returns decimal
+        return discounts
+
 

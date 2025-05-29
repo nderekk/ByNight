@@ -35,3 +35,5 @@ class MessagePopup(QDialog):
 
     self.setLayout(layout)
     self.setStyleSheet("background-color: #333;")
+    
+    self.exec()
