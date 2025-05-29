@@ -15,6 +15,7 @@ class ReservationDetailsController(QObject):
     self.view.back_btn.clicked.connect(self.handle_back)
     self.view.mod_res_clicked.connect(self.handle_mod_res)
     self.view.cancel_res_clicked.connect(self.handle_cancel_res)
+    self.view.qr_btn.clicked.connect(self.handle_qrcode)
   
   def format_res_details(self):
     details = {
@@ -34,23 +35,19 @@ class ReservationDetailsController(QObject):
   
   def handle_back(self):
     from app.controllers import ViewReservationsController
-        
-    # self.controller = Container.resolve(ViewReservationsController)
     self.controller = ViewReservationsController(self.show_page)
     self.show_page('view_res_controller', self.controller)
     
   def handle_mod_res(self, id: int):
     from app.controllers import ModifyReservationController
-    # if not Container.is_initialized(ModifyReservationController):
-    #   self.mod_res_controller = ModifyReservationController(id, self.show_page)
-    #   Container.add_existing_instance(ModifyReservationController, self.mod_res_controller)
-    # else:
-    #   self.mod_res_controller = Container.resolve(ModifyReservationController)
-    #   self.mod_res_controller.refresh_mod_fields(id)
     self.mod_res_controller = ModifyReservationController(id, self.show_page)
     self.show_page('mod_res_controller', self.mod_res_controller)
     
   def handle_cancel_res(self, id: int):
     from app.controllers import CancelReservationController
     self.canc_res_controller = CancelReservationController(id, self.show_page)
+    
+  def handle_qrcode(self, reservation):
+    from app.controllers import QRcodeController
+    QRcodeController(self.reservation, self.show_page)
     

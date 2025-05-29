@@ -1,3 +1,7 @@
 PySide6>=6.0.0
 sqlalchemy
-mysql-connector-python>=8.0.0 
+qrcode[pil]
+opencv-python 
+pyzbar
+matplotlib
+tzdata
