@@ -141,7 +141,7 @@ def seed():
                 title="Trap Night",
                 description="DJ Marinos",
                 music="Trap",
-                date=date(2025, 6, 1),
+                date=date(2023, 6, 1),
                 time=time(22, 0),
                 club=dummy_clubs[3]
             ),
@@ -149,7 +149,7 @@ def seed():
                 title="Kultura",
                 description="Gxhan",
                 music="Hip-Hop/Rap",
-                date=date(2025, 6, 1),
+                date=date(2023, 6, 1),
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
@@ -157,7 +157,7 @@ def seed():
                 title="RnB Night",
                 description="Brent Faiyaz",
                 music="R&B",
-                date=date(2025, 6, 2),
+                date=date(2023, 6, 2),
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
@@ -165,7 +165,7 @@ def seed():
                 title="Lules Culpa",
                 description="Liva K",
                 music="House",
-                date=date(2025, 6, 3),
+                date=date(2023, 6, 3),
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
@@ -173,7 +173,7 @@ def seed():
                 title="Greek Night",
                 description="patris thriskeia oikogeneia",
                 music="Laika",
-                date=date(2025, 6, 4),
+                date=date(2023, 6, 4),
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
@@ -181,7 +181,7 @@ def seed():
                 title="boy lover night",
                 description="Drake",
                 music="drake-music",
-                date=date(2025, 6, 10),
+                date=date(2023, 6, 10),
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
@@ -189,7 +189,7 @@ def seed():
                 title="Old skool",
                 description="oldheadades elate edw",
                 music="Hip-Hop/Rap",
-                date=date(2025, 6, 12),
+                date=date(2023, 6, 12),
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
