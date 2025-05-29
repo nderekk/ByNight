@@ -142,7 +142,7 @@ def seed():
                 title="Trap Night",
                 description="DJ Marinos",
                 music="Trap",
-                date=date(2025, 6, 1),
+                date=date(2024, 6, 1),
                 time=time(22, 0),
                 club=dummy_clubs[3]
             ),
@@ -199,7 +199,7 @@ def seed():
                 title="Latin Night",
                 description="DJ Carlos",
                 music="Latin",
-                date=date(2025, 6, 15),
+                date=date(2023, 6, 15),
                 time=time(22, 0),
                 club=dummy_clubs[0]
             ),
@@ -224,7 +224,7 @@ def seed():
                 title="Pop Night",
                 description="Top 40 Hits",
                 music="Pop",
-                date=date(2025, 6, 18),
+                date=date(2024, 6, 18),
                 time=time(22, 0),
                 club=dummy_clubs[1]
             ),
