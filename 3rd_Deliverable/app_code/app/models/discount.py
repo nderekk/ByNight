@@ -1,5 +1,5 @@
 from app.data.database import Base
-from app.models import Reservation
+from app.models import Reservation, Event
 from app.services.db_session import DatabaseSession
 from app.utils.container import Container
 from datetime import datetime
@@ -19,7 +19,10 @@ class Discount(Base):
           date = date.date()
 
         
-        reservations = session.query(Reservation).filter(func.date(Reservation.date) == date.isoformat()).all()
+        reservations = session.query(Reservation)\
+            .join(Reservation.event)\
+            .filter(Event.date == date)\
+            .all()
 
         print(f"DEBUG: Found {len(reservations)} reservations on {date}")
 
@@ -45,15 +48,19 @@ class Discount(Base):
         print("DEBUG: Discounts applied and session committed")
     
     @classmethod
-    def get_discounts_by_date(cls, date):
-        session = cls._get_session()
-        result = session.query(Reservation).filter(
-            func.date(Reservation.date) == date
-        ).first()
+    def get_discounts_by_date(cls, selected_date):
+        session = Container.resolve(DatabaseSession)
 
-        if result:
-            return {
-                "regular": result.regular_discount,
-                "premium": result.premium_discount
-            }
-        return {"regular": 0.0, "premium": 0.0}
+        reservations = session.query(Reservation).join(Reservation.event).filter(
+            Event.date == selected_date
+        ).all()
+
+
+        if not reservations:
+            return {}
+
+        latest_res = reservations[0]
+        return {
+            "regular": latest_res.regular_discount,
+            "premium": latest_res.premium_discount
+        }

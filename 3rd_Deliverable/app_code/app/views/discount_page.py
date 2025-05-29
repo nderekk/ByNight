@@ -151,7 +151,8 @@ class DiscountPage(QWidget):
 
     def update_discounts_from_db(self):
         qdate = self.date_edit.date()
-        selected_date = qdate.toPython()
+        selected_date = qdate.toPython()  
+
 
         discounts = Discount.get_discounts_by_date(selected_date)  
 
