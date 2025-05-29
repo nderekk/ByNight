@@ -1,12 +1,11 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, select
 from sqlalchemy.orm import relationship
 from app.data.database import Base
 from app.utils.container import Container
 from app.services.db_session import DatabaseSession
 from sqlalchemy import distinct, and_
 from sqlalchemy.orm import joinedload
-from app.models.review import Review   
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 class Club(Base):
   __tablename__ = "clubs"
@@ -32,16 +31,17 @@ class Club(Base):
   manager = relationship("Manager", back_populates="managed_club")
     
   def get_upcoming_club_reservations(self):
-    from app.models import Reservation
+    from app.models import Reservation, Event
     session = Container.resolve(DatabaseSession)
     print(f"\nGetting upcoming reservations for club: {self.name}")
     print(f"Club ID: {self.id}")
     print(f"Current time: {datetime.now()}")
     
+    event_ids_today = select(Event.id).where(Event.date == date.today())
+    
     reservations = session.query(Reservation).filter(
-      Reservation.club_id == self.id,
-      Reservation.date > datetime.now()
-      # Reservation.date == datetime.now() uncomment in the future
+    Reservation.club_id == self.id,
+    Reservation.event_id.in_(event_ids_today)
     ).all()
     
     print(f"Found {len(reservations)} upcoming reservations")

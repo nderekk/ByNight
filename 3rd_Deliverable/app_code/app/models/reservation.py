@@ -16,7 +16,6 @@ class Reservation(Base):
   table_id = Column(Integer, ForeignKey("tables.id")) 
   
   num_of_people = Column(Integer)
-  date = Column(DateTime)
   qrcode = Column(String) # to do
   regular_discount = Column(Float, default=0.0)
   premium_discount = Column(Float, default=0.0)
@@ -28,7 +27,13 @@ class Reservation(Base):
   table = relationship("Table", back_populates="reservations")
   review = relationship("Review", back_populates="reservation", uselist=False, cascade="all, delete-orphan")
 
-  
+  @property
+  def date(self):
+    """Get the combined date and time from the associated event"""
+    if self.event:
+      return datetime.combine(self.event.date, self.event.time)
+    return None
+
   @classmethod
   def create_res(cls, club, event_id: int, table_type: str, people: str, bottles: tuple[str]):
     session = Container.resolve(DatabaseSession)
@@ -48,7 +53,6 @@ class Reservation(Base):
       event_id=event_id,
       table=table,
       num_of_people= people,
-      date=Event.get_event_datetime(event_id),
       regular_discount=0.0,
       premium_discount=0.0,
     )
@@ -104,9 +108,6 @@ class Reservation(Base):
     session = Container.resolve(DatabaseSession)
     session.commit()
     return response
-  
-   
-
   
   def cancel_res(self, reservation):
     session = Container.resolve(DatabaseSession)
