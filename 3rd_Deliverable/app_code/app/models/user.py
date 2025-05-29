@@ -23,6 +23,36 @@ class User(Base):
         'with_polymorphic': '*',  # Ensures subclass is always returned
     }
 
+    
+    def update_to_manager(self):
+     from app.utils.container import Container
+     from app.services.db_session import DatabaseSession
+     from app.models.manager import Manager
+
+     session = Container.resolve(DatabaseSession)
+
+     
+     customer_entry = session.query(app.models.Customer).filter_by(id=self.id).first()
+     if customer_entry:
+        session.delete(customer_entry)
+        session.commit()
+
+     
+     new_manager = Manager(
+        id=self.id,   
+        full_name=self.full_name,
+        age=self.age,
+        role=Role.MANAGER,
+        phone=self.phone,
+        email=self.email,
+        password=self.password
+    )
+
+     session.merge(new_manager)   
+     session.commit()
+
+        
+
     def verify_password(self, password: str) -> bool:
         return self.password == password
     
@@ -30,10 +60,10 @@ class User(Base):
         return self.get_upcoming_reservations_for_display(), self.get_past_reservations_for_display()
     
     def get_upcoming_reservations_for_display(self):
-        upcoming = [r for r in self.reservations if r.date > datetime.now()]
+        upcoming = [r for r in self.reservations if datetime.combine(r.date, datetime.min.time()) > datetime.now()]
         return upcoming
     
     def get_past_reservations_for_display(self):
-        past = [r for r in self.reservations if r.date < datetime.now()]
+        past = [r for r in self.reservations if datetime.combine(r.date, datetime.min.time()) < datetime.now()]
         return past
   

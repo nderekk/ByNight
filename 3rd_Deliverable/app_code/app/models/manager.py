@@ -10,13 +10,13 @@ class Manager(User):
     id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 
     # Relationship to managed clubs
-    managed_clubs = relationship("Club", back_populates="manager", cascade="all, delete-orphan")
+    managed_club = relationship("Club", back_populates="manager", cascade="all, delete-orphan", uselist=False)
 
     __mapper_args__ = {
         "polymorphic_identity": Role.MANAGER,
     }
 
-    # Manager-specific methods
+    
     def get_managed_clubs(self):
         return self.managed_clubs
 
@@ -28,4 +28,6 @@ class Manager(User):
                 "total_reservations": len(club.reservations),
                 "total_staff": len(club.staff)
             }
-        return stats 
+        return stats
+    
+    

@@ -6,9 +6,7 @@ from app.services.db_session import DatabaseSession
 from sqlalchemy import distinct, and_
 from sqlalchemy.orm import joinedload
 from app.models.review import Review   
-
-
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Club(Base):
   __tablename__ = "clubs"
@@ -17,7 +15,8 @@ class Club(Base):
   name = Column(String, unique=True, nullable=False)
   address = Column(String, nullable=False)
   location = Column(String, nullable=False)
-  manager_id = Column(Integer, ForeignKey("managers.id"), nullable=True)
+  manager_id = Column(Integer, ForeignKey("managers.id"), unique=True, nullable=True)
+  max_capacity = Column(Integer, nullable=False, default=100)
   vip_available = Column(Integer, nullable=False, default=5)
   pass_available = Column(Integer, nullable=False, default=30)
   bar_available = Column(Integer, nullable=False, default=30)
@@ -29,12 +28,9 @@ class Club(Base):
   
   staff_id = Column(Integer, ForeignKey("staff.id"), nullable=True)
   staff = relationship("Staff", back_populates="works_at", uselist=False)
-
-  # staff_members = relationship("StaffMember", back_populates="club", cascade="all, delete-orphan")
-  # statistics = relationship("ClubStatistics", back_populates="club", uselist=False)
   
-  manager = relationship("Manager", back_populates="managed_clubs")
-  
+  manager = relationship("Manager", back_populates="managed_club")
+    
   def get_upcoming_club_reservations(self):
     from app.models import Reservation
     session = Container.resolve(DatabaseSession)
@@ -103,8 +99,20 @@ class Club(Base):
     return False
   
   def get_available_table(self, table_type: str):
-    
     for table in self.tables:
         if table.table_type.value == table_type and table.is_available:
             return table
     raise Exception("No available table found")
+  
+  def get_weeks_events(self, start_of_week):
+    from app.models import Event
+    session = Container.resolve(DatabaseSession)
+    end_of_week = start_of_week + timedelta(days=6)
+
+    events = session.query(Event).filter(
+        Event.club_id == self.id,
+        Event.date >= start_of_week,
+        Event.date <= end_of_week
+    ).order_by(Event.date).all()
+
+    return events 

@@ -9,5 +9,6 @@ from app.models.customer import Customer
 from app.models.manager import Manager
 from app.models.staff import Staff
 from app.models.role import Role
+from app.models.review import Review
 
 __all__ = ['User', 'Customer', 'Manager', 'Staff', 'Role']

@@ -36,9 +36,7 @@ class ModifyReservationController(QObject):
     self.controller = ReservationDetailsController(self.res_id, self.show_page)
     self.show_page('res_details_controller', self.controller)
     
-  def handle_save_changes(self):
-    from app.services import ReservationValidator
-    
+  def handle_save_changes(self):   
     self.club = self.reservation.get_club()
     self.table_type = self.view.table_type_combo.currentText()
     self.people = int(self.view.people_spin.value())
@@ -46,11 +44,9 @@ class ModifyReservationController(QObject):
     # print(f"bottles: {self.bottles[0]} , {self.bottles[1]}\n")
     response = self.reservation.update_res(self.table_type, self.people, self.bottles)
     if response[0]:
-      popup = MessagePopup(success=True, message=response[1])
-      popup.exec()
+      MessagePopup(success=True, message=response[1])
       self.handle_back()
     else:
-      popup = MessagePopup(success=False, message=response[1])
-      popup.exec()
+      MessagePopup(success=False, message=response[1])
     
     

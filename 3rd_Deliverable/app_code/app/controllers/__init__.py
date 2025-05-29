@@ -9,3 +9,6 @@ from app.controllers.canc_res_controller import CancelReservationController
 from app.controllers.qrcode_controller import QRcodeController
 from app.controllers.staff_homepage_controller import StaffHomePageController
 from app.controllers.make_reservation_controller import MakeReservationController
+from app.controllers.event_creator_controller import EventCreatorController
+from app.controllers.add_event_controller import AddEventController
+from app.controllers.add_review_controller import AddReviewController
