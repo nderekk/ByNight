@@ -8,6 +8,7 @@ class ManagerHomePageController(QObject):
         super().__init__()
         self.user = Container.resolve(User)
         self.club = self.user.managed_club
+        self.club_registered = True
         if not self.club:
             self.club_registered = False
         self.show_page = show_page
