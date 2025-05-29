@@ -200,7 +200,7 @@ def seed():
                 title="Latin Night",
                 description="DJ Carlos",
                 music="Latin",
-                date=date(2023, 6, 15),
+                date=date(2025, 6, 15),
                 time=time(22, 0),
                 club=dummy_clubs[0]
             ),
@@ -225,7 +225,7 @@ def seed():
                 title="Pop Night",
                 description="Top 40 Hits",
                 music="Pop",
-                date=date(2024, 6, 18),
+                date=date(2025, 6, 18),
                 time=time(22, 0),
                 club=dummy_clubs[1]
             ),
@@ -251,7 +251,7 @@ def seed():
                 title="Summer Party",
                 description="Summer Hits",
                 music="Pop",
-                date=date(2024, 7, 15),
+                date=date(2025, 7, 15),
                 time=time(22, 0),
                 club=dummy_clubs[0]
             ),
@@ -463,24 +463,88 @@ def seed():
         session.flush()  # Flush to get event IDs
 
         # Add past reservations for Marquee
-        past_reservations = []
-        for i in range(20):
-            # Create and add reservation
-            reservation = Reservation(
-                user=customers[i % 5],
-                table=tables[0] if i % 2 == 0 else tables[7],  # Alternate between VIP and PASS tables
-                num_of_people=2 + (i % 5),  # Vary number of people from 2 to 6
-                order=orders[i % 30],  # Cycle through available orders
+        past_reservations = [
+            Reservation(
+                user=customers[1],
+                table=tables[1],
+                num_of_people=2,
+                order=orders[4],
                 club=dummy_clubs[3],
-                event=past_events[i % 10]  # Cycle through past events
-            )
-            session.add(reservation)
-            session.flush()  # Flush to get the ID
-            
-            # Refresh the reservation with all relationships loaded
-            session.refresh(reservation, ['event', 'user', 'table', 'order', 'club'])
-            past_reservations.append(reservation)
-
+                event=past_events[1]
+            ),
+            Reservation(
+                user=customers[1],
+                table=tables[2],
+                num_of_people=2,
+                order=orders[2],
+                club=dummy_clubs[3],
+                event=past_events[1]
+            ),Reservation(
+                user=customers[1],
+                table=tables[3],
+                num_of_people=2,
+                order=orders[4],
+                club=dummy_clubs[3],
+                event=past_events[2]
+            ),Reservation(
+                user=customers[1],
+                table=tables[2],
+                num_of_people=2,
+                order=orders[0],
+                club=dummy_clubs[3],
+                event=past_events[0]
+            ),Reservation(
+                user=customers[1],
+                table=tables[1],
+                num_of_people=2,
+                order=orders[1],
+                club=dummy_clubs[3],
+                event=past_events[3]
+            ),Reservation(
+                user=customers[1],
+                table=tables[1],
+                num_of_people=2,
+                order=orders[3],
+                club=dummy_clubs[3],
+                event=past_events[1]
+            ),Reservation(
+                user=customers[1],
+                table=tables[2],
+                num_of_people=2,
+                order=orders[2],
+                club=dummy_clubs[3],
+                event=past_events[2]
+            ),Reservation(
+                user=customers[1],
+                table=tables[3],
+                num_of_people=2,
+                order=orders[5],
+                club=dummy_clubs[3],
+                event=past_events[2]
+            ),Reservation(
+                user=customers[1],
+                table=tables[1],
+                num_of_people=2,
+                order=orders[4],
+                club=dummy_clubs[3],
+                event=past_events[2]
+            ),Reservation(
+                user=customers[1],
+                table=tables[1],
+                num_of_people=2,
+                order=orders[4],
+                club=dummy_clubs[3],
+                event=past_events[4]
+            ),Reservation(
+                user=customers[1],
+                table=tables[1],
+                num_of_people=2,
+                order=orders[1],
+                club=dummy_clubs[3],
+                event=past_events[3]
+            ),
+        ]
+        session.add_all(past_reservations)
         # Add reviews for past reservations
         reviews = [
             Review(
@@ -508,7 +572,73 @@ def seed():
                 comments="Poor service and the music was too loud."
             ),
         ]
+        
+        # future reservations
+        # 8. Create Reservations and link them to individual orders
+        dummy_reservations = [
+            Reservation(
+                user=customers[0],
+                table=tables[0],
+                num_of_people=4,
+                order=orders[0],
+                club=dummy_clubs[3],
+                event=events[0]
+            ),
+            Reservation(
+                user=customers[0],
+                table=tables[1],
+                num_of_people=2,
+                order=orders[1],
+                club=dummy_clubs[3],
+                event=events[1]
+            ),
+            Reservation(
+                user=customers[2],
+                table=tables[1],
+                num_of_people=2,
+                order=orders[2],
+                club=dummy_clubs[3],
+                event=events[1]
+            ),
+            Reservation(
+                user=customers[3],
+                table=tables[1],
+                num_of_people=2,
+                order=orders[3],
+                club=dummy_clubs[3],
+                event=events[1]
+            ),
+            Reservation(
+                user=customers[1],
+                table=tables[1],
+                num_of_people=2,
+                order=orders[4],
+                club=dummy_clubs[3],
+                event=events[1]
+            ),
+            Reservation(
+                user=customers[1],
+                table=tables[1],
+                num_of_people=3,
+                order=orders[5],
+                club=dummy_clubs[3],
+                event=events[0]
+            )
+        ]
+        session.add_all(dummy_reservations)
+        session.flush()
 
+        dummy_review= [
+            Review(
+                music_rating = 5,
+                atmosphere_rating = 5,
+                service_rating = 5,
+                overall_experience = 5,
+                reservation=dummy_reservations[2]
+            )
+        ]
+        session.add_all(dummy_review)
+        
         # Add reviews and commit
         session.add_all(reviews)
         session.commit()
