@@ -1,5 +1,5 @@
 from sqlalchemy import func
-from app.models import Reservation, Club, Order, Review
+from app.models import Reservation, Club, Order, Review, Event
 from app.data.database import Base
 from app.services.db_session import DatabaseSession
 from app.utils.container import Container
@@ -18,11 +18,15 @@ class Statistics(Base):
     @classmethod
     def _get_reservations(cls, from_datetime, to_datetime, club_id):
         session = cls._get_session()
-        return session.query(Reservation).filter(
-            Reservation.date >= from_datetime,
-            Reservation.date <= to_datetime,
-            Reservation.club_id == club_id
-        ).all()
+
+        return session.query(Reservation)\
+            .join(Reservation.event)\
+            .filter(
+                Event.club_id == club_id,
+                Event.date >= from_datetime,
+                Event.date <= to_datetime
+            ).all()
+
 
     @classmethod
     def get_orders(cls, reservations_id):
@@ -84,9 +88,9 @@ class Statistics(Base):
     def get_rating(cls, from_datetime, to_datetime, club_id):
         session = cls._get_session()
 
-        reviews = session.query(Review).join(Review.reservation).filter(
-          Reservation.date >= from_datetime,
-          Reservation.date <= to_datetime,
+        reviews = session.query(Review).join(Review.reservation).join(Reservation.event).filter(
+          Event.date >= from_datetime,
+          Event.date <= to_datetime,
           Reservation.club_id == club_id
         ).all()
     
