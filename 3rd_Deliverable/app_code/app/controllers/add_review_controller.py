@@ -1,7 +1,7 @@
 from app.utils.container import Container
 from PySide6.QtCore import QObject, Signal
 from app.models.user import User
-from app.views.review_page import ReviewPage
+from app.views.review_page import ReviewPage,ReviewPopup
 from app.models import Reservation
 
 class AddReviewController(QObject):
@@ -60,8 +60,16 @@ class AddReviewController(QObject):
       comment=comment,
       reservation_id=self.reservation.id
         )
+    
 
+    event_id = self.reservation.event_id   
+    other_reviews = Review.get_reviews(event_id)
     QMessageBox.information(self.view,"Success","Your review has been submitted successfully!")
+
+    show_other_reviews=ReviewPopup(other_reviews)
+    show_other_reviews.exec()
+
+     
     self.handle_back()
 
 

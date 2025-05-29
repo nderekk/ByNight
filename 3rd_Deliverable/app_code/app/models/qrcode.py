@@ -5,6 +5,7 @@ from io import BytesIO
 class QRcode:
   def __init__(self, reservation_data):
     qr_string = f"{reservation_data['club_name']} | {reservation_data['date']} | ID: {reservation_data['id']}"
+    print(f"\n{qr_string}\n")
     self.pixmap = self.__generate_qr_pixmap(qr_string)
   
   def __generate_qr_pixmap(self, data: str) -> QPixmap:

@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
+from datetime import datetime
 
 
 class ReservationCard(QFrame):
@@ -46,8 +47,8 @@ class StaffHomePage(QWidget):
 
     # Header with title and camera button
     header_layout = QHBoxLayout()
-    title = QLabel(f"{self.club_name} - Tonight's Reservations")
-    title.setStyleSheet("font-weight: bold; font-size: 18pt; margin: 10px 0;")
+    title = QLabel(f"{self.club_name} - Reservations:  {datetime.now().strftime('%a - %d/%m')}")
+    title.setStyleSheet("font-weight: bold; font-size: 16pt; margin: 10px 0;")
 
     camera_btn = QPushButton("📷")
     camera_btn.setFixedSize(32, 32)
