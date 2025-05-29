@@ -3,14 +3,15 @@ from app.models.user import User
 from app.views.manager_home_page_view import ManagerUI
 from app.utils.container import Container
 
-
 class ManagerHomePageController(QObject):
     def __init__(self, show_page: callable):
         super().__init__()
         self.user = Container.resolve(User)
         self.club = self.user.managed_club
+        if not self.club:
+            self.club_registered = False
         self.show_page = show_page
-        self.view = ManagerUI()
+        self.view = ManagerUI(self.club_registered)
         self.load_club_info()
         self.setup_connections()
 
@@ -62,7 +63,7 @@ class ManagerHomePageController(QObject):
     def handle_ur_club(self):
         from app.services.club_creator import ClubCreator
         self.club_creator = ClubCreator(self.show_page, self.club_details)
-        self.club_creator.ur_club()         
+        self.club_creator.ur_club()     
 
     def club_details(self, details:dict):
          self.update_club_view(details)
@@ -76,3 +77,9 @@ class ManagerHomePageController(QObject):
 
          self.discount_controller = DiscountController(self.show_page)
          self.show_page('discount_view_page', self.discount_controller)
+         
+    def enable_buttons(self):
+        self.view.viewResButton.setDisabled(False)
+        self.view.addEventButton.setDisabled(False)
+        self.view.viewStatsButton.setDisabled(False)
+        self.view.giveDiscountsButton.setDisabled(False)

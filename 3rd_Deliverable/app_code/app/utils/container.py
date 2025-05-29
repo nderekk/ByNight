@@ -22,6 +22,11 @@ class Container:
       cls._instances[interface] = existing_obj
       
   @classmethod
+  def replace_existing_instance(cls, interface: Type, existing_obj: Type):
+    if interface in cls._instances:
+      cls._instances[interface] = existing_obj  
+      
+  @classmethod
   def is_initialized(cls, interface: Type):
     if interface in cls._instances:
       return True

@@ -80,4 +80,8 @@ class ClubCreator:
             "location": location
         })
 
+        from app.controllers.manager_home_page_controller import ManagerHomePageController
+        Container.resolve(ManagerHomePageController).enable_buttons()
+        Container.resolve(ManagerHomePageController).club = new_club
+
         self.window.close()
