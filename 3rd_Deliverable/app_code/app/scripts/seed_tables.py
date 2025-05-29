@@ -470,13 +470,16 @@ def seed():
                 user=customers[i % 5],
                 table=tables[0] if i % 2 == 0 else tables[7],  # Alternate between VIP and PASS tables
                 num_of_people=2 + (i % 5),  # Vary number of people from 2 to 6
-                order=orders[i % 20],  # Cycle through available orders
+                order=orders[i % 30],  # Cycle through available orders
                 club=dummy_clubs[3],
-                event=past_events[i % 9]  # Cycle through past events
+                event=past_events[i % 10]  # Cycle through past events
             )
+            session.add(reservation)
             session.flush()  # Flush to get the ID
+            
+            # Refresh the reservation with all relationships loaded
+            session.refresh(reservation, ['event', 'user', 'table', 'order', 'club'])
             past_reservations.append(reservation)
-        session.add_all(past_reservations)
 
         # Add reviews for past reservations
         reviews = [
