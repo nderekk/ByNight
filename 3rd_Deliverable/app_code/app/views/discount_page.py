@@ -142,7 +142,7 @@ class DiscountPage(QWidget):
 
         # Footer (No Enter button)
         footer = QHBoxLayout()
-        self.load_button = QPushButton("Load")
+        self.load_button = QPushButton("Save")
         self.load_button.clicked.connect(self.load_discounts)
 
         footer.addStretch()

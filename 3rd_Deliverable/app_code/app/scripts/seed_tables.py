@@ -2,6 +2,7 @@ from app.data.database import SessionLocal
 from app.models import Club, Customer, Event, Reservation, Order, Table, Role, TableType, Staff, Manager
 from app.models.review import Review
 from datetime import datetime, date, time
+from sqlalchemy.orm import joinedload
 
 # WINDOWS
 # $env:PYTHONPATH = "."
@@ -353,179 +354,170 @@ def seed():
             Order(cost=210.0, delivered=True, paid=True, regular_bottles=3, premium_bottles=2),
             Order(cost=230.0, delivered=True, paid=True, regular_bottles=5, premium_bottles=0),
             Order(cost=240.0, delivered=True, paid=True, regular_bottles=1, premium_bottles=4),
-            Order(cost=250.0, delivered=True, paid=True, regular_bottles=2, premium_bottles=3)
+            Order(cost=250.0, delivered=True, paid=True, regular_bottles=2, premium_bottles=3),
+            # Additional orders for past reservations
+            Order(cost=280.0, delivered=True, paid=True, regular_bottles=3, premium_bottles=3),
+            Order(cost=260.0, delivered=True, paid=True, regular_bottles=4, premium_bottles=2),
+            Order(cost=290.0, delivered=True, paid=True, regular_bottles=2, premium_bottles=4),
+            Order(cost=270.0, delivered=True, paid=True, regular_bottles=5, premium_bottles=1),
+            Order(cost=300.0, delivered=True, paid=True, regular_bottles=3, premium_bottles=4),
+            Order(cost=320.0, delivered=True, paid=True, regular_bottles=4, premium_bottles=3),
+            Order(cost=340.0, delivered=True, paid=True, regular_bottles=5, premium_bottles=2),
+            Order(cost=360.0, delivered=True, paid=True, regular_bottles=2, premium_bottles=5),
+            Order(cost=380.0, delivered=True, paid=True, regular_bottles=3, premium_bottles=5),
+            Order(cost=400.0, delivered=True, paid=True, regular_bottles=4, premium_bottles=4),
+            Order(cost=420.0, delivered=True, paid=True, regular_bottles=5, premium_bottles=3),
+            Order(cost=440.0, delivered=True, paid=True, regular_bottles=3, premium_bottles=5),
+            Order(cost=460.0, delivered=True, paid=True, regular_bottles=4, premium_bottles=5),
+            Order(cost=480.0, delivered=True, paid=True, regular_bottles=5, premium_bottles=4),
+            Order(cost=500.0, delivered=True, paid=True, regular_bottles=4, premium_bottles=5),
+            Order(cost=520.0, delivered=True, paid=True, regular_bottles=5, premium_bottles=5)
         ]
         session.add_all(orders)
         session.flush()  # Flush to get order IDs
-        
-        # 8. Create Reservations and link them to individual orders
-        dummy_reservations = [
-            # Existing reservations
-            Reservation(
-                user=customers[0],
-                table=tables[0],
-                num_of_people=4,
-                order=orders[0],
-                club=dummy_clubs[3],
-                event=events[0]
+
+        # Create past events for Marquee
+        past_events = [
+            Event(
+                title="Past Trap Night 1",
+                description="DJ Past",
+                music="Trap",
+                date=date(2024, 1, 15),
+                time=time(22, 0),
+                club=dummy_clubs[3]
             ),
-            Reservation(
-                user=customers[0],
-                table=tables[1],
-                num_of_people=2,
-                order=orders[1],
-                club=dummy_clubs[3],
-                event=events[1]
+            Event(
+                title="Past Hip Hop Night",
+                description="Past Artist",
+                music="Hip-Hop/Rap",
+                date=date(2024, 1, 20),
+                time=time(23, 0),
+                club=dummy_clubs[3]
             ),
-            Reservation(
-                user=customers[2],
-                table=tables[1],
-                num_of_people=2,
-                order=orders[2],
-                club=dummy_clubs[3],
-                event=events[1]
+            Event(
+                title="Past RnB Night",
+                description="Past RnB Artist",
+                music="R&B",
+                date=date(2024, 2, 1),
+                time=time(22, 0),
+                club=dummy_clubs[3]
             ),
-            Reservation(
-                user=customers[3],
-                table=tables[1],
-                num_of_people=2,
-                order=orders[3],
-                club=dummy_clubs[3],
-                event=events[1]
+            Event(
+                title="Past House Night",
+                description="Past House DJ",
+                music="House",
+                date=date(2024, 2, 10),
+                time=time(23, 0),
+                club=dummy_clubs[3]
             ),
-            Reservation(
-                user=customers[1],
-                table=tables[1],
-                num_of_people=2,
-                order=orders[4],
-                club=dummy_clubs[3],
-                event=events[1]
+            Event(
+                title="Past Latin Night",
+                description="Past Latin DJ",
+                music="Latin",
+                date=date(2024, 2, 20),
+                time=time(22, 0),
+                club=dummy_clubs[3]
             ),
-            Reservation(
-                user=customers[1],
-                table=tables[1],
-                num_of_people=3,
-                order=orders[5],
-                club=dummy_clubs[3],
-                event=events[0]
+            Event(
+                title="Past Rock Night",
+                description="Past Rock Band",
+                music="Rock",
+                date=date(2024, 3, 1),
+                time=time(21, 0),
+                club=dummy_clubs[3]
             ),
-            Reservation(
-                user=customers[4],
-                table=tables[0],
-                num_of_people=1,
-                order=orders[0],
-                club=dummy_clubs[3],
-                event=events[0]
+            Event(
+                title="Past Jazz Night",
+                description="Past Jazz Band",
+                music="Jazz",
+                date=date(2024, 3, 10),
+                time=time(20, 0),
+                club=dummy_clubs[3]
             ),
-            # New reservations for Navona
-            Reservation(
-                user=customers[0],
-                table=tables[2],
-                num_of_people=6,
-                order=orders[6],
-                club=dummy_clubs[0],
-                event=events[7]
+            Event(
+                title="Past Pop Night",
+                description="Past Pop Artist",
+                music="Pop",
+                date=date(2024, 3, 20),
+                time=time(22, 0),
+                club=dummy_clubs[3]
             ),
-            Reservation(
-                user=customers[1],
-                table=tables[3],
-                num_of_people=3,
-                order=orders[7],
-                club=dummy_clubs[0],
-                event=events[8]
+            Event(
+                title="Past EDM Night",
+                description="Past EDM DJ",
+                music="EDM",
+                date=date(2024, 4, 1),
+                time=time(23, 0),
+                club=dummy_clubs[3]
             ),
-            # New reservations for Saint
-            Reservation(
-                user=customers[2],
-                table=tables[4],
-                num_of_people=4,
-                order=orders[8],
-                club=dummy_clubs[1],
-                event=events[9]
-            ),
-            Reservation(
-                user=customers[3],
-                table=tables[5],
-                num_of_people=3,
-                order=orders[9],
-                club=dummy_clubs[1],
-                event=events[10]
-            ),
-            # New reservations for Omnia
-            Reservation(
-                user=customers[4],
-                table=tables[6],
-                num_of_people=6,
-                order=orders[10],
-                club=dummy_clubs[2],
-                event=events[11]
-            ),
-            Reservation(
-                user=customers[0],
-                table=tables[7],
-                num_of_people=4,
-                order=orders[11],
-                club=dummy_clubs[2],
-                event=events[12]
-            ),
-            # Past reservations
-            Reservation(
-                user=customers[1],
-                table=tables[2],
-                num_of_people=5,
-                order=orders[12],
-                club=dummy_clubs[0],
-                event=events[13]
-            ),
-            Reservation(
-                user=customers[2],
-                table=tables[4],
-                num_of_people=4,
-                order=orders[13],
-                club=dummy_clubs[1],
-                event=events[14]
+            Event(
+                title="Past Reggae Night",
+                description="Past Reggae Band",
+                music="Reggae",
+                date=date(2024, 4, 10),
+                time=time(22, 0),
+                club=dummy_clubs[3]
             )
         ]
-        session.add_all(dummy_reservations)
+        session.add_all(past_events)
+        session.flush()  # Flush to get event IDs
 
+        # Add past reservations for Marquee
+        past_reservations = []
+        for i in range(20):
+            # Create and add reservation
+            reservation = Reservation(
+                user=customers[i % 5],
+                table=tables[0] if i % 2 == 0 else tables[7],  # Alternate between VIP and PASS tables
+                num_of_people=2 + (i % 5),  # Vary number of people from 2 to 6
+                order=orders[i % 30],  # Cycle through available orders
+                club=dummy_clubs[3],
+                event=past_events[i % 10]  # Cycle through past events
+            )
+            session.add(reservation)
+            session.flush()  # Flush to get the ID
+            
+            # Refresh the reservation with all relationships loaded
+            session.refresh(reservation, ['event', 'user', 'table', 'order', 'club'])
+            past_reservations.append(reservation)
+
+        # Add reviews for past reservations
         reviews = [
-        
-        Review(
-            reservation_id=3,
-            music_rating=4,
-            atmosphere_rating=3,
-            service_rating=4,
-            overall_experience=4,
-            comments="Great night, a bit crowded but fun."
-        ),
-        Review(
-            reservation_id=4,
-            music_rating=3,
-            atmosphere_rating=3,
-            service_rating=3,
-            overall_experience=3,
-            comments="It was okay. Nothing too exciting."
-        ),
-        Review(
-            reservation_id=5,
-            music_rating=2,
-            atmosphere_rating=2,
-            service_rating=1,
-            overall_experience=2,
-            comments="Poor service and the music was too loud."
-        ),
-    ]
+            Review(
+                reservation=past_reservations[0],
+                music_rating=4,
+                atmosphere_rating=3,
+                service_rating=4,
+                overall_experience=4,
+                comments="Great night, a bit crowded but fun."
+            ),
+            Review(
+                reservation=past_reservations[1],
+                music_rating=3,
+                atmosphere_rating=3,
+                service_rating=3,
+                overall_experience=3,
+                comments="It was okay. Nothing too exciting."
+            ),
+            Review(
+                reservation=past_reservations[2],
+                music_rating=2,
+                atmosphere_rating=2,
+                service_rating=1,
+                overall_experience=2,
+                comments="Poor service and the music was too loud."
+            ),
+        ]
 
+        # Add reviews and commit
         session.add_all(reviews)
-     
-
-        # 9. Commit all
         session.commit()
         print("✅ Dummy data successfully seeded.")
 
     except Exception as e:
         session.rollback()
         print("❌ Error seeding data:", e)
+        raise  # Re-raise the exception to see the full traceback
 
     finally:
         session.close()

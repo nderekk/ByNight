@@ -50,6 +50,7 @@ class User(Base):
 
      session.merge(new_manager)   
      session.commit() 
+     return new_manager
 
     def verify_password(self, password: str) -> bool:
         return self.password == password

@@ -8,21 +8,13 @@ from PySide6.QtCore import Qt, QSize
 
 
 class ManagerUI(QWidget):
-    def __init__(self):
+    def __init__(self, club_registered):
         super().__init__()
+        self.club_registered = club_registered
         self.setWindowTitle("Manager Homepage")
         self.resize(500, 650)
 
         main_layout = QVBoxLayout(self)
-
-        # --- Top Bar: Back + Search ---
-        top_bar = QHBoxLayout()
-        self.backButton = QPushButton("←")
-        self.searchLineEdit = QLineEdit()
-        self.searchLineEdit.setPlaceholderText("Search")
-        top_bar.addWidget(self.backButton)
-        top_bar.addWidget(self.searchLineEdit)
-        main_layout.addLayout(top_bar)
 
         # --- Manager Actions ---
         actions_bar = QHBoxLayout()
@@ -37,6 +29,11 @@ class ManagerUI(QWidget):
         actions_bar.addWidget(self.viewStatsButton)
         actions_bar.addWidget(self.giveDiscountsButton)
         main_layout.addLayout(actions_bar)
+        if not self.club_registered:
+            self.viewResButton.setDisabled(True)
+            self.addEventButton.setDisabled(True)
+            self.viewStatsButton.setDisabled(True)
+            self.giveDiscountsButton.setDisabled(True)
 
         # --- Club Details Section ---
         club_details = QFrame()
