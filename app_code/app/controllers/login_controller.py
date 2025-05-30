@@ -11,8 +11,6 @@ class LoginController(QObject):
   # Signals for view updates
   login_successful = Signal(User)
   login_failed = Signal(str)
-  signup_successful = Signal()
-  signup_failed = Signal(str)
 
   def __init__(self, show_page):
     super().__init__()
@@ -23,21 +21,24 @@ class LoginController(QObject):
 
   def setup_connections(self):
     # Connect view signals to controller methods
-    # self.view.login_attempted.connect(self.handle_login)
-    self.view.signup_attempted.connect(self.handle_signup)
+    self.view.login_attempted.connect(self.handle_login)
     self.view.google_login_attempted.connect(self.handle_google_login)
     self.view.apple_login_attempted.connect(self.handle_apple_login)
-    self.view.continue_clicked.connect(self.on_continue_clicked)
 
     # Connect controller signals to view methods
     self.login_successful.connect(self.handle_next_page)
     self.login_failed.connect(self.view.show_error)
-    self.signup_successful.connect(self.view.reset)
-    self.signup_failed.connect(self.view.show_error)
-    
-    self.view.continue_btn.clicked.connect(self.on_continue_clicked)
 
   def handle_login(self, email: str, password: str):
+    """Authenticate user with email and password."""
+    email = email.strip()
+    if not self._validate_email(email):
+      self.login_failed.emit("Please enter a valid email address")
+      return
+    if not password:
+      self.login_failed.emit("Please enter your password")
+      return
+
     try:
       success, user = self.auth_service.authenticate(email, password)
       if success:
@@ -47,26 +48,7 @@ class LoginController(QObject):
     except Exception as e:
       self.login_failed.emit(str(e))
 
-  def handle_signup(self, email: str, password: str, user_type: str):
-    self.login_failed.emit("Feature Not Yet Implimented")
-    
-  def on_continue_clicked(self):
-    email = self.view.email_input.text().strip()
-    if not self.view.password_input.isVisible():
-      # First step: email validation
-      if not self.validate_email(email):
-        self.view.show_error("Please enter a valid email address")
-        return
-      self.view.show_password_step()
-    else:
-      # Second step: password and login/signup
-      password = self.view.password_input.text()
-      if not password:
-        self.view.show_error("Please enter your password")
-        return
-      self.handle_login(email, password)
-      
-  def validate_email(self, email):
+  def _validate_email(self, email: str) -> bool:
     import re
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(pattern, email) is not None
