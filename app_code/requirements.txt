@@ -3,5 +3,3 @@ sqlalchemy
 qrcode[pil]
 opencv-python 
 pyzbar
-matplotlib
-tzdata

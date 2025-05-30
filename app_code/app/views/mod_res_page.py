@@ -5,12 +5,10 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 
 class ModifyReservationPage(QWidget):
-  def __init__(self, current_table_type, current_num_of_people, reg_bottles, prem_bottles):
+  def __init__(self, current_table_type, current_num_of_people):
     super().__init__()
     self.current_table_type = current_table_type
     self.current_num_of_people = current_num_of_people
-    self.reg_bottles = reg_bottles
-    self.prem_bottles = prem_bottles
     self.setup_ui()
 
   def setup_ui(self):
@@ -53,14 +51,12 @@ class ModifyReservationPage(QWidget):
 
     self.premium_spin = QSpinBox()
     self.premium_spin.setRange(0, 10)
-    self.premium_spin.setValue(self.prem_bottles)
     self.premium_spin.setStyleSheet("background-color: #333; color: white; padding: 5px;")
     self.premium_spin.setFixedWidth(spinbox_width)
     form_layout.addRow("Premium Bottles:", self.premium_spin)
 
     self.regular_spin = QSpinBox()
     self.regular_spin.setRange(0, 10)
-    self.regular_spin.setValue(self.reg_bottles)
     self.regular_spin.setStyleSheet("background-color: #333; color: white; padding: 5px;")
     self.regular_spin.setFixedWidth(spinbox_width)
     form_layout.addRow("Regular Bottles:", self.regular_spin)
@@ -76,11 +72,9 @@ class ModifyReservationPage(QWidget):
 
     self.setLayout(main_layout)
 
-  def refresh_page(self, current_table_type, current_num_of_people, reg_bottles, prem_bottles):
+  def refresh_page(self, current_table_type, current_num_of_people):
     print(f"\n {current_table_type} \n {current_num_of_people}")
     self.current_table_type = current_table_type
     self.current_num_of_people = current_num_of_people
     self.table_type_combo.setCurrentText(current_table_type)
     self.people_spin.setValue(current_num_of_people)
-    self.regular_spin.setValue(reg_bottles)
-    self.premium_spin.setValue(prem_bottles)
