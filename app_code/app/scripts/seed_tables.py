@@ -15,31 +15,31 @@ def seed():
         # 1. Create Managers first
         managers = [
             Manager(
-                full_name="Alice",
+                full_name="Giannis Papadopoulos",
                 age=30,
                 role=Role.MANAGER,
                 phone=1234567890,
-                email="alice@example.com",
+                email="papadopoulos@ceid.gr",
                 password="password"
             ),
             Manager(
-                full_name="Bob",
+                full_name="Konstantinos Georgiou",
                 age=35,
                 role=Role.MANAGER,
                 phone=2345678901,
-                email="bob@example.com",
+                email="georgiou@ceid.gr",
                 password="password"
             ),
             Manager(
-                full_name="Charlie",
+                full_name="Dimitris Ioannou",
                 age=32,
                 role=Role.MANAGER,
                 phone=3456789012,
-                email="charlie@example.com",
+                email="ioannou@ceid.gr",
                 password="password"
             ),
             Manager(
-                full_name="Toulas",
+                full_name="Athanasios Toulas",
                 age=40,
                 role=Role.MANAGER,
                 phone=4567890123,
@@ -47,11 +47,11 @@ def seed():
                 password="slet"
             ),
             Manager(
-                full_name="BIG FUCKING SIOU",
+                full_name="Spyros Sioufas",
                 age=50,
                 role=Role.MANAGER,
                 phone=1234567890,
-                email="spiros@ceid.gr",
+                email="sioufas@ceid.gr",
                 password="slet"
             )
         ]
@@ -61,39 +61,39 @@ def seed():
         # 3. Create Customer
         customers = [
             Customer(
-                full_name="BIG PSARAKIS GOAT",
+                full_name="Marios Psaras",
                 age=55,
                 role=Role.CUSTOMER,
                 phone=1234567890,
-                email="fishakis@ceid.gr",
+                email="psaras@ceid.gr",
                 password="slet"
             ),
             Customer(
-                full_name="GABRIEL",
+                full_name="Gabriel Gavrilidis",
                 age=23,
                 role=Role.CUSTOMER,
                 phone=1234567890,
-                email="gabriel@ceid.gr",
+                email="gavrilidis@ceid.gr",
                 password="slet"
             ),
             Customer(
-                full_name="FARMAKIS O FARMAKOPOIOS",
+                full_name="Alexandros Farmakis",
                 age=23,
                 role=Role.CUSTOMER,
                 phone=1234567890,
-                email="aofarmakis@ceid.gr",
+                email="farmakis@ceid.gr",
                 password="slet"
             ),
             Customer(
-                full_name="Drivi",
+                full_name="Dimitris Drivis",
                 age=21,
                 role=Role.CUSTOMER,
                 phone=1234567890,
-                email="drivi@ceid.gr",
+                email="drivis@ceid.gr",
                 password="oly"
             ),
             Customer(
-                full_name="SKEGIAS O DIAKSTIS",
+                full_name="Nikos Skegias",
                 age=23,
                 role=Role.CUSTOMER,
                 phone=1234567890,
@@ -141,7 +141,7 @@ def seed():
                 title="Trap Night",
                 description="DJ Marinos",
                 music="Trap",
-                date=date(2023, 6, 1),
+                date=date(2024, 6, 1),
                 time=time(22, 0),
                 club=dummy_clubs[3]
             ),
@@ -149,7 +149,7 @@ def seed():
                 title="Kultura",
                 description="Gxhan",
                 music="Hip-Hop/Rap",
-                date=date(2023, 6, 1),
+                date=date(2024, 6, 1),
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
@@ -157,7 +157,7 @@ def seed():
                 title="RnB Night",
                 description="Brent Faiyaz",
                 music="R&B",
-                date=date(2023, 6, 2),
+                date=date(2024, 6, 2),
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
@@ -165,7 +165,7 @@ def seed():
                 title="Lules Culpa",
                 description="Liva K",
                 music="House",
-                date=date(2023, 6, 3),
+                date=date(2024, 6, 3),
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
@@ -173,28 +173,53 @@ def seed():
                 title="Greek Night",
                 description="patris thriskeia oikogeneia",
                 music="Laika",
-                date=date(2023, 6, 4),
+                date=date(2024, 6, 4),
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
             Event(
-                title="boy lover night",
-                description="Drake",
-                music="drake-music",
-                date=date(2023, 6, 10),
-                time=time(23, 0),
-                club=dummy_clubs[3]
+                title="Summer Vibes",
+                description="DJ Summer",
+                music="House",
+                date=date(2025, 7, 15),
+                time=time(22, 0),
+                club=dummy_clubs[0]
             ),
             Event(
-                title="Old skool",
-                description="oldheadades elate edw",
-                music="Hip-Hop/Rap",
-                date=date(2023, 6, 12),
+                title="Rock Night",
+                description="Rock Band Live",
+                music="Rock",
+                date=date(2025, 7, 20),
+                time=time(21, 0),
+                club=dummy_clubs[1]
+            ),
+            Event(
+                title="Jazz Evening",
+                description="Jazz Quartet",
+                music="Jazz",
+                date=date(2025, 8, 5),
+                time=time(20, 0),
+                club=dummy_clubs[2]
+            ),
+            Event(
+                title="Latin Night",
+                description="Salsa Band",
+                music="Latin",
+                date=date(2025, 8, 12),
+                time=time(22, 0),
+                club=dummy_clubs[0]
+            ),
+            Event(
+                title="EDM Festival",
+                description="Multiple DJs",
+                music="EDM",
+                date=date(2025, 8, 25),
                 time=time(23, 0),
                 club=dummy_clubs[3]
-            ),
+            )
         ]
         session.add_all(events)
+        session.flush()
 
         # 6. Create Table
         tables = [
@@ -207,9 +232,20 @@ def seed():
                 capacity=4,
                 club=dummy_clubs[2],
                 table_type=TableType.PASS
+            ),
+            Table(
+                capacity=8,
+                club=dummy_clubs[3],
+                table_type=TableType.VIP
+            ),
+            Table(
+                capacity=4,
+                club=dummy_clubs[3],
+                table_type=TableType.PASS
             )
         ]
         session.add_all(tables)
+        session.flush()
 
         # 7. Create Order
         orders = [
@@ -218,81 +254,172 @@ def seed():
             Order(cost=130.0, delivered=True, paid=False, regular_bottles=2),
             Order(cost=140.0, delivered=False, paid=True, regular_bottles=1),
             Order(cost=160.0, delivered=True, paid=True, regular_bottles=3),
-            Order(cost=170.0, delivered=True, paid=True, regular_bottles=4)
+            Order(cost=170.0, delivered=True, paid=True, regular_bottles=4),
+            Order(cost=200.0, delivered=False, paid=False, regular_bottles=3),
+            Order(cost=180.0, delivered=False, paid=False, regular_bottles=2),
+            Order(cost=250.0, delivered=False, paid=False, regular_bottles=4),
+            Order(cost=300.0, delivered=False, paid=False, regular_bottles=5),
+            Order(cost=220.0, delivered=True, paid=True, regular_bottles=3),
+            Order(cost=190.0, delivered=True, paid=True, regular_bottles=2),
+            Order(cost=280.0, delivered=True, paid=True, regular_bottles=4)
         ]
         session.add_all(orders)
+        session.flush()
         
-# 8. Create Reservations and link them to individual orders
+        # 8. Create Reservations and link them to individual orders
         dummy_reservations = [
             Reservation(
                 user=customers[0],
                 table=tables[0],
                 num_of_people=4,
                 order=orders[0],
-                date=datetime(2026, 1, 1, 22, 0),
+                date=datetime(2024, 6, 1, 22, 0),
                 club=dummy_clubs[3],
                 event=events[0]
             ),
             Reservation(
-                user=customers[0],
+                user=customers[1],
                 table=tables[1],
                 num_of_people=2,
                 order=orders[1],
-                date=datetime(2024, 8, 1, 22, 0),
+                date=datetime(2024, 6, 1, 23, 0),
                 club=dummy_clubs[3],
                 event=events[1]
             ),
             Reservation(
                 user=customers[2],
-                table=tables[1],
-                num_of_people=2,
+                table=tables[2],
+                num_of_people=6,
                 order=orders[2],
-                date=datetime(2024, 7, 1, 22, 0),
+                date=datetime(2024, 6, 2, 23, 0),
                 club=dummy_clubs[3],
-                event=events[1]
+                event=events[2]
             ),
             Reservation(
                 user=customers[3],
-                table=tables[1],
-                num_of_people=2,
+                table=tables[3],
+                num_of_people=3,
                 order=orders[3],
-                date=datetime(2024, 6, 1, 22, 0),
+                date=datetime(2024, 6, 3, 23, 0),
                 club=dummy_clubs[3],
-                event=events[1]
+                event=events[3]
             ),
             Reservation(
-                user=customers[1],
-                table=tables[1],
-                num_of_people=2,
+                user=customers[4],
+                table=tables[0],
+                num_of_people=5,
                 order=orders[4],
-                date=datetime(2025, 12, 9, 23, 30),
+                date=datetime(2024, 6, 4, 23, 0),
                 club=dummy_clubs[3],
-                event=events[1]
+                event=events[4]
+            ),
+            Reservation(
+                user=customers[0],
+                table=tables[2],
+                num_of_people=7,
+                order=orders[5],
+                date=datetime(2025, 7, 15, 22, 0),
+                club=dummy_clubs[0],
+                event=events[5]
             ),
             Reservation(
                 user=customers[1],
                 table=tables[1],
                 num_of_people=3,
-                order=orders[5],
-                date=datetime(2025, 10, 28, 22, 0),
+                order=orders[6],
+                date=datetime(2025, 7, 20, 21, 0),
+                club=dummy_clubs[1],
+                event=events[6]
+            ),
+            Reservation(
+                user=customers[2],
+                table=tables[3],
+                num_of_people=3,
+                order=orders[7],
+                date=datetime(2025, 8, 5, 20, 0),
+                club=dummy_clubs[2],
+                event=events[7]
+            ),
+            Reservation(
+                user=customers[3],
+                table=tables[0],
+                num_of_people=5,
+                order=orders[8],
+                date=datetime(2025, 8, 12, 22, 0),
+                club=dummy_clubs[0],
+                event=events[8]
+            ),
+            Reservation(
+                user=customers[4],
+                table=tables[2],
+                num_of_people=6,
+                order=orders[9],
+                date=datetime(2025, 8, 25, 23, 0),
+                club=dummy_clubs[1],
+                event=events[9]
+            ),
+            Reservation(
+                user=customers[1],
+                table=tables[0],
+                num_of_people=4,
+                order=orders[10],
+                date=datetime(2024, 6, 1, 23, 0),
                 club=dummy_clubs[3],
-                event=events[0]
+                event=events[1]
+            ),
+            Reservation(
+                user=customers[2],
+                table=tables[2],
+                num_of_people=6,
+                order=orders[11],
+                date=datetime(2024, 6, 1, 23, 0),
+                club=dummy_clubs[3],
+                event=events[1]
+            ),
+            Reservation(
+                user=customers[4],
+                table=tables[3],
+                num_of_people=3,
+                order=orders[12],
+                date=datetime(2024, 6, 1, 23, 0),
+                club=dummy_clubs[3],
+                event=events[1]
             )
         ]
         session.add_all(dummy_reservations)
         session.flush()
 
-        dummy_review= [
+        dummy_review = [
             Review(
-                music_rating = 5,
-                atmosphere_rating = 5,
-                service_rating = 5,
-                overall_experience = 5,
+                music_rating=5,
+                atmosphere_rating=5,
+                service_rating=5,
+                overall_experience=5,
                 reservation=dummy_reservations[2]
+            ),
+            Review(
+                music_rating=4,
+                atmosphere_rating=5,
+                service_rating=4,
+                overall_experience=4,
+                reservation=dummy_reservations[10]
+            ),
+            Review(
+                music_rating=5,
+                atmosphere_rating=4,
+                service_rating=5,
+                overall_experience=5,
+                reservation=dummy_reservations[11]
+            ),
+            Review(
+                music_rating=3,
+                atmosphere_rating=4,
+                service_rating=3,
+                overall_experience=3,
+                reservation=dummy_reservations[12]
             )
         ]
         session.add_all(dummy_review)
-
 
         # 9. Commit all
         session.commit()
