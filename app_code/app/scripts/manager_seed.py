@@ -193,6 +193,14 @@ def seed():
                 time=time(23, 0),
                 club=dummy_clubs[3]
             ),
+            Event(
+                title="tsoupagio",
+                description="sex drugs alchohol",
+                music="dj marinos typehsi",
+                date=date(2025, 6, 12),
+                time=time(23, 0),
+                club=dummy_clubs[3]
+            ),
         ]
         session.add_all(events)
 
