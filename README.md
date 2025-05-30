@@ -45,16 +45,15 @@ ByNight
 - **Language**: Python 3.x
 - **GUI Framework**: PySide6
 - **Database**: SQLite
-- **Testing**: pytest
 
 ## Getting Started
 
 1. Navigate to the project directory:
    ```bash
-   cd 3rd_Deliverable/app_code
+   cd /app_code
    ```
 
-2. Create a virtual environment:
+2. Create a virtual environment (if you want):
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
