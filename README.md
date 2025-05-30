@@ -68,7 +68,7 @@ Project Structure
    ```bash
    python main.py
    ```
-## Test Users
+# Test Users
 
 # Managers
 -email: papadopoulos@ceid.gr
@@ -84,7 +84,12 @@ Project Structure
 -password: password
 
 -email: sioufas@ceid.gr
--password: password
+-password: slet
+
+# Customer
+-email: papadopoulos@ceid.gr
+-password: slet
+
 
 ## Key Features
 
