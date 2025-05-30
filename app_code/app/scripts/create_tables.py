@@ -6,6 +6,6 @@ import app.models
 # $env:PYTHONPATH = "."
 # python app/scripts/create_tables.py
 # UNIX:
-# PYTHONPATH=. python app/scripts/create_tables.py
+# PYTHONPATH=. python3 app/scripts/create_tables.py
 os.remove("app_data.db")
 Base.metadata.create_all(bind=engine)
