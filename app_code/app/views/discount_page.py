@@ -62,9 +62,6 @@ class PercentageInput(QWidget):
 class DiscountPage(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Discount Page")
-        self.resize(400, 600)
-
         main_layout = QVBoxLayout(self)
         self.setLayout(main_layout)
 
@@ -82,7 +79,7 @@ class DiscountPage(QWidget):
         self.date_edit = QDateEdit() 
         self.date_edit.setDate(QDate.currentDate())
         self.date_edit.setCalendarPopup(True)
-        self.date_edit.dateChanged.connect(self.update_discounts_from_db)
+        self.date_edit.dateChanged.connect(self.handle_date_change)
         
 
         header.addWidget(self.back_button)
@@ -135,7 +132,7 @@ class DiscountPage(QWidget):
             self.list_layout.addWidget(container)
             self.discount_fields.append((name, discount_edit, checkbox))
 
-        self.update_discounts_from_db() 
+        self.handle_date_change() 
 
         scroll_area.setWidget(self.list_widget)
         main_layout.addWidget(scroll_area)
@@ -149,7 +146,7 @@ class DiscountPage(QWidget):
         footer.addWidget(self.load_button)
         main_layout.addLayout(footer)
 
-    def update_discounts_from_db(self):
+    def handle_date_change(self):
         from app.utils.container import Container
         from app.models import User
         qdate = self.date_edit.date()
@@ -172,7 +169,6 @@ class DiscountPage(QWidget):
             checkbox.setChecked(True)
 
     def load_discounts(self):
-        print("Loading discounts...")
         for name, lineedit, checkbox in self.discount_fields:
             lineedit.setEnabled(checkbox.isChecked())
 
