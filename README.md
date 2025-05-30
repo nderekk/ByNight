@@ -2,7 +2,7 @@ ByNight
 
 Το ByNight είναι μια εφαρμογή διαχείρισης και αναζήτησης κρατήσεων για νυχτερινά μαγαζιά, η οποία απευθύνεται τόσο στους πελάτες όσο και στους ιδιοκτήτες.
 
-##Βασικές Λειτουργίες
+Βασικές Λειτουργίες
 
 #Για πελάτες
 
@@ -25,7 +25,7 @@ ByNight
 
 -Προσθήκη και διαχείριση εκδηλώσεων.
 
-## Project Structure
+Project Structure
 
 ```
 3rd_Deliverable/
@@ -68,6 +68,23 @@ ByNight
    ```bash
    python main.py
    ```
+## Test Users
+
+# Managers
+-email: papadopoulos@ceid.gr
+-password: password
+
+-email: georgiou@ceid.gr
+-password: password
+
+-email: ioannou@ceid.gr
+-password: password
+
+-email: toulas@ceid.gr
+-password: password
+
+-email: sioufas@ceid.gr
+-password: password
 
 ## Key Features
 
