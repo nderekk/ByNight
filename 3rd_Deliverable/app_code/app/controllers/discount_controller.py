@@ -3,10 +3,7 @@ from PySide6.QtCore import QObject, Signal
 from app.utils.container import Container
 from app.views.discount_page import DiscountPage
 from PySide6.QtCore import QDate
-from app.models.discount import Discount 
-from app.models import Event, User
-
-
+from app.models import Event, User, Discount
 
 class DiscountController(QObject):
   
