@@ -96,6 +96,9 @@ Project Structure
 -email: farmakis@ceid.gr
 -password: slet
 
+# Staff
+-email: giparis@ceid.gr
+-password: slet
 
 ## Key Features
 
