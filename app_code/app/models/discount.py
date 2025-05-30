@@ -13,7 +13,7 @@ class Discount(Base):
         return Container.resolve(DatabaseSession)
 
     @classmethod
-    def give_discounts(cls, date, regular_disc, premium_disc):  
+    def give_discounts(cls, club_id, date, regular_disc, premium_disc, ):  
         session = cls._get_session()
         if isinstance(date, datetime):
           date = date.date()
@@ -21,7 +21,7 @@ class Discount(Base):
         
         reservations = session.query(Reservation)\
             .join(Reservation.event)\
-            .filter(Event.date == date)\
+            .filter(Event.date == date, Event.club_id == club_id)\
             .all()
 
         print(f"DEBUG: Found {len(reservations)} reservations on {date}")
@@ -32,8 +32,9 @@ class Discount(Base):
                 continue
 
             # Apply the discounts
-            res.regular_discount = regular_disc
-            res.premium_discount = premium_disc
+            event = res.event
+            event.regular_discount = regular_disc
+            event.premium_discount = premium_disc
 
             # Recalculate cost
             new_cost = (
@@ -48,19 +49,20 @@ class Discount(Base):
         print("DEBUG: Discounts applied and session committed")
     
     @classmethod
-    def get_discounts_by_date(cls, selected_date):
+    def get_discounts_by_date(cls, selected_date, club_id):
         session = Container.resolve(DatabaseSession)
 
-        reservations = session.query(Reservation).join(Reservation.event).filter(
-            Event.date == selected_date
-        ).all()
+        # Find one event on the selected date for the club
+        event = session.query(Event).filter(
+            Event.date == selected_date,
+            Event.club_id == club_id
+        ).first()
 
-
-        if not reservations:
+        if not event:
             return {}
 
-        latest_res = reservations[0]
         return {
-            "regular": latest_res.regular_discount,
-            "premium": latest_res.premium_discount
+            "regular": event.regular_discount,
+            "premium": event.premium_discount
         }
+

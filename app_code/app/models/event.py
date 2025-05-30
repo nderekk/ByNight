@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Enum, Date, Time, ForeignKey
+from sqlalchemy import Column, Integer, String, Enum, Date, Time, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from app.data.database import Base
 from datetime import timedelta
@@ -16,6 +16,9 @@ class Event(Base):
   
   club_id = Column(Integer, ForeignKey("clubs.id"), nullable=False)
   club = relationship("Club", back_populates="events")
+
+  regular_discount = Column(Float, default=0.0)
+  premium_discount = Column(Float, default=0.0)
    
   reservations = relationship("Reservation", back_populates="event", cascade="all, delete-orphan")
   
