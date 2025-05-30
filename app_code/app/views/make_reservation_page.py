@@ -8,6 +8,7 @@ from app.models.club import Club
 from app.utils.container import Container                
 from app.services.db_session import DatabaseSession      
 import app.models                                        
+from datetime import date
 
 
 class MakeReservationPage(QWidget):
@@ -198,13 +199,14 @@ class MakeReservationPage(QWidget):
       self.venue_label.setText(club.name)
 
      def load_events(self):
-  
         session = Container.resolve(DatabaseSession)
 
         self.event_dropdown.clear()
 
+        today = date.today()
         events = session.query(app.models.Event)\
                         .filter(app.models.Event.club_id == self.club.id)\
+                        .filter(app.models.Event.date >= today)\
                         .order_by(app.models.Event.date.asc())\
                         .all()
 
