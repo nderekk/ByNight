@@ -150,11 +150,14 @@ class DiscountPage(QWidget):
         main_layout.addLayout(footer)
 
     def update_discounts_from_db(self):
+        from app.utils.container import Container
+        from app.models import User
         qdate = self.date_edit.date()
         selected_date = qdate.toPython()  
+        self.manager_club = Container.resolve(User)
 
 
-        discounts = Discount.get_discounts_by_date(selected_date)  
+        discounts = Discount.get_discounts_by_date(selected_date, self.manager_club.id)  
 
         for name, lineedit, checkbox in self.discount_fields:
             value = 0.0

@@ -4,6 +4,7 @@ from app.utils.container import Container
 from app.views.discount_page import DiscountPage
 from PySide6.QtCore import QDate
 from app.models.discount import Discount 
+from app.models import Event, User
 
 
 
@@ -13,6 +14,7 @@ class DiscountController(QObject):
     super().__init__()
     self.show_page = show_page
     self.view = DiscountPage()
+    self.manager_club = Container.resolve(User)
     self.setup_connections()
   
   def setup_connections(self):
@@ -55,7 +57,7 @@ class DiscountController(QObject):
       print(f"  Premium: {premium_discount}")
 
     # Call your model logic
-      Discount.give_discounts(date=selected_date, regular_disc=regular_discount, premium_disc=premium_discount )
+      Discount.give_discounts(self.manager_club.id, date=selected_date, regular_disc=regular_discount, premium_disc=premium_discount)
  
 
 

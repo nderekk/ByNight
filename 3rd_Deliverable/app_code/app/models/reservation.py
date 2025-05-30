@@ -18,8 +18,6 @@ class Reservation(Base):
   num_of_people = Column(Integer)
   date = Column(DateTime)
   qrcode = Column(String) # to do
-  regular_discount = Column(Float, default=0.0)
-  premium_discount = Column(Float, default=0.0)
 
   club = relationship("Club", back_populates="reservations")
   order = relationship("Order", back_populates="reservation", uselist=False, cascade="all, delete-orphan")
@@ -49,12 +47,10 @@ class Reservation(Base):
       table=table,
       num_of_people= people,
       date=Event.get_event_datetime(event_id),
-      regular_discount=0.0,
-      premium_discount=0.0,
     )
 
     order = Order(
-      cost=bottles[1]*120*(1 - reservation.premium_discount) + bottles[0]*80*(1 - reservation.regular_discount),
+      cost=bottles[1]*120*(1 - Event.premium_discount) + bottles[0]*80*(1 - Event.regular_discount),
       reservation=reservation,
       premium_bottles=bottles[1],
       regular_bottles=bottles[0]
@@ -72,7 +68,7 @@ class Reservation(Base):
     return True
   
   def update_res(self, table_type: str, people: str, bottles: tuple[str]):
-    from app.models import Table, Order, TableType
+    from app.models import Table, Order, TableType, Event
     from app.services import ReservationValidator
     # bottle[0] = 80 bottle[1] = 120 $
     bottles = [int(bottle) for bottle in bottles]
@@ -93,7 +89,7 @@ class Reservation(Base):
     
     self.table.table_type = TableType(table_type)
 
-    cost=bottles[1]*120*(1 - self.premium_discount) + bottles[0]*80*(1 - self.regular_discount)
+    self.cost=bottles[1]*120*(1 - Event.premium_discount) + bottles[0]*80*(1 - Event.regular_discount)
     self.order.regular_bottles=bottles[0]
     self.order.premium_bottles=bottles[1]
     
