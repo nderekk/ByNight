@@ -49,7 +49,6 @@ class Reservation(Base):
       table=table,
       num_of_people= people,
       date=Event.get_event_datetime(event_id),
-      date=Event.get_event_datetime(event_id),
     )
 
     order = Order(
@@ -71,7 +70,6 @@ class Reservation(Base):
     return True
   
   def update_res(self, table_type: str, people: str, bottles: tuple[str]):
-    from app.models import Table, Order, TableType, Event
     from app.models import Table, Order, TableType, Event
     from app.services import ReservationValidator
     session = Container.resolve(DatabaseSession)

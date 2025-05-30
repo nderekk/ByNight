@@ -61,7 +61,6 @@ class Discount(Base):
     
     @classmethod
     def get_discounts_by_date(cls, selected_date, club_id):
-    def get_discounts_by_date(cls, selected_date, club_id):
         session = Container.resolve(DatabaseSession)
 
         # Find one event on the selected date for the club
@@ -69,19 +68,11 @@ class Discount(Base):
             Event.date == selected_date,
             Event.club_id == club_id
         ).first()
-        # Find one event on the selected date for the club
-        event = session.query(Event).filter(
-            Event.date == selected_date,
-            Event.club_id == club_id
-        ).first()
 
-        if not event:
         if not event:
             return {}
 
         return {
-            "regular": event.regular_discount,
-            "premium": event.premium_discount
             "regular": event.regular_discount,
             "premium": event.premium_discount
         }
