@@ -12,41 +12,52 @@ class Discount(Base):
     def _get_session(cls):
         return Container.resolve(DatabaseSession)
 
+    
     @classmethod
-    def give_discounts(cls, club_id, date, regular_disc, premium_disc, ):  
+    def give_discounts(cls, club_id, date, regular_disc, premium_disc):  
         session = cls._get_session()
         if isinstance(date, datetime):
-          date = date.date()
+            date = date.date()
 
-        
-        reservations = session.query(Reservation)\
-            .join(Reservation.event)\
-            .filter(Event.date == date, Event.club_id == club_id)\
-            .all()
+        # Get event for club and date
+        event = session.query(Event).filter(
+            Event.date == date,
+            Event.club_id == club_id
+        ).first()
 
-        print(f"DEBUG: Found {len(reservations)} reservations on {date}")
+        if not event:
+            print(f"DEBUG: No event found for club {club_id} on {date}")
+            return
+
+        # Update event discounts
+        event.regular_discount = regular_disc
+        event.premium_discount = premium_disc
+        print(f"DEBUG: Updated event discounts - Regular: {regular_disc}, Premium: {premium_disc}")
+
+        # Update reservations if any
+        reservations = session.query(Reservation).filter(
+            Reservation.event_id == event.id
+        ).all()
+
+        print(f"DEBUG: Found {len(reservations)} reservations for event {event.id} on {date}")
 
         for res in reservations:
             if not res.order:
                 print(f"DEBUG: Skipping reservation {res.id} (no order)")
                 continue
 
-            # Apply the discounts
-            event = res.event
-            event.regular_discount = regular_disc
-            event.premium_discount = premium_disc
-
-            # Recalculate cost
+            # Recalculate cost based on new discounts
             new_cost = (
                 res.order.regular_bottles * 80 * (1 - regular_disc) +
                 res.order.premium_bottles * 120 * (1 - premium_disc)
             )
             res.order.cost = new_cost
 
-            print(f"DEBUG: Updated reservation {res.id} - New cost: {new_cost}")
+            print(f"DEBUG: Updated reservation {res.id} cost to {new_cost}")
 
         session.commit()
         print("DEBUG: Discounts applied and session committed")
+
     
     @classmethod
     def get_discounts_by_date(cls, selected_date, club_id):

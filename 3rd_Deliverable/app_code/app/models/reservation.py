@@ -32,6 +32,7 @@ class Reservation(Base):
     session = Container.resolve(DatabaseSession)
     from app.models import Order, Table,TableType, User, Event
     from datetime import datetime
+    event = session.get(Event, event_id)
 
     table = Table(
       capacity=6,
@@ -50,7 +51,7 @@ class Reservation(Base):
     )
 
     order = Order(
-      cost=bottles[1]*120*(1 - Event.premium_discount) + bottles[0]*80*(1 - Event.regular_discount),
+      cost=bottles[1]*120*(1 - event.premium_discount) + bottles[0]*80*(1 - event.regular_discount),
       reservation=reservation,
       premium_bottles=bottles[1],
       regular_bottles=bottles[0]
@@ -70,8 +71,10 @@ class Reservation(Base):
   def update_res(self, table_type: str, people: str, bottles: tuple[str]):
     from app.models import Table, Order, TableType, Event
     from app.services import ReservationValidator
-    # bottle[0] = 80 bottle[1] = 120 $
+    session = Container.resolve(DatabaseSession)
+    event = session.get(Event, self.event_id)
     bottles = [int(bottle) for bottle in bottles]
+
       
     mapper = {
       "bar": "bar_available",
@@ -89,7 +92,7 @@ class Reservation(Base):
     
     self.table.table_type = TableType(table_type)
 
-    self.cost=bottles[1]*120*(1 - Event.premium_discount) + bottles[0]*80*(1 - Event.regular_discount)
+    self.cost=bottles[1]*120*(1 - event.premium_discount) + bottles[0]*80*(1 - event.regular_discount)
     self.order.regular_bottles=bottles[0]
     self.order.premium_bottles=bottles[1]
     
@@ -97,7 +100,6 @@ class Reservation(Base):
     
     print("Record Updated")
     
-    session = Container.resolve(DatabaseSession)
     session.commit()
     return response
   

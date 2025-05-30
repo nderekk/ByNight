@@ -143,7 +143,6 @@ class DiscountPage(QWidget):
         # Footer (No Enter button)
         footer = QHBoxLayout()
         self.load_button = QPushButton("Save")
-        self.load_button.clicked.connect(self.load_discounts)
 
         footer.addStretch()
         footer.addWidget(self.load_button)
@@ -171,10 +170,7 @@ class DiscountPage(QWidget):
             lineedit.setEnabled(True)
             checkbox.setChecked(True)
 
-    def load_discounts(self):
-        print("Loading discounts...")
-        for name, lineedit, checkbox in self.discount_fields:
-            lineedit.setEnabled(checkbox.isChecked())
+
 
     def connect_checkbox_to_lineedit(self, checkbox, lineedit):
         checkbox.stateChanged.connect(
