@@ -6,45 +6,6 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
 
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QTextEdit, QScrollArea, QWidget
-
-
-class ReviewPopup(QDialog):
-    from app.models.review import Review
-    def __init__(self, reviews: list[Review]):
-        super().__init__()
-        self.setWindowTitle("Other Users' Reviews")
-        self.setMinimumSize(400, 300)
-        layout = QVBoxLayout()
-
-        scroll_area = QScrollArea()
-        scroll_content = QWidget()
-        scroll_layout = QVBoxLayout()
-
-        if not reviews:
-            scroll_layout.addWidget(QLabel("No other reviews available."))
-        else:
-            for r in reviews:
-                text = (
-                    f"<b>Music:</b> {r.music_rating} | "
-                    f"<b>Atmosphere:</b> {r.atmosphere_rating} | "
-                    f"<b>Service:</b> {r.service_rating} | "
-                    f"<b>Overall:</b> {r.overall_experience}<br>"
-                    f"<i>{r.comments}</i>"
-                )
-                label = QLabel(text)
-                label.setWordWrap(True)
-                scroll_layout.addWidget(label)
-                scroll_layout.addWidget(QLabel("—" * 40))
-
-        scroll_content.setLayout(scroll_layout)
-        scroll_area.setWidget(scroll_content)
-        scroll_area.setWidgetResizable(True)
-        layout.addWidget(scroll_area)
-
-        self.setLayout(layout)
-
-
 class StarRating(QWidget):
     def __init__(self, stars=5):
         super().__init__()

@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from app.data.database import Base
 from app.models.role import Role
 import app.models
-from datetime import datetime, date
+from datetime import datetime
 
 class User(Base):
     __tablename__ = "users"
@@ -52,6 +52,8 @@ class User(Base):
      session.commit() 
      return new_manager
 
+        
+
     def verify_password(self, password: str) -> bool:
         return self.password == password
     
@@ -59,10 +61,10 @@ class User(Base):
         return self.get_upcoming_reservations_for_display(), self.get_past_reservations_for_display()
     
     def get_upcoming_reservations_for_display(self):
-        upcoming = [r for r in self.reservations if r.date.date() >= date.today()]
+        upcoming = [r for r in self.reservations if datetime.combine(r.date, datetime.min.time()) > datetime.now()]
         return upcoming
     
     def get_past_reservations_for_display(self):
-        past = [r for r in self.reservations if r.date.date() < date.today()]
+        past = [r for r in self.reservations if datetime.combine(r.date, datetime.min.time()) < datetime.now()]
         return past
   
