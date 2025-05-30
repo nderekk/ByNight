@@ -81,13 +81,19 @@ Project Structure
 -password: password
 
 -email: toulas@ceid.gr
--password: password
+-password: slet
 
 -email: sioufas@ceid.gr
 -password: slet
 
 # Customer
 -email: papadopoulos@ceid.gr
+-password: slet
+
+-email: gavrilidis@ceid.gr
+-password: slet
+
+-email: farmakis@ceid.gr
 -password: slet
 
 
